@@ -8,7 +8,6 @@ import { Server } from "socket.io";
 
 // import userRouter from './Routes/userRoute.js'
 import conversationRouter from './Routes/conversationRoute.js'
-
 dotenv.config();
 
 const app = express()
@@ -23,12 +22,25 @@ const io = new Server(server, {
     }
   });
 
-app.use("/api/v1", userRouter);
+// app.use("/api/v1", userRouter);
 app.use("/api/v1/conversation", conversationRouter);
 
 const PORT = process.env.PORT || 5000;
 
+io.on('connection', (socket) => {
+    
+  socket.on('join_conversation', (conversationId) => {
+    socket.join(conversationId);
+  });
 
+  socket.on('leave_conversation', (conversationId) => {
+    socket.leave(conversationId);
+  });
+
+  socket.on('disconnect', () => {});
+});
+
+export { io };
 
   server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

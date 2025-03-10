@@ -1,29 +1,47 @@
-import { Request, Response } from "express";
-
-import prisma from '../db/prisma.js';
+import prisma from "../db/prisma.js"
 import { io } from '../server.js';
 
-export const createConversation = async (req: Request, res: Response): Promise<any> => {
+export const createConversation = async (req, res) => {
     try {
-        const { userId, title } = req.body;
+        const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
         }
-        const userExists = await prisma.user.findUnique({ where: { id: userId } });
+        const userExists = await prisma.user.findUnique({ where: { id: userId }});
         if (!userExists) {
             return res.status(404).json({ error: "User not found" });
         }
+        const conversationCount = await prisma.conversation.count({
+            where: { userId },
+        });
 
         const conversation = await prisma.conversation.create({
             data: {
-                title: title || "New Conversation",
+                title: `Conversation ${conversationCount + 1}`,
                 userId: userId,
             }
         });
 
         io.emit(`user_${userId}_new_conversation`, conversation);
 
-        res.status(201).json(conversation);
+        const message = await prisma.message.create({
+            data: {
+                content:  "How can I help you?",
+                conversationId: conversation.id,
+                isFromAI: true,
+            }
+        });
+
+        io.to(conversation.id).emit('new_message', message);
+        io.emit(`user_${conversation.userId}_conversation_updated`, {
+            conversationId: conversation.id,
+            lastMessage: message
+        });
+
+        res.status(201).json({
+            conversation, 
+            initialMessage: message
+          });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -31,49 +49,59 @@ export const createConversation = async (req: Request, res: Response): Promise<a
     }
 };
 
-export const findConversationsByUserId = async (req: Request, res: Response): Promise<any> => {
+export const findConversationsByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
         }
+
+        // Check if the user exists
         const userExists = await prisma.user.findUnique({
-            where: { id: userId }
+            where: { id: userId },
         });
 
         if (!userExists) {
             return res.status(404).json({ error: "User not found" });
         }
 
+        // Fetch conversations with the count of messages
         const conversations = await prisma.conversation.findMany({
             where: {
-                userId
+                userId,
             },
             orderBy: {
-                updatedAt: 'desc'
+                updatedAt: 'desc',
             },
             include: {
-                messages: {
-                    take: 1,
-                    orderBy: {
-                        createdAt: 'desc'
-                    }
-                }
-            }
+                _count: {
+                    select: {
+                        messages: true, // Count the number of messages for each conversation
+                    },
+                },
+            },
         });
 
+        // Format the response to simplify the structure
+        const formattedConversations = conversations.map((conversation) => ({
+            id: conversation.id,
+            title: conversation.title,
+            messageCount: conversation._count.messages, // Extract the message count
+        }));
+
         res.status(200).json({
-            conversations,
+            conversations: formattedConversations,
             status: 200,
-            message: "Conversations fetched Successfully"
+            message: "Conversations fetched successfully",
         });
     } catch (error) {
-        res.status(500).json(error);
-        console.log("error finding user conversations", error.message);
+        res.status(500).json({ error: error.message });
+        console.log("Error finding user conversations:", error.message);
     }
 };
 
-export const findConversationById = async (req: Request, res: Response): Promise<any> => {
+
+export const findConversationById = async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {
@@ -106,7 +134,7 @@ export const findConversationById = async (req: Request, res: Response): Promise
     }
 };
 
-export const sendMessage = async (req: Request, res: Response): Promise<any> => {
+export const sendMessage = async (req, res) => {
     try {
         const { content, conversationId } = req.body;
         if (!content || !conversationId) {
@@ -150,7 +178,7 @@ export const sendMessage = async (req: Request, res: Response): Promise<any> => 
     }
 };
 
-export const sendAIMessage = async (conversationId: string): Promise<any> => {
+export const sendAIMessage = async (conversationId) => {
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
@@ -178,14 +206,12 @@ export const sendAIMessage = async (conversationId: string): Promise<any> => {
             conversationId,
             lastMessage: message
         });
-
-        console.log("AI message sent successfully");
     } catch (error) {
         console.log("error sending AI message", error);
     }
 };
 
-export const deleteConversationById = async (req: Request, res: Response): Promise<any> => {
+export const deleteConversationById = async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {
