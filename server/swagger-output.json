@@ -25,7 +25,9 @@
   "paths": {
     "/create": {
       "post": {
-        "description": "",
+        
+        "summary": "Create a new conversation",
+        "description":  "Endpoint for creating a new conversation for a user.",
         "parameters": [
           {
             "name": "body",
@@ -58,7 +60,8 @@
     },
     "/all/{userId}": {
       "get": {
-        "description": "",
+        "summary": "Get all conversations for a user",
+        "description": "Fetch all conversations associated with the given user ID.",
         "parameters": [
           {
             "name": "userId",
@@ -85,7 +88,8 @@
     },
     "/{id}": {
       "delete": {
-        "description": "",
+        "summary": "Delete a specific conversation",
+        "description": "Delete a conversation by its unique ID.",
         "parameters": [
           {
             "name": "id",
@@ -110,7 +114,8 @@
         }
       },
       "get": {
-        "description": "",
+        "summary": "Get details of a specific conversation",
+        "description": "Retrieve information about a single conversation using its ID.",
         "parameters": [
           {
             "name": "id",
@@ -137,7 +142,8 @@
     },
     "/send": {
       "post": {
-        "description": "",
+        "summary": "Send a message to a conversation",
+        "description": "Send a new message to a specified conversation.",
         "parameters": [
           {
             "name": "body",
