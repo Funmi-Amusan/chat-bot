@@ -56,7 +56,6 @@ export const findConversationsByUserId = async (req, res) => {
             return res.status(400).json({ error: "User ID is required" });
         }
 
-        // Check if the user exists
         const userExists = await prisma.user.findUnique({
             where: { id: userId },
         });
@@ -65,7 +64,6 @@ export const findConversationsByUserId = async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        // Fetch conversations with the count of messages
         const conversations = await prisma.conversation.findMany({
             where: {
                 userId,
@@ -76,17 +74,16 @@ export const findConversationsByUserId = async (req, res) => {
             include: {
                 _count: {
                     select: {
-                        messages: true, // Count the number of messages for each conversation
+                        messages: true,
                     },
                 },
             },
         });
 
-        // Format the response to simplify the structure
         const formattedConversations = conversations.map((conversation) => ({
             id: conversation.id,
             title: conversation.title,
-            messageCount: conversation._count.messages, // Extract the message count
+            messageCount: conversation._count.messages, 
         }));
 
         res.status(200).json({

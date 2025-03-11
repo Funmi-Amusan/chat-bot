@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { Server } from "socket.io";
 
-// import userRouter from './Routes/userRoute.js'
+//import userRouter from './Routes/userRoute.js'
 import conversationRouter from './Routes/conversationRoute.js'
 dotenv.config();
 
@@ -22,7 +22,7 @@ const io = new Server(server, {
     }
   });
 
-// app.use("/api/v1", userRouter);
+//app.use("/api/v1", userRouter);
 app.use("/api/v1/conversation", conversationRouter);
 
 const PORT = process.env.PORT || 5000;
