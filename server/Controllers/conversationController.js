@@ -7,47 +7,58 @@ export const createConversation = async (req, res) => {
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
         }
-        const userExists = await prisma.user.findUnique({ where: { id: userId }});
+        const userExists = await prisma.user.findUnique({ where: { id: userId } });
         if (!userExists) {
             return res.status(404).json({ error: "User not found" });
         }
-        const conversationCount = await prisma.conversation.count({
+        
+        const lastConversation = await prisma.conversation.findFirst({
             where: { userId },
+            orderBy: { title: "desc" },
         });
+
+        let nextTitleNumber = 1;
+        if (lastConversation && lastConversation.title.startsWith("Conversation")) {
+            const lastTitleNumber = parseInt(lastConversation.title.split(" ")[1], 10);
+            if (!isNaN(lastTitleNumber)) {
+                nextTitleNumber = lastTitleNumber + 1;
+            }
+        }
 
         const conversation = await prisma.conversation.create({
             data: {
-                title: `Conversation ${conversationCount + 1}`,
+                title: `Conversation ${nextTitleNumber}`,
                 userId: userId,
-            }
+            },
         });
 
         io.emit(`user_${userId}_new_conversation`, conversation);
 
         const message = await prisma.message.create({
             data: {
-                content:  "How can I help you?",
+                content: "How can I help you?",
                 conversationId: conversation.id,
                 isFromAI: true,
-            }
+            },
         });
 
         io.to(conversation.id).emit('new_message', message);
         io.emit(`user_${conversation.userId}_conversation_updated`, {
             conversationId: conversation.id,
-            lastMessage: message
+            lastMessage: message,
         });
 
         res.status(201).json({
-            conversation, 
-            initialMessage: message
-          });
+            conversation,
+            initialMessage: message,
+        });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
-        console.log("error creating conversation:", error.message);
+        console.log("Error creating conversation:", error.message);
     }
 };
+
 
 export const findConversationsByUserId = async (req, res) => {
     try {
