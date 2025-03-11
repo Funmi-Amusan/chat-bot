@@ -1,23 +1,29 @@
 version: '3'
 services:
   client:
-    build: ./client
+    container_name: client
+    image: client
+    build:
+      context: ./client
+      dockerfile: client.dockerfile
     ports:
-      - "3000:3000"
-    volumes:
-      - ./client:/usr/src/app
-      - /usr/src/app/node_modules
+      - 3000:3000
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+    restart: always
     depends_on:
       - server
-    environment:
-      - NODE_ENV=development
-
   server:
-    build: ./server
+    container_name: server
+    image: server
+    build:
+      context: ./server
+      dockerfile: server.dockerfile
     ports:
       - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://neondb_owner:npg_tHl4kPQj9pKa@ep-shy-rain-abtjgbsv-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
-    environment:
-      - NODE_ENV=development
+    restart: always
