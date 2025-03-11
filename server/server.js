@@ -5,6 +5,10 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { Server } from "socket.io";
+import swaggerUi from 'swagger-ui-express';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const swaggerFile = require('./swagger-output.json');
 
 //import userRouter from './Routes/userRoute.js'
 import conversationRouter from './Routes/conversationRoute.js'
@@ -22,6 +26,8 @@ const io = new Server(server, {
     }
   });
 
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+  
 //app.use("/api/v1", userRouter);
 app.use("/api/v1/conversation", conversationRouter);
 
