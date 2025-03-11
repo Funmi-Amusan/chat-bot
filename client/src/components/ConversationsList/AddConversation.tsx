@@ -27,11 +27,9 @@ const AddConversation = () => {
           
           const body = CreateConversationSchema.parse({ userId });
           const res = await dispatch(createConversationAction(body));
-          
           if (res) {
             await dispatch(fetchAllConversationsAction(userId));
-            console.log("first conversation created", res)
-            await dispatch(fetchAConversationAction(res?.payload?.payload?.conversation?.id));
+            await dispatch(fetchAConversationAction(res?.payload?.conversation?.id));
           }
         } catch (error) {
           if (error instanceof z.ZodError) {

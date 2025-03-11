@@ -39,9 +39,9 @@ export const createConversationAction = createAsyncThunk(
             if (response) {
                 const cacheKey = `allConversations_${body.userId}`;
                 conversationCache.clear(cacheKey);
-                return { success: true, payload: response };
+                return response;
             }
-            return { success: false, payload: response };
+            return response;
         } catch (err: unknown) {
             if (err instanceof Error && !('response' in err)) {
                 throw err;
@@ -66,8 +66,10 @@ export const fetchAConversationAction = createAsyncThunk(
 
             if (response) {
                 conversationCache.set(cacheKey, response.conversation);
+                console.log("cache response", response)
                 return { success: true, payload: response.conversation };
             }
+            console.log("normal response", response)
 
             return { success: false, payload: response };
         } catch (err: unknown) {
