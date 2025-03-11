@@ -22,6 +22,10 @@ The application follows a three-tier architecture:
 - Node.js and npm (for local development without Docker)
 - A Neon PostgreSQL database instance
 
+## Note
+
+- Since there is no authentication in the application, the user Id is hardcoded so everyone is using the same user Id.
+
 ## Getting Started
 
 ### Clone the Repository

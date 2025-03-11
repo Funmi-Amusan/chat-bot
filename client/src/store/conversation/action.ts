@@ -60,17 +60,14 @@ export const fetchAConversationAction = createAsyncThunk(
             const cachedData = conversationCache.get(cacheKey);
 
             if (cachedData) {
-                console.log(`[CACHE] Using cached data for conversation ${id}`);
                 return { success: true, payload: cachedData };
             }
             const response = await conversationService.getAConversation(id);
 
             if (response) {
                 conversationCache.set(cacheKey, response.conversation);
-                console.log("cache response", response)
                 return { success: true, payload: response.conversation };
             }
-            console.log("normal response", response)
 
             return { success: false, payload: response };
         } catch (err: unknown) {
