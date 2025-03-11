@@ -6,21 +6,22 @@ import { conversationCache } from "@/utils/cache";
 
 export const fetchAllConversationsAction = createAsyncThunk(
     "/fetchAllConversations",
-    async (userId: string, { rejectWithValue }) => {
+    async (payload: { userId: string, forceRefresh?: boolean }, { rejectWithValue }) => {
         try {
+            const { userId, forceRefresh } = payload
             const cacheKey = `allConversations_${userId}`;
-            const cachedData = conversationCache.get(cacheKey);
 
+            const cachedData = forceRefresh ? null : conversationCache.get(cacheKey);
             if (cachedData) {
                 return { success: true, payload: cachedData };
             }
+
             const response = await conversationService.getConversation(userId);
 
             if (response) {
                 conversationCache.set(cacheKey, response.conversations);
                 return { success: true, payload: response.conversations };
             }
-
             return { success: false, payload: response };
         } catch (err: unknown) {
             if (err instanceof Error && !('response' in err)) {

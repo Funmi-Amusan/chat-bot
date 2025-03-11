@@ -24,7 +24,7 @@ const ChatWindow = () => {
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide">
       {loading && <Spinner />}
-      {conversationData?.messages && conversationData?.messages?.length > 0 && (
+      {!loading && conversationData?.messages && conversationData?.messages?.length > 0 && (
           <p className="text-[#1D192B] text-center mb-4">
             {new Date(conversationData?.messages[0]?.createdAt).toLocaleString('en-US', {
               month: 'short',
@@ -35,7 +35,7 @@ const ChatWindow = () => {
             })}
           </p>
         )}
-      {conversationData?.messages && conversationData?.messages?.length > 0 ? (
+      {!loading && conversationData?.messages && conversationData?.messages?.length > 0 ? (
         conversationData.messages.map((message) => (
           <div key={message.id} className="mb-4">
             <div

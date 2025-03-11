@@ -1,9 +1,12 @@
 'use client'
 
 import { createConversationAction, fetchAConversationAction, fetchAllConversationsAction } from '@/store/conversation/action';
-import { useAppDispatch, useAppSelector } from '@/utils/hooks';
+import { Conversation } from '@/store/conversation/types';
+import { useAppDispatch } from '@/utils/hooks';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { z } from 'zod'; 
+
+
 const CreateConversationSchema = z.object({
   userId: z.string().uuid(),
 });
@@ -11,24 +14,25 @@ const CreateConversationSchema = z.object({
 const AddConversation = () => {
    const dispatch = useAppDispatch();
    const userId = "6d25380c-3ae8-4023-af50-2dfce1fb8fa4"
-      const { conversations } = useAppSelector((state) => state.conversationReducer);
 
       const createAConversation = async () => {
         try {
-          await dispatch(fetchAllConversationsAction(userId));
-          const existingConversation = conversations?.find(
-            (conversation) => conversation.messageCount === 0
-          );
-        
+          const response = await dispatch(fetchAllConversationsAction({ userId, forceRefresh: true }));
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updatedConversations  = (response as any)?.payload?.payload;
+
+    const existingConversation = updatedConversations?.find(
+      (updatedConversation: Conversation) => updatedConversation.messageCount === 1
+    );
           if (existingConversation) {
             await dispatch(fetchAConversationAction(existingConversation.id));
             return;
           }
-          
           const body = CreateConversationSchema.parse({ userId });
           const res = await dispatch(createConversationAction(body));
           if (res) {
-            await dispatch(fetchAllConversationsAction(userId));
+            await dispatch(fetchAllConversationsAction({ userId, forceRefresh: true }));
             await dispatch(fetchAConversationAction(res?.payload?.conversation?.id));
           }
         } catch (error) {
@@ -38,12 +42,9 @@ const AddConversation = () => {
             console.error("An unexpected error occurred:", error);
           }
         }
-      };
-    const createNewConversation = () => {
-      createAConversation()
-    }
+      };   
   return (
-    <div onClick={() => createNewConversation()} className=' p-4 w-full rounded-2xl h-14 flex gap-3 items-center justify-center bg-[#EADDFF] shadow-lg text-[#21005D]'>
+    <div onClick={() => createAConversation()} className=' p-4 w-full rounded-2xl h-14 flex gap-3 items-center justify-center bg-[#EADDFF] shadow-lg text-[#21005D]'>
        <AddCircleOutlineOutlinedIcon />
         <p className='font-semibold'> Conversations </p>
     </div>

@@ -31,7 +31,7 @@ const ConversationList = () => {
     try {
       const validUserId: ValidUserId = UserIdSchema.parse(userId)
       
-      await dispatch(fetchAllConversationsAction(validUserId))
+      await dispatch(fetchAllConversationsAction({userId: validUserId, forceRefresh: false}))
     } catch (error) {
       if (error instanceof z.ZodError) {
         setValidationError("Invalid user ID format")

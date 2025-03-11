@@ -37,7 +37,7 @@ const ConversationItem = ({ title, id }: { title: string, id: string }) => {
     setIsDeleting(true);
     const res = await dispatch(DeleteAConversationAction(id));
     if (res) {
-      await dispatch(fetchAllConversationsAction(userId));
+      await dispatch(fetchAllConversationsAction({userId, forceRefresh: false}));
       setIsDeleting(false);
       handleCloseModal()
     }
