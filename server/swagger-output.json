@@ -23,7 +23,7 @@
     "application/json"
   ],
   "paths": {
-    "/create": {
+    "/conversation/create": {
       "post": {
         
         "summary": "Create a new conversation",
@@ -36,7 +36,7 @@
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "example": "6d25380c-3ae8-4023-af50-2dfce1fb8fa4"
                 }
               }
             }
@@ -58,7 +58,7 @@
         }
       }
     },
-    "/all/{userId}": {
+    "/conversation/all/{userId}": {
       "get": {
         "summary": "Get all conversations for a user",
         "description": "Fetch all conversations associated with the given user ID.",
@@ -86,7 +86,7 @@
         }
       }
     },
-    "/{id}": {
+    "/conversation/{id}": {
       "delete": {
         "summary": "Delete a specific conversation",
         "description": "Delete a conversation by its unique ID.",
@@ -140,7 +140,7 @@
         }
       }
     },
-    "/send": {
+    "/conversation/send": {
       "post": {
         "summary": "Send a message to a conversation",
         "description": "Send a new message to a specified conversation.",
