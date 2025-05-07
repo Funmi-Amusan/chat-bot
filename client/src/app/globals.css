@@ -2,11 +2,14 @@
 
 :root {
   --main-header-height: 68px;
+  --font-bricolage: "Bricolage Grotesque", sans-serif;
+  --color-body: oklch(0.967 0.001 286.375);
 }
 
 @layer components {
-  body {
-    background-color: #FEF7FF;
+
+  a {
+    @apply text-zinc-500 hover:text-zinc-600 underline;
   }
   
   .scrollbar-hide {
@@ -16,6 +19,18 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .font-bricolage {
+    font-family: var(--font-bricolage);
+  }
+
+  .text-sm {
+    @apply text-xs text-zinc-500 leading-normal tracking-tight
+  }
+
+  .text-md {
+    @apply text-base text-zinc-500 leading-normal tracking-tight
   }
 
 }

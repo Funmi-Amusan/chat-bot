@@ -10,7 +10,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const swaggerFile = require('./swagger-output.json');
 
-//import userRouter from './Routes/userRoute.js'
+import userRouter from './Routes/userRoute.js'
 import conversationRouter from './Routes/conversationRoute.js'
 dotenv.config();
 
@@ -28,10 +28,10 @@ const io = new Server(server, {
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
   
-//app.use("/api/v1", userRouter);
+app.use("/api/v1", userRouter);
 app.use("/api/v1/conversation", conversationRouter);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 io.on('connection', (socket) => {
     
