@@ -7,7 +7,7 @@ import ChatBotAvatar from '@/assets/ChatBotAvatar.png';
 import UserAvatar from '@/assets/UserAvatar.png';
 import Image from 'next/image';
 import ActiveTypingBubble from './ActiveTypingBubble';
-import Spinner from '../Spinner';
+import Spinner from '../ui/Spinner';
 
 const ChatWindow = () => {
   const { conversationData, isAITyping, loading } = useAppSelector((state) => state.conversationReducer);

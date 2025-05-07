@@ -8,6 +8,10 @@
 
 @layer components {
 
+  body {
+    @apply bg-zinc-100 text-zinc-900;
+  }
+
   a {
     @apply text-zinc-500 hover:text-zinc-600 underline;
   }
@@ -33,4 +37,17 @@
     @apply text-base text-zinc-500 leading-normal tracking-tight
   }
 
+  .fade-in {
+    animation: fade-in 3s ease-in-out;
+  }
+
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 100;
+  }
 }

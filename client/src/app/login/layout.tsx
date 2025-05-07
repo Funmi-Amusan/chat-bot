@@ -22,6 +22,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  carousel,
+  loginForm,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -30,7 +32,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          <main>{children}</main>
+          {/* <main>{children}</main> */}
+          <div className="grid grid-cols-2">
+            {loginForm}
+            {carousel}
+          </div>
       </body>
     </html>
   );
