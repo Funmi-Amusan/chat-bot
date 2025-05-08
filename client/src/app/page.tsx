@@ -9,7 +9,7 @@ import { ProductShowcase } from "@/components/home/ProductShowcase";
 
 export default function Home() {
   return (
-    <div className="flex flex-col h-[calc(100vh-var(--main-header-height))]">
+    <div className="flex flex-col bg-black h-[calc(100vh-var(--main-header-height))]">
       <Banner />
       <Hero />
       <LogoTicker />

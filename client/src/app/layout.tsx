@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${ubuntu.variable} bg-body antialiased`}
+        className={`${inter.variable} ${ubuntu.variable} antialiased`}
       >
       <StoreProvider>
         {children}

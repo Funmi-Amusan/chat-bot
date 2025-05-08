@@ -38,6 +38,13 @@
     @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-30 tracking-tight font-semibold text-white;
   }
 
+  h2 {
+    @apply text-4xl md:text-[54px] lg:text-[62px] py-12 tracking-tight font-semibold text-white;
+  }
+
+  h5 {
+    @apply text-lg font-bold text-white;
+  }
   a {
     @apply no-underline
   }

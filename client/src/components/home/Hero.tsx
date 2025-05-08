@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export const Hero = () => {
   return (
-    <section className="bg-black "
+    <section className=" "
     style={{ 
       backgroundImage: `url(${ImageAssets.landingBGHero.src})`, 
       backgroundSize: 'cover',  
