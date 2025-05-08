@@ -1,7 +1,7 @@
 
 import { signIn } from "@/lib/auth";
-import BaseButton from "./ui/BaseButton";
-import GoogleLogo from '@/assets/Google.png'
+import BaseButton from "../ui/BaseButton";
+import { ImageAssets } from "@/assets/images";
 
 const GoogleSignIn = () => {
   return (
@@ -12,7 +12,7 @@ const GoogleSignIn = () => {
         await signIn("google");
       }}
     >
-     <BaseButton text='Login to Google' type="submit" imgSrc={GoogleLogo.src} className='w-full bg-white border-gray-300' />
+     <BaseButton text='Login to Google' type="submit" imgSrc={ImageAssets.googleLogo.src} className='w-full bg-white border-gray-300' />
     </form>
   );
 };

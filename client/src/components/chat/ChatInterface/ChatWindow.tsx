@@ -3,11 +3,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useAppSelector } from '@/utils/hooks';
 import MessageBubble from './MessageBubble';
-import ChatBotAvatar from '@/assets/ChatBotAvatar.png';
-import UserAvatar from '@/assets/UserAvatar.png';
 import Image from 'next/image';
 import ActiveTypingBubble from './ActiveTypingBubble';
-import Spinner from '../ui/Spinner';
+import Spinner from '@/components/ui/Spinner';
+import { ImageAssets } from '@/assets/images';
 
 const ChatWindow = () => {
   const { conversationData, isAITyping, loading } = useAppSelector((state) => state.conversationReducer);
@@ -45,7 +44,7 @@ const ChatWindow = () => {
             >
               <div className="flex-shrink-0 h-12 w-12">
                 <Image
-                  src={message?.isFromAI ? ChatBotAvatar : UserAvatar}
+                  src={message?.isFromAI ? ImageAssets.ChatBotAvatar : ImageAssets.userAvatar}
                   alt={message?.isFromAI ? 'Chat Bot Avatar' : 'User Avatar'}
                   width={48}
                   height={48}

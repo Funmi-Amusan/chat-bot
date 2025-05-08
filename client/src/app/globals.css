@@ -4,6 +4,7 @@
   --main-header-height: 68px;
   --font-inter: "Inter", sans-serif;
   --color-body: oklch(0.967 0.001 286.375);
+  --color-gray: '#7A7A7A'
 }
 
 @layer components {
@@ -29,6 +30,10 @@
     font-family: var(--font-inter);
   }
 
+  .text-gray {
+   color: '#7A7A7A';
+  }
+
   h1 {
     @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-30 tracking-tight font-semibold text-white;
   }
@@ -50,7 +55,11 @@
   }
 
   .text-body-tag {
-    @apply text-sm text-black font-medium leading-normal tracking-tight
+    @apply text-sm font-normal leading-normal tracking-tight
+  }
+
+  .text-body-gray {
+    @apply text-lg text-[#7a7a7a] font-medium leading-normal tracking-tight
   }
 
   .rainbow-gradient {
@@ -80,6 +89,7 @@
     @apply py-2 px-4 border border-white/20 rounded-xl w-fit text-sm;
   }
 
+  
   .fade-in {
     animation: fade-in 3s ease-in-out;
   }

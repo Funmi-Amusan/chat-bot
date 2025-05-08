@@ -4,16 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import FadeInGroup from '@/components/ui/BaseFadeInGroup';
 import BaseText from '@/components/ui/BaseText';
 import BaseCodeEditor from '@/components/ui/BaseCodeEditor';
-import Avatar from '@/assets/UserAvatar.png';
-import Report from '@/assets/doc.svg';
-import Calendar from '@/assets/calendar.svg';
-import Graph from '@/assets/graph.svg';
+import { ImageAssets } from '@/assets/images';
 
 const content = [
   { text: 'Identify code optimizations and refactor', editor: true },
-  { text: 'Generate reports efficiently', imgSrc: Report.src },
-  { text: 'Stay on top of your schedule', imgSrc: Calendar.src },
-  { text: 'Visualize data insights', imgSrc: Graph.src },
+  { text: 'Generate reports efficiently', imgSrc: ImageAssets.doc.src },
+  { text: 'Stay on top of your schedule', imgSrc: ImageAssets.calendar.src },
+  { text: 'Visualize data insights', imgSrc: ImageAssets.graph.src },
 ];
 
 export default function AuthCarousel() {
@@ -42,7 +39,7 @@ export default function AuthCarousel() {
             <FadeInGroup stagger={1.5} duration={0.8}>
               <BaseText
                 text={content[index].text}
-                imgSrc={Avatar.src}
+                imgSrc={ImageAssets.ChatBotAvatar.src}
                 className="font-bricolage bg-zinc-200"
               />
               <div className="relative">

@@ -1,7 +1,7 @@
 "use client";
 
-import BaseButton from "./ui/BaseButton";
 import { signOut } from "next-auth/react";
+import BaseButton from "../ui/BaseButton";
 
 const SignOut = () => {
   const handleSignOut = async () => {

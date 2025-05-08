@@ -21,6 +21,7 @@
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "morgan": "^1.10.0",
+    "motion": "^12.10.4",
     "nodemailer": "^7.0.2",
     "socket.io": "^4.8.1",
     "swagger-autogen": "^2.23.7",
