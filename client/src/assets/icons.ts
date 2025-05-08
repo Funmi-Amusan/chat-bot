@@ -8,6 +8,7 @@ import menuWhite from './icons/menu-w.png';
 import minus from './icons/minus.svg';
 import pinterest from './icons/pinterest.svg';
 import plus from './icons/plus.svg';
+import plusWhite from './icons/plus-w.svg';
 import tiktok from './icons/tiktok.svg';
 import XSocial from './icons/x-social.svg';
 import X from './icons/x.svg';
@@ -24,6 +25,7 @@ export const IconAssets = {
     minus,
     pinterest,
     plus,
+    plusWhite,
     tiktok,
     XSocial,
     X,

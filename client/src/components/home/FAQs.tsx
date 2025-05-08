@@ -1,3 +1,5 @@
+import Accordion from "../ui/Accordion";
+
 const items = [
   {
     question: "What payment methods do you accept?",
@@ -22,5 +24,17 @@ const items = [
 ];
 
 export const FAQs = () => {
-  return null;
+  return (
+    <section className="bg-gradient-to-t from-black from-20%  to-[#5D2CA8] to-90% flex-center-col text-center py-18 ">
+      <h2>Frequently asked questions</h2>
+      {
+        items.map((faq)=> (
+<div key={faq.question} className="flex flex-col px-2 w-full">
+      <Accordion question={faq.question} answer={faq.answer}/>
+</div>
+        ))
+        
+      }
+    </section>
+  );
 };
