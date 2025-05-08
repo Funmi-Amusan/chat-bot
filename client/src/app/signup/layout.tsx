@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   carousel,
-  loginForm,
+  signupForm,
 }: Readonly<{
   children: React.ReactNode
   carousel: React.ReactNode;
@@ -35,7 +35,7 @@ export default function RootLayout({
       >
           {/* <main>{children}</main> */}
           <div className="grid grid-cols-2">
-            {loginForm}
+            {signupForm}
             {carousel}
           </div>
       </body>

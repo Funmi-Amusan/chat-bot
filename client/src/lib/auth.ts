@@ -1,25 +1,59 @@
-
+import { loginURL } from "@/utils/end-point"
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
-export const { auth, handlers, signIn } = NextAuth({ providers: [GitHub, Google, Credentials({
-    credentials: {
-        email: {},
-        password: {}
-    },
-    authorize: async (credentials) => {
-        const email = 'funmi@test.com'
-        const password = '123456'
-        if (credentials?.email === email && credentials?.password === password) {
-            return {
-                id: '1',
-                email: email,
-                name: 'Funmi',
-                image: 'https://avatars.githubusercontent.com/u/1?v=4'  
+
+export const { auth, handlers, signIn } = NextAuth({ 
+    providers: [
+        GitHub, 
+        Google, 
+        Credentials({
+          credentials: {
+            email: { label: "Email", type: "email" },
+            password: { label: "Password", type: "password" }
+          },
+          async authorize(credentials) {
+            try {
+              const response = await fetch(loginURL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+              });
+              let data;
+              try {
+                data = await response.json();
+              } catch (parseError) {
+                console.error('Error parsing JSON:', parseError);
+                data = {}; 
+              }
+              
+              if (!response.ok) {
+                throw new Error(data.message || `Failed with status: ${response.status}`);
+              }
+              
+              if (data.userResponse) {
+                return {
+                  id: data.userResponse.id,
+                  name: data.userResponse.name,
+                  email: data.userResponse.email,
+                };
+              }
+              
+              console.error('Invalid response structure:', data);
+              return null;
+            } catch (error) {
+              console.error("Authentication error:", error.message);
+              throw error;
             }
-        } else {
-            throw new Error('Invalid credentials')
-        }
-    }
-})] })
+          }
+        })
+      ],
+//   pages: {
+//     signIn: '/login',
+//     // Add a custom registration page if you have one
+//     newUser: '/register'
+//   }
+})

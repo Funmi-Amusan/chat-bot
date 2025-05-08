@@ -5,17 +5,37 @@ import BaseButton from '@/components/ui/BaseButton'
 import BaseInput from '@/components/ui/BaseInput'
 import { GithubSignIn } from '@/components/github-sign-in'
 import { GoogleSignIn } from '@/components/google-sign-in'
-import { auth, signIn } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { executeAction } from '@/lib/executeAction'
+import { registerUserURL } from '@/utils/end-point'
 
 
-const SignUpForm = async () => {
-
-    const session = await auth();
-    if (session) {
-      redirect("/chat");
-    }
+const SignUpForm = () => {
+   
+    const handleRegistration = async (formData: FormData) => {
+        "use server";
+        const response = await fetch(registerUserURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+            body: JSON.stringify({
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password')
+            })
+        });
+        
+        const data = await response.json();
+        console.log('data', data)
+        
+        if (response.ok) {
+          redirect('/login?registered=true');
+        } else {
+            console.log("_______")
+          // Handle error
+        //   setError(data.error);
+        }
+      }
   
   return (
         <section className=' w-full flex flex-col items-center p-8 h-screen'>
@@ -30,22 +50,16 @@ const SignUpForm = async () => {
                <GithubSignIn />
                <GoogleSignIn />
                 <p className='text-md'>OR</p>
-                {
-
-                }
                 <form action={async (formData: FormData) => {
                     "use server"
-                    await executeAction({
-                        actionFn: async () => {
-                          await signIn("credentials", formData);
-                        }
-                      })
+                    await handleRegistration(formData);
                 }}>
-                <BaseInput placeholder='Email' name='email' id='email' className='mb-2'/>
-                <BaseInput placeholder='Password' name='password' id='password' security='true' className='mb-2' />
-                <BaseButton text='Continue With Email' variant='dark' type='submit' />
-                </form>
-                <p className='text-center text-sm'>Don&apos;t have an account?  <a href="/signup">Sign Up</a>.</p>
+                         <BaseInput placeholder='Name' name='name' id='name' className='mb-2'/>
+                    <BaseInput placeholder='Email' name='email'  id='email' className='mb-2'/>
+                    <BaseInput placeholder='Password' name='password' id='password' className='mb-2' />
+                    <BaseButton text='Continue With Email' variant='dark' type='submit' />
+                    </form>
+                    <p className='text-center text-sm'>  Already have an account?{' '} <a href="/login">Sign In</a>.</p>
                 <p className='text-center text-sm'>By continuing, you agree to Anthropic’s <a href="">Consumer Terms </a>and <a href=""> Usage Policy</a>, and acknowledge our <a href="">Privacy Policy</a>.</p>
             </div>
 

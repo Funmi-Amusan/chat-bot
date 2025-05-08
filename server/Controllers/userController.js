@@ -4,17 +4,11 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import transporter from '../config/email.js';
 
-// const prisma = new PrismaClient();
-
-// getByUserId
-// updateUser
-// deleteUser
-// getAllUsers
-
-
 
 export const createUser = async (req, res) => {
     try {
+
+        console.log('got to create user');
         const { name, email, password } = req.body;
         const existingUser = await prisma.user.findUnique({
             where: {
@@ -47,7 +41,7 @@ export const createUser = async (req, res) => {
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
-
+console.log('user created successfully');
         res.status(201).json({ message: "User created successfully. Please log in." });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while creating the user' });
@@ -57,6 +51,7 @@ export const createUser = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
+        console.log('got to login');
         const { email, password } = req.body;
         const user = await prisma.user.findUnique({
             where: {
@@ -64,6 +59,7 @@ export const login = async (req, res) => {
             }
         });
         if (!user) {
+            console.log('user not found');
             return res.status(404).json({ message: "User not found" });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -83,6 +79,7 @@ export const login = async (req, res) => {
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
+        console.log('successfully logged in');
         res.status(200).json({
             userResponse,
             conversations
