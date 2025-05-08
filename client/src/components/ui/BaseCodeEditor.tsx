@@ -24,23 +24,23 @@ const BaseCodeEditor = ({className}: {className?: string}) => {
             <span className="text-cyan-400">max-width</span>: <span className="text-green-300">300px</span>;
           </p>
           <p className="ml-6 flex items-center">
-            <span className="text-cyan-400">background-color</span>: <div className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
+            <span className="text-cyan-400">background-color</span>: <span className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
             <span>#1d1e22</span>;
           </p>
           <p className="ml-6 flex items-center">
-            <span className="text-cyan-400">background-color</span>: <div className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
+            <span className="text-cyan-400">background-color</span>: <span className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
             <span>#1d1e22</span>;
           </p>
           <p className="ml-6 flex items-center">
-            <span className="text-cyan-400">background-color</span>: <div className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
+            <span className="text-cyan-400">background-color</span>: <span className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
             <span>#1d1e22</span>;
           </p>
           <p className="ml-6 flex items-center">
-            <span className="text-cyan-400">background-color</span>: <div className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
+            <span className="text-cyan-400">background-color</span>: <span className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
             <span>#1d1e22</span>;
           </p>
           <p className="ml-6 flex items-center">
-            <span className="text-cyan-400">background-color</span>: <div className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
+            <span className="text-cyan-400">background-color</span>: <span className="h-2 w-2 border border-white inline-block bg-gray-900 mr-2" />
             <span>#1d1e22</span>;
           </p>
           <p className="ml-6">

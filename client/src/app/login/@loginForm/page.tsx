@@ -1,12 +1,24 @@
-'use client'
+
 import React from 'react'
 import Image from 'next/image'
 import Logo from '@/assets/Logo.png'
 import BaseButton from '@/components/ui/BaseButton'
 import BaseInput from '@/components/ui/BaseInput'
-import GoogleLogo from '@/assets/Google.png'
+import { GithubSignIn } from '@/components/github-sign-in'
+import { GoogleSignIn } from '@/components/google-sign-in'
+import { auth, signIn } from '@/lib/auth'
+import { redirect } from 'next/navigation'
+import { executeAction } from '@/lib/executeAction'
 
-export default function Page() {
+
+const LoginForm = async () => {
+
+    const session = await auth();
+    if (session) {
+      redirect("/chat");
+    }
+  
+
   return (
         <section className=' w-full flex flex-col items-center p-8 h-screen'>
             <div className='flex items-center justify-center mb-10 gap-2'>
@@ -17,11 +29,21 @@ export default function Page() {
             <h2 className='text-5xl font-extralight font-bricolage text-center'>Your Ideas, <br /> <span>Elevated</span> </h2>
             <p>Privacy-first AI that helps you create in confidence.</p>
             <div className=' flex flex-col justify-center items-center border border-zinc-200 gap-2 shadow-2xl mt-6 p-8 rounded-4xl '>
-               <BaseButton text='Login to Google' imgSrc={GoogleLogo.src} className='w-full bg-white border-gray-300' onClick={() => {console.log('first')}}/>
+               <GithubSignIn />
+               <GoogleSignIn />
                 <p className='text-md'>OR</p>
-                <BaseInput placeholder='Email' type='text' id='email' className='mb-2'/>
-                <BaseInput placeholder='Password' type='password' id='password' className='mb-2' />
-                <BaseButton text='Continue With Email' variant='dark'  onClick={() => {console.log('first')}}/>
+                <form action={async (formData: FormData) => {
+                    "use server"
+                    await executeAction({
+                        actionFn: async () => {
+                          await signIn("credentials", formData);
+                        }
+                      })
+                }}>
+                <BaseInput placeholder='Email' name='email' type='text' id='email' className='mb-2'/>
+                <BaseInput placeholder='Password' name='password' type='password' id='password' className='mb-2' />
+                <BaseButton text='Continue With Email' variant='dark' type='submit' />
+                </form>
                 <p className='text-center text-sm'>By continuing, you agree to Anthropic’s <a href="">Consumer Terms </a>and <a href=""> Usage Policy</a>, and acknowledge our <a href="">Privacy Policy</a>.</p>
             </div>
 
@@ -31,3 +53,4 @@ export default function Page() {
   )
 }
 
+export default LoginForm;

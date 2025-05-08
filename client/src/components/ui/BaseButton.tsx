@@ -4,12 +4,13 @@ import React from 'react';
 type BaseButtonProps = {
   text: string;
   imgSrc?: string;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
   variant?: "default" | "dark" | "primary";
+  type?: "button" | "submit";
 };
 
-const BaseButton = ({ text, onClick, imgSrc, className, variant = "default" }: BaseButtonProps) => {
+const BaseButton = ({ text, onClick, imgSrc, className, variant = "default", type = 'button' }: BaseButtonProps) => {
   
   const buttonStyles = {
     default: "bg-white text-gray-700 hover:border hover:bg-gray-100",
@@ -19,6 +20,7 @@ const BaseButton = ({ text, onClick, imgSrc, className, variant = "default" }: B
 
   return (
     <button 
+    type={type}
       onClick={onClick} 
       className={`flex justify-center items-center gap-3 px-6 py-3 w-full text-center font-bold text-sm uppercase rounded-lg transition-transform duration-300 hover:scale-105 ${buttonStyles[variant]} ${className}`}
     >

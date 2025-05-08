@@ -4,10 +4,11 @@ type BaseInputProps = {
   placeholder: string;
   type: string;
   id: string;
+  name: string;
   className?: string;
 };
 
-const BaseInput = ({ placeholder, type, id, className }: BaseInputProps) => {
+const BaseInput = ({ placeholder, type, id, name, className }: BaseInputProps) => {
   return (
     <div className="w-full max-w-[400px]  ">
       <input 
@@ -15,6 +16,7 @@ const BaseInput = ({ placeholder, type, id, className }: BaseInputProps) => {
         placeholder={placeholder} 
         type={type} 
         id={id}
+        name={name}
       />
     </div>
   );

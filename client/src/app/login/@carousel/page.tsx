@@ -29,7 +29,7 @@ export default function Page() {
 
   return (
     <section className="p-4">
-      <div className="bg-zinc-200 rounded-3xl h-full flex flex-col gap-12 items-center justify-center">
+      <div className="bg-zinc-200/60 rounded-3xl h-full flex flex-col gap-12 items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
@@ -43,7 +43,7 @@ export default function Page() {
               <BaseText
                 text={content[index].text}
                 imgSrc={Avatar.src}
-                className="font-bricolage bg-zinc-300"
+                className="font-bricolage bg-zinc-200"
               />
               <div className="relative">
                 {content[index].editor ? (
