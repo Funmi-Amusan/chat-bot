@@ -47,9 +47,6 @@ const SignUpForm = () => {
             <h2 className='text-5xl font-extralight font-bricolage text-center'>Your Ideas, <br /> <span>Elevated</span> </h2>
             <p>Privacy-first AI that helps you create in confidence.</p>
             <div className=' flex flex-col justify-center items-center border border-zinc-200 gap-2 shadow-2xl mt-6 p-8 rounded-4xl '>
-               <GithubSignIn />
-               <GoogleSignIn />
-                <p className='text-md'>OR</p>
                 <form action={async (formData: FormData) => {
                     "use server"
                     await handleRegistration(formData);
