@@ -2,7 +2,8 @@ import Image from 'next/image'
 import Logo from '@/assets/Logo.png'
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { SignOut } from '../sign-out';
+import { SignOut } from '../auth/sign-out';
+
 
 const MainHeader  = async () => {
   const session = await auth();

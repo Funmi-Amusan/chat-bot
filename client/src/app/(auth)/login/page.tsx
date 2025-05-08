@@ -3,11 +3,11 @@ import Image from 'next/image'
 import Logo from '@/assets/Logo.png'
 import BaseButton from '@/components/ui/BaseButton'
 import BaseInput from '@/components/ui/BaseInput'
-import { GithubSignIn } from '@/components/github-sign-in'
-import { GoogleSignIn } from '@/components/google-sign-in'
 import { auth, signIn } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { executeAction } from '@/lib/executeAction'
+import { GithubSignIn } from '@/components/auth/github-sign-in'
+import { GoogleSignIn } from '@/components/auth/google-sign-in'
 
 
 const SignUpForm = async () => {

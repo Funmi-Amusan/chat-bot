@@ -2,7 +2,7 @@
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import { Box, Button, SwipeableDrawer } from '@mui/material';
 import { useState } from 'react';
-import ConversationList from '../ConversationsList/ConversationList';
+import ConversationList from '../chat/ConversationsList/ConversationList';
 
 const MobileMenu = () => {
 

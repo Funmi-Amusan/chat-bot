@@ -1,6 +1,7 @@
-import ChatHeader from "@/components/ChatInterface/ChatHeader";
-import ChatInterface from "@/components/ChatInterface/ChatInterface";
-import ConversationList from "@/components/ConversationsList/ConversationList";
+
+import ChatHeader from "@/components/chat/ChatInterface/ChatHeader";
+import ChatInterface from "@/components/chat/ChatInterface/ChatInterface";
+import ConversationList from "@/components/chat/ConversationsList/ConversationList";
 
 export default function Home() {
   return (

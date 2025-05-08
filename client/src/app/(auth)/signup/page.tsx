@@ -3,8 +3,6 @@ import Image from 'next/image'
 import Logo from '@/assets/Logo.png'
 import BaseButton from '@/components/ui/BaseButton'
 import BaseInput from '@/components/ui/BaseInput'
-import { GithubSignIn } from '@/components/github-sign-in'
-import { GoogleSignIn } from '@/components/google-sign-in'
 import { redirect } from 'next/navigation'
 import { registerUserURL } from '@/utils/end-point'
 
@@ -31,9 +29,7 @@ const SignUpForm = () => {
         if (response.ok) {
           redirect('/login?registered=true');
         } else {
-            console.log("_______")
-          // Handle error
-        //   setError(data.error);
+        // add error toast
         }
       }
   
