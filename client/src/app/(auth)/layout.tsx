@@ -1,6 +1,8 @@
+// app/(auth)/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./../globals.css";
+import AuthCarousel from "@/components/AuthCarousel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,31 +15,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chat Bot",
+  title: "Chat Bot - Authentication",
   description: "Chat with a bot cos why not",
   icons: {
     icon: '/icon.png', 
   },
 };
 
-export default function RootLayout({
-  carousel,
-  signupForm,
+export default function AuthLayout({
+  children,
 }: Readonly<{
   children: React.ReactNode
-  carousel: React.ReactNode;
-  loginForm: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          {/* <main>{children}</main> */}
-          <div className="grid grid-cols-2">
-            {signupForm}
-            {carousel}
+        <div className="grid grid-cols-2">
+          <div className="flex items-center justify-center">
+            {children}
           </div>
+          <AuthCarousel />
+        </div>
       </body>
     </html>
   );

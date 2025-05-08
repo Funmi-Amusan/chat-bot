@@ -16,7 +16,7 @@ const content = [
   { text: 'Visualize data insights', imgSrc: Graph.src },
 ];
 
-export default function Page() {
+export default function AuthCarousel() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
