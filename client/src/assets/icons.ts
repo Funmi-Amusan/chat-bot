@@ -1,4 +1,5 @@
-import arrowBlack from './icons/arrow-w.svg';
+import arrowWhite from './icons/arrow-w.svg';
+import arrowBlack from './icons/arrow-b.svg';
 import ecosystem from './icons/ecosystem.svg';
 import instagram from './icons/insta.svg';
 import linkedin from './icons/linkedin.svg';
@@ -14,6 +15,7 @@ import youtube from './icons/youtube.svg';
 
 export const IconAssets = {
     arrowBlack,
+    arrowWhite,
     ecosystem,
     instagram,
     linkedin,

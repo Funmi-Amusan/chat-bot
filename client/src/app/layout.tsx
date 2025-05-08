@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Bricolage_Grotesque } from "next/font/google";
+import { Inter, Ubuntu } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./storeProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const ubuntu = Ubuntu({
+  variable: "--font-ubuntu",
   subsets: ["latin"],
-});
-
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
-  subsets: ["latin"],
+  weight: "700",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} bg-body antialiased`}
+        className={`${inter.variable} ${ubuntu.variable} bg-body antialiased`}
       >
       <StoreProvider>
         {children}

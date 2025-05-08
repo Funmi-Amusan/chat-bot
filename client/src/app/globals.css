@@ -2,7 +2,7 @@
 
 :root {
   --main-header-height: 68px;
-  --font-bricolage: "Bricolage Grotesque", sans-serif;
+  --font-inter: "Inter", sans-serif;
   --color-body: oklch(0.967 0.001 286.375);
 }
 
@@ -25,8 +25,16 @@
     display: none;
   }
 
-  .font-bricolage {
-    font-family: var(--font-bricolage);
+  .font-inter {
+    font-family: var(--font-inter);
+  }
+
+  h1 {
+    @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-30 tracking-tight font-semibold text-white;
+  }
+
+  a {
+    @apply no-underline
   }
 
   .text-sm {
@@ -35,6 +43,10 @@
 
   .text-md {
     @apply text-base text-zinc-500 leading-normal tracking-tight
+  }
+
+  .text-body-lg {
+    @apply text-[22px] text-white font-medium leading-8 tracking-tighter
   }
 
   .text-body-tag {
@@ -58,6 +70,14 @@
   }
   .flex-between {
     @apply flex items-center justify-between
+  }
+
+  .btn {
+    @apply py-2 px-4 bg-white font-semibold text-black rounded-lg w-fit text-sm;
+  }
+
+  .tag {
+    @apply py-2 px-4 border border-white/20 rounded-xl w-fit text-sm;
   }
 
   .fade-in {
