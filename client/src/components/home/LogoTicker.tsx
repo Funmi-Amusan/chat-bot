@@ -1,19 +1,11 @@
 "use client";
 
-import { ImageAssets } from "@/assets/images";
+import { comapnyLogos } from "@/utils/data";
 import { motion } from "framer-motion"
 
-const images = [
-  { src: ImageAssets.acme.src, alt: "Acme Logo" },
-  { src: ImageAssets.quantum.src, alt: "Quantum Logo" },
-  { src: ImageAssets.echo.src, alt: "Echo Logo" },
-  { src: ImageAssets.celestial.src, alt: "Celestial Logo" },
-  { src: ImageAssets.pulse.src, alt: "Pulse Logo" },
-  { src: ImageAssets.apex.src, alt: "Apex Logo" },
-];
 
 export const LogoTicker = () => {
-  const allImages = [...images, ...images];
+  const allImages = [...comapnyLogos, ...comapnyLogos];
   
   return (
     <section className="bg-black py-12 text-center flex flex-col items-center gap-9">

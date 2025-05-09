@@ -5,8 +5,8 @@ import Image from "next/image";
 
 export const CallToAction = () => {
   return (
-    <section className="bg-black flex-center-col py-20 px-8">
-      <div className=" max-w-[540px] flex-center-col relative">
+    <section className="bg-black flex-center-col py-20 px-8 relative">
+      <div className=" max-w-[540px] flex-center-col ">
 
       <h2>Get instant access</h2>
       <p className="text-white/50 text-body-gray font-inter text-center">

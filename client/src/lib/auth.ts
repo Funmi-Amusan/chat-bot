@@ -4,7 +4,7 @@ import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 
-export const { auth, handlers, signIn } = NextAuth({ 
+export const { auth, handlers, signIn, signOut } = NextAuth({ 
     providers: [
         GitHub, 
         Google, 
@@ -33,7 +33,6 @@ export const { auth, handlers, signIn } = NextAuth({
               if (!response.ok) {
                 throw new Error(data.message || `Failed with status: ${response.status}`);
               }
-              
               if (data.userResponse) {
                 return {
                   id: data.userResponse.id,
@@ -51,9 +50,8 @@ export const { auth, handlers, signIn } = NextAuth({
           }
         })
       ],
-//   pages: {
-//     signIn: '/login',
-//     // Add a custom registration page if you have one
-//     newUser: '/register'
-//   }
+    pages: {
+      signIn: '/login',
+      newUser: '/signup',
+    }
 })

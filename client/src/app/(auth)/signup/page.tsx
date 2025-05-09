@@ -1,10 +1,10 @@
 import React from 'react'
 import Image from 'next/image'
-import Logo from '@/assets/Logo.png'
 import BaseButton from '@/components/ui/BaseButton'
 import BaseInput from '@/components/ui/BaseInput'
 import { redirect } from 'next/navigation'
 import { registerUserURL } from '@/utils/end-point'
+import { ImageAssets } from '@/assets/images'
 
 
 const SignUpForm = () => {
@@ -36,7 +36,7 @@ const SignUpForm = () => {
   return (
         <section className=' w-full flex flex-col items-center p-8 h-screen'>
             <div className='flex items-center justify-center mb-10 gap-2'>
-        <Image src={Logo} alt="Logo" className='w-8 h-8 object-cover' width={50} height={50}/>
+        <Image src={ImageAssets.Logo.src} alt="Logo" className='w-8 h-8 object-cover' width={50} height={50}/>
         <h1 className='text-3xl font-semibold'>Chat Bot</h1>
             </div>
             <div className='flex flex-col items-center gap-4 w-4/6'>

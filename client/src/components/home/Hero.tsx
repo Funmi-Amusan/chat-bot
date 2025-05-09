@@ -1,7 +1,10 @@
+"use client";
+
 import { IconAssets } from "@/assets/icons";
 import { Navbar } from "./Navbar";
 import { ImageAssets } from "@/assets/images";
 import Image from "next/image";
+import {motion} from "framer-motion";
 
 export const Hero = () => {
   return (
@@ -20,14 +23,23 @@ export const Hero = () => {
            <img src={IconAssets.arrowWhite.src} alt="mobile menu" width={10}/> 
         </span> 
            </a>
-           <div className="relative overflow-clip">
+           <div className="relative">
 
      <h1 className=" my-8 ">One Task <br /> at a Time</h1>
      <div className=" flex justify-center">
      <p className="text-body-lg max-w-[450px] font-inter text-center  ">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes.</p>
-     <Image src={ImageAssets.cursor.src} alt="cursor image" aria-hidden className="absolute top-10 -left-12 lg:left-40 lg:top-30 hidden md:block"  width={150} height={150} />
-     <Image src={ImageAssets.message.src} alt="message image" aria-hidden className="absolute top-20 -right-15 lg:right-36 hidden md:block"  width={150} height={150} />
-     
+     <motion.div 
+     className="absolute top-20 -right-15 lg:right-36 hidden md:block"
+     drag
+     dragSnapToOrigin
+     >
+     <Image src={ImageAssets.message.src} alt="message image" aria-hidden className=""  width={150} height={150} draggable={false} />
+     </motion.div>
+     <motion.div className="absolute top-10 -left-12 lg:left-40 lg:top-30 hidden md:block" drag
+     dragSnapToOrigin>
+
+<Image src={ImageAssets.cursor.src} alt="cursor image" aria-hidden className=""  width={150} height={150} draggable={false} />
+</motion.div>
      </div>
     <button className="btn mt-8">Get Free</button>
            </div>

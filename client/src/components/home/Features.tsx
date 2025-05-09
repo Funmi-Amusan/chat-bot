@@ -1,26 +1,6 @@
+import { features } from "@/utils/data";
 import Card from "../ui/Card";
-import { IconAssets } from "@/assets/icons";
 
-const features = [
-  {
-    image: IconAssets.ecosystem.src,
-    title: "Integration Ecosystem",
-    description:
-      "Enhance your productivity by connecting with your tools, keeping your essentials in one place.",
-  },
-  {
-    image: IconAssets.ecosystem.src,
-    title: "Goal Setting and Tracking",
-    description:
-      "Define and track your goals, breaking down objectives into achievable tasks to keep your targets in sight.",
-  },
-  {
-    image: IconAssets.ecosystem.src,
-    title: "Secure Data Encryption",
-    description:
-      "With end-to-end encryption, your data is securely stored and protected from unauthorized access.",
-  },
-];
 
 export const Features = () => {
   return (
