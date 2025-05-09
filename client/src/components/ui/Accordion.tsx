@@ -1,22 +1,40 @@
-
-import { IconAssets } from '@/assets/icons'
-import React from 'react'
+"use client";
+import { FaPlus, FaMinus } from "react-icons/fa6"; 
+import React from 'react';
+import { motion, AnimatePresence } from "framer-motion";
 
 type AccordionProps = {
-  question: string,
-  answer: string,
+  question: string;
+  answer: string;
+  id: number;
+  isOpen: boolean;
+  onToggle: (id: number) => void;
 }
 
-const Accordion = ({question, answer}: AccordionProps) => {
+const Accordion = ({ question, answer, id, isOpen, onToggle }: AccordionProps) => {
+
   return (
-    <div className='flex-center-col max-w-2xl mx-auto gap-2 w-full rounded-lg py-8 px-4'>
-        <div className='flex justify-between py-4 w-full mb-2 border-b border-white/30 text-start'>
-        <h5>{question}</h5>
-<img src={IconAssets.plusWhite.src} alt="plus icon" className='h-5 w-auto'/>
+    <div onClick={() => onToggle(id)} className={`flex-center-col max-w-2xl mx-auto gap-2 w-full rounded-lg py-4 px-4 cursor-pointer `}>
+        <div className='flex justify-between items-center py-2 w-full border-b border-white/30 text-start'> 
+            <h5>{question}</h5>
+            {isOpen ? <FaMinus color="white" size={20} /> : <FaPlus color="white" size={20} />}
         </div>
-        <p className='text-md font-inter text-center hidden !text-white'>{answer}</p>
+
+        <AnimatePresence> 
+            {isOpen && (
+                <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className='text-md font-inter text-white text-left w-full overflow-hidden' 
+                >
+                    {answer}
+                </motion.p>
+            )}
+        </AnimatePresence>
     </div>
-  )
+  );
 }
 
-export default Accordion
+export default Accordion;
