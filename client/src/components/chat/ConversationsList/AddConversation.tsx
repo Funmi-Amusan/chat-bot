@@ -2,8 +2,9 @@
 
 import { createConversationAction, fetchAConversationAction, fetchAllConversationsAction } from '@/store/conversation/action';
 import { Conversation } from '@/store/conversation/types';
-import { useAppDispatch } from '@/utils/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { redirect } from 'next/navigation';
 import { z } from 'zod'; 
 
 
@@ -13,7 +14,11 @@ const CreateConversationSchema = z.object({
 
 const AddConversation = () => {
    const dispatch = useAppDispatch();
-   const userId = "6d25380c-3ae8-4023-af50-2dfce1fb8fa4"
+    const { user } = useAppSelector((state) => state.conversationReducer)
+   if (!user) {
+       redirect('/login')
+     }
+     const userId = user
 
       const createAConversation = async () => {
         try {

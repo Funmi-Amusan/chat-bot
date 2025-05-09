@@ -67,7 +67,7 @@ const ChatWindow = () => {
         <div className="flex items-start">
           <div className="mr-2">
             <Image
-              src={ChatBotAvatar}
+              src={ImageAssets.ChatBotAvatar}
               alt="bot avatar"
               width={48}
               height={48}

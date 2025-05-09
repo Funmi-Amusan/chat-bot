@@ -9,6 +9,7 @@ const initialState: InitialState = {
     conversationData: null,
     conversations: [],
     isAITyping: false,
+    user: null,
 }
 
 const conversationSlice = createSlice({
@@ -26,6 +27,9 @@ const conversationSlice = createSlice({
         },
         setAITyping: (state, action) => {
             state.isAITyping = action.payload;
+        },
+        setLoggedInUserAction: (state, action) => {
+            state.user = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -76,5 +80,6 @@ export default conversationSlice.reducer;
 
 export const {
     addMessageToConversationAction,
-    setAITyping
+    setAITyping,
+    setLoggedInUserAction,
 } = conversationSlice.actions;

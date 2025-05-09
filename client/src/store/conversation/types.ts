@@ -5,6 +5,7 @@ export type InitialState = {
     error: boolean;
     message: string | null;
     isAITyping: boolean;
+    user: string | null;
 };
 
 export type Conversation = {

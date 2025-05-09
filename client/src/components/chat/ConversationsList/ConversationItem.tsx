@@ -8,14 +8,12 @@ import DeleteModal from './DeleteModal';
 
 const ConversationItem = ({ title, id }: { title: string, id: string }) => {
    const dispatch = useAppDispatch();
-   const { conversationData, loading } = useAppSelector((state) => state.conversationReducer);
+   const { conversationData, loading, user: userId } = useAppSelector((state) => state.conversationReducer);
    const [openModal, setOpen] = useState(false);
    const [isDeleting, setIsDeleting] = useState(false);
    const handleCloseModal = () => setOpen(false);
 
    const isCurrentConversation = conversationData?.id === id;
-
-   const userId = "6d25380c-3ae8-4023-af50-2dfce1fb8fa4"
 
    const getAConversation = async () => {
       await dispatch(fetchAConversationAction(id));

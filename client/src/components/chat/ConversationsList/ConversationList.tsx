@@ -6,6 +6,7 @@ import ConversationItem from './ConversationItem'
 import { fetchAllConversationsAction } from '@/store/conversation/action'
 import { useAppDispatch, useAppSelector } from '@/utils/hooks'
 import { z } from 'zod'
+import { redirect } from 'next/navigation'
 
 const UserIdSchema = z.string().uuid("Invalid user ID format")
 
@@ -21,11 +22,15 @@ type ValidConversation = z.infer<typeof ConversationSchema>
 
 const ConversationList = () => {
   const dispatch = useAppDispatch()
-  const { conversations } = useAppSelector((state) => state.conversationReducer)
+  const { conversations, user } = useAppSelector((state) => state.conversationReducer)
   const [validationError, setValidationError] = useState<string | null>(null)
   const [validatedConversations, setValidatedConversations] = useState<ValidConversation[]>([])
   
-  const userId = "6d25380c-3ae8-4023-af50-2dfce1fb8fa4"
+  if (!user) {
+    redirect('/login')
+  }
+
+  const userId = user
   
   const getConversations = async () => {
     try {
