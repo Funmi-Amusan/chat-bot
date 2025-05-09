@@ -7,8 +7,6 @@ import transporter from '../config/email.js';
 
 export const createUser = async (req, res) => {
     try {
-
-        console.log('got to create user');
         const { name, email, password } = req.body;
         const existingUser = await prisma.user.findUnique({
             where: {
