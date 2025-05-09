@@ -22,7 +22,7 @@ const BaseButton = ({ text, onClick, imgSrc, className, variant = "default", typ
     <button 
     type={type}
       onClick={onClick} 
-      className={`flex justify-center items-center gap-3 px-6 py-3 w-full text-center font-bold text-sm uppercase rounded-lg transition-transform duration-300 hover:scale-105 ${buttonStyles[variant]} ${className}`}
+      className={`inline-flex flex-wrap whitespace-nowrap justify-center items-center gap-3 px-6 py-2 w-full text-center font-bold text-sm uppercase rounded-lg transition-transform duration-300 hover:scale-105 ${buttonStyles[variant]} ${className}`}
     >
       {imgSrc && <img src={imgSrc} alt="button icon" className="h-4" />}
       {text}

@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export const Hero = () => {
   return (
-    <section className=" "
+    <section className=" overflow-clip"
     style={{ 
       backgroundImage: `url(${ImageAssets.landingBGHero.src})`, 
       backgroundSize: 'cover',  
@@ -20,7 +20,7 @@ export const Hero = () => {
            <img src={IconAssets.arrowWhite.src} alt="mobile menu" width={10}/> 
         </span> 
            </a>
-           <div className="relative">
+           <div className="relative overflow-clip">
 
      <h1 className=" my-8 ">One Task <br /> at a Time</h1>
      <div className=" flex justify-center">
