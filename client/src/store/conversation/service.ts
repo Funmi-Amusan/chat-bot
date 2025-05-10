@@ -1,6 +1,6 @@
 import { createConversationURL, deleteConversationByIdURL, findConversationByIdURL, findConversationsByUserIdURL, sendMessageURL } from '@/utils/end-point';
 import http from '../../utils/https';
-import { createConversationPayload, sendMessagePayload } from './types';
+import { sendMessagePayload } from './types';
 
 class ConversationService {
     async getConversation(userId: string) {
@@ -12,8 +12,9 @@ class ConversationService {
         }
     }
 
-    async createConversation(body: createConversationPayload) {
+    async createConversation(body: string) {
         try {
+            console.log('body', body)
             const response = await http.post({ url: createConversationURL, body });
             return response;
         } catch (error) {

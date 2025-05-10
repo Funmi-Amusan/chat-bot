@@ -1,92 +1,69 @@
-'use client'
+import { auth } from '@/lib/auth'; 
+import { conversationService } from '@/store/conversation/service';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
+import ConversationDisplay from './ConversationDisplay';
 
-import { useEffect, useState } from 'react'
-import AddConversation from './AddConversation'
-import ConversationItem from './ConversationItem'
-import { fetchAllConversationsAction } from '@/store/conversation/action'
-import { useAppDispatch, useAppSelector } from '@/utils/hooks'
-import { z } from 'zod'
-import { redirect } from 'next/navigation'
-
-const UserIdSchema = z.string().uuid("Invalid user ID format")
+const UserIdSchema = z.string().uuid("Invalid user ID format");
 
 const ConversationSchema = z.object({
   id: z.string().uuid("Invalid conversation ID"),
-  title: z.string().optional(),
-})
+  title: z.string().optional().nullable(), 
+});
 
-const ConversationsSchema = z.array(ConversationSchema)
+const ConversationsSchema = z.array(ConversationSchema);
 
-type ValidUserId = z.infer<typeof UserIdSchema>
-type ValidConversation = z.infer<typeof ConversationSchema>
+type ValidConversation = z.infer<typeof ConversationSchema>;
 
-const ConversationList = () => {
-  const dispatch = useAppDispatch()
-  const { conversations, user } = useAppSelector((state) => state.conversationReducer)
-  const [validationError, setValidationError] = useState<string | null>(null)
-  const [validatedConversations, setValidatedConversations] = useState<ValidConversation[]>([])
-  
-  if (!user) {
-    redirect('/login')
+const ConversationList = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    redirect('/login');
   }
 
-  const userId = user
-  
-  const getConversations = async () => {
-    try {
-      const validUserId: ValidUserId = UserIdSchema.parse(userId)
-      
-      await dispatch(fetchAllConversationsAction({userId: validUserId, forceRefresh: false}))
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        setValidationError("Invalid user ID format")
-        console.error("User ID validation error:", error.errors)
-      } else {
-        setValidationError("Failed to fetch conversations")
-        console.error("Error fetching conversations:", error)
-      }
-    }
+  let validUserId: z.infer<typeof UserIdSchema>;
+  try {
+    validUserId = UserIdSchema.parse(userId);
+  } catch (error) {
+    console.error("Server: Invalid user ID format after authentication:", error);
+    return (
+      <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 '>
+        <p className="text-center text-red-500 mt-4">Authentication error: Invalid user ID format.</p>
+      </div>
+    );
   }
-  
-  useEffect(() => {
-    if (conversations) {
-      try {
-        const validated = ConversationsSchema.parse(conversations)
-        setValidatedConversations(validated)
-        setValidationError(null)
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          setValidationError("Invalid conversation data format")
-          console.error("Conversations validation error:", error.errors)
-        }
-      }
-    }
-  }, [conversations])
 
-  useEffect(() => {
-    getConversations()
-  }, [userId])
+  let conversations: ValidConversation[] = [];
+  let fetchError: string | null = null;
+
+  try {
+    const response = await conversationService.getConversation(validUserId); 
+
+    if (response && response.conversations) {
+        conversations = ConversationsSchema.parse(response.conversations);
+    } else {
+        console.warn("Server: conversationService.getConversation returned no conversations or unexpected structure", response);
+        conversations = []; 
+    }
+
+
+  } catch (error) {
+    console.error("Server: Error fetching or validating conversations:", error);
+    if (error instanceof z.ZodError) {
+        fetchError = "Invalid conversation data format from server.";
+    } else if (error instanceof Error) {
+         fetchError = `Failed to fetch conversations: ${error.message}`;
+    } else {
+         fetchError = "An unknown error occurred while fetching conversations.";
+    }
+    conversations = [];
+  }
 
   return (
-    <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 '>
-      <AddConversation />
-<div className=' overflow-y-auto scrollbar-hide flex-1 flex flex-col gap-2'>
-      {validatedConversations?.length > 0 ? (
-        validatedConversations.map((conversation) => (
-          <ConversationItem 
-            key={conversation.id} 
-            title={conversation?.title || "Untitled Conversation"} 
-            id={conversation?.id} 
-          />
-        ))
-      ) : (
-        <div className="text-center text-gray-500 mt-4">
-          {!validationError && "No conversations found"}
-        </div>
-      )}
-</div>
-    </div>
-  )
-}
+    <ConversationDisplay initialConversations={conversations} fetchError={fetchError} />
+  );
+};
 
-export default ConversationList
+export default ConversationList;

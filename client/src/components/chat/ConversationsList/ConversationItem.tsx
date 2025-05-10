@@ -13,6 +13,8 @@ const ConversationItem = ({ title, id }: { title: string, id: string }) => {
    const [isDeleting, setIsDeleting] = useState(false);
    const handleCloseModal = () => setOpen(false);
 
+   if(!userId) return null;
+
    const isCurrentConversation = conversationData?.id === id;
 
    const getAConversation = async () => {
@@ -29,6 +31,7 @@ const ConversationItem = ({ title, id }: { title: string, id: string }) => {
     if (!isCurrentConversation) {
       setOpen(true)
     }
+    // show toast explaining 
   }
 
   const handleDeleteConversation = async () => {

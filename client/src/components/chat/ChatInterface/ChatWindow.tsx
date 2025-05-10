@@ -1,41 +1,38 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '@/utils/hooks';
 import MessageBubble from './MessageBubble';
 import Image from 'next/image';
 import ActiveTypingBubble from './ActiveTypingBubble';
 import Spinner from '@/components/ui/Spinner';
 import { ImageAssets } from '@/assets/images';
+import { redirect, useParams } from 'next/navigation';
+import { getAConverstaionById } from '@/lib/actions/ConversationActions';
 
 const ChatWindow = () => {
-  const { conversationData, isAITyping, loading } = useAppSelector((state) => state.conversationReducer);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const {id} = useParams()
+  const conversationId = id;
+  if (!conversationId) {
+    redirect('/login');
+  }
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  const [messages, setMessages] = useState([]);
+ 
   useEffect(() => {
-    scrollToBottom();
-  }, [conversationData?.messages, isAITyping]);
+    const fetchConversation = async () => {
+      if (conversationId) {
+        const conversation = await getAConverstaionById(conversationId as string);
+        setMessages(conversation.data.messages);
+      }
+    }
+    fetchConversation();
+  }, [conversationId]);
 
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide">
-      {loading && <Spinner />}
-      {!loading && conversationData?.messages && conversationData?.messages?.length > 0 && (
-          <p className="text-[#1D192B] text-center mb-4">
-            {new Date(conversationData?.messages[0]?.createdAt).toLocaleString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric',
-              hour12: true,
-            })}
-          </p>
-        )}
-      {!loading && conversationData?.messages && conversationData?.messages?.length > 0 ? (
-        conversationData.messages.map((message) => (
+    {messages?.length > 0 && (
+        messages.map((message) => (
           <div key={message.id} className="mb-4">
             <div
               className={`flex gap-4 items-end ${
@@ -57,13 +54,9 @@ const ChatWindow = () => {
             </div>
           </div>
         ))
-      ) : (
-        <div className="flex items-center justify-center h-full">
-          <h2>How can I help you today?</h2>
-        </div>
       )}
 
-      {isAITyping && (
+      {/* {isAITyping && (
         <div className="flex items-start">
           <div className="mr-2">
             <Image
@@ -78,7 +71,7 @@ const ChatWindow = () => {
         </div>
       )}
 
-      <div ref={messagesEndRef} />
+      <div ref={messagesEndRef} /> */}
     </div>
   );
 };

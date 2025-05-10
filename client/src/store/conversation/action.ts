@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { conversationService } from "./service";
-import { createConversationPayload, sendMessagePayload } from "./types";
+import {  sendMessagePayload } from "./types";
 import { conversationCache } from "@/utils/cache";
 
 
@@ -32,25 +32,6 @@ export const fetchAllConversationsAction = createAsyncThunk(
     }
 );
 
-export const createConversationAction = createAsyncThunk(
-    "/createConversation",
-    async (body: createConversationPayload, { rejectWithValue }) => {
-        try {
-            const response = await conversationService.createConversation(body);
-            if (response) {
-                const cacheKey = `allConversations_${body.userId}`;
-                conversationCache.clear(cacheKey);
-                return response;
-            }
-            return response;
-        } catch (err: unknown) {
-            if (err instanceof Error && !('response' in err)) {
-                throw err;
-            }
-            return rejectWithValue((err as { response: { data: unknown } }).response.data);
-        }
-    }
-);
 
 export const fetchAConversationAction = createAsyncThunk(
     "/fetchAConversation",

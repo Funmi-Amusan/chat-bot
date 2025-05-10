@@ -17,7 +17,7 @@ const MainHeader  = async () => {
   return (
 
     <header className=' p-2.5 shadow-md justify-between flex bg-white items-center'>
-      <Image src={ImageAssets.Logo} alt={'Logo'} width={50} height={48} />
+      <Image src={ImageAssets.Logo} alt={'Logo'} width={40} height={40} />
       <UserInitializer userId={userId} />
   <SignOut />
     </header>
