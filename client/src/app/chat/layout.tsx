@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import StoreProvider from "../../storeProvider";
 
 export const metadata: Metadata = {
   title: "Chat Bot",
@@ -10,24 +9,22 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
+  children,
   sidebar,
-  chatWindow,
 }: Readonly<{
-  sidebar: React.ReactNode;
-  chatWindow: React.ReactNode;
+    children: React.ReactNode;
+    sidebar: React.ReactNode;
 }>) {
   return (
     <div className="h-screen">
-      <StoreProvider>
           <main className="grid grid-cols-2 lg:grid-cols-[300px_1fr] h-screen lg:gap-4 "> 
             <div className="hidden lg:flex flex-col h-full overflow-scroll ">
               {sidebar}
             </div>
-            <div className="">
-              {chatWindow}
+            <div className=" ">
+              {children}
             </div>
           </main>
-        </StoreProvider>
       </div>
   );
 }

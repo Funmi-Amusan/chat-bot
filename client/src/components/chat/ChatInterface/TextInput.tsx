@@ -100,12 +100,12 @@ const TextInput = () => {
               rows={1}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)} 
-              disabled={loading || isAITyping}
+              disabled={loading }
             />
            <div 
-    onClick={() => !isAITyping && message.trim() !== "" && sendMessage()} 
+    onClick={() =>  message.trim() !== "" && sendMessage()} 
     className={`px-4 flex-shrink-0 ${
-      message.trim() === "" || isAITyping ? "text-gray-400 cursor-not-allowed" : "text-[#625B71] cursor-pointer"
+      message.trim() === "" ? "text-gray-400 cursor-not-allowed" : "text-[#625B71] cursor-pointer"
     }`}
   >
     <SendOutlinedIcon style={{ color: isAITyping ? "#A0A0A0" : "#625B71" }} />

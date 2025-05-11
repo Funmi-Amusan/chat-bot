@@ -59,8 +59,8 @@ export const createConversation = async (req, res) => {
     }
 };
 
-
 export const findConversationsByUserId = async (req, res) => {
+    console.log("----Finding conversations by user ID----");
     try {
         const { userId } = req.params;
         if (!userId) {
@@ -110,6 +110,7 @@ export const findConversationsByUserId = async (req, res) => {
 
 
 export const findConversationById = async (req, res) => {
+    console.log("----Finding conversation by ID----");
     try {
         const { id } = req.params;
         if (!id) {
@@ -163,7 +164,7 @@ export const sendMessage = async (req, res) => {
         });
 
         io.to(conversationId).emit('new_message', message);
-
+console.log('new_message')
         io.emit(`user_${conversationExists.userId}_conversation_updated`, {
             conversationId,
             lastMessage: message

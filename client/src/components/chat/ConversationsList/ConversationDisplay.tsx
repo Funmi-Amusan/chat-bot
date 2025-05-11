@@ -1,4 +1,5 @@
 
+import AddConversation from './AddConversation';
 import ConversationItem from './ConversationItem'; 
 type Conversation = {
     id: string;
@@ -7,12 +8,14 @@ type Conversation = {
 
 type ConversationDisplayProps = {
     initialConversations: Conversation[];
+    currentId: string;
 };
 
-const ConversationDisplay = ({ initialConversations }: ConversationDisplayProps) => {
-
+const ConversationDisplay = ({ initialConversations, currentId }: ConversationDisplayProps) => {
     return (
         <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 '>
+
+    <AddConversation />
             <div className=' overflow-y-auto scrollbar-hide flex-1 flex flex-col gap-2'>
                
                   {initialConversations.map((conversation) => (
@@ -20,6 +23,7 @@ const ConversationDisplay = ({ initialConversations }: ConversationDisplayProps)
                             key={conversation.id}
                             title={conversation?.title || "Untitled Conversation"}
                             id={conversation?.id}
+                            isActive={conversation.id === currentId}
                         />
                     ))}
             </div>

@@ -3,6 +3,7 @@ import { conversationService } from '@/store/conversation/service';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import ConversationDisplay from './ConversationDisplay';
+import ConversationItem from './ConversationItem';
 
 const UserIdSchema = z.string().uuid("Invalid user ID format");
 
@@ -62,7 +63,18 @@ const ConversationList = async () => {
   }
 
   return (
-    <ConversationDisplay initialConversations={conversations} fetchError={fetchError} />
+    <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 '>
+    <div className=' overflow-y-auto scrollbar-hide flex-1 flex flex-col gap-2'>
+       
+          {conversations.map((conversation) => (
+                <ConversationItem
+                    key={conversation.id}
+                    title={conversation?.title || "Untitled Conversation"}
+                    id={conversation?.id}
+                />
+            ))}
+    </div>
+</div>
   );
 };
 

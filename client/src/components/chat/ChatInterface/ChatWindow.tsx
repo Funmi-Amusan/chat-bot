@@ -1,34 +1,22 @@
 'use client';
 
-import React, { use, useEffect, useRef, useState } from 'react';
-import { useAppSelector } from '@/utils/hooks';
+import React from 'react';
 import MessageBubble from './MessageBubble';
 import Image from 'next/image';
-import ActiveTypingBubble from './ActiveTypingBubble';
-import Spinner from '@/components/ui/Spinner';
 import { ImageAssets } from '@/assets/images';
-import { redirect, useParams } from 'next/navigation';
-import { getAConverstaionById } from '@/lib/actions/ConversationActions';
+import { Message } from '@/store/conversation/types';
+import { useAppSelector } from '@/utils/hooks';
+import ActiveTypingBubble from './ActiveTypingBubble';
 
-const ChatWindow = () => {
-  const {id} = useParams()
-  const conversationId = id;
-  if (!conversationId) {
-    redirect('/login');
-  }
+const ChatWindow = ({messages}: {messages: Message[]}) => {
 
-  const [messages, setMessages] = useState([]);
+  const {
+    isAITyping,
+    conversationData,
+    loading,
+  } = useAppSelector((state) => state.conversationReducer);
+  console.log('isAITyping', isAITyping);
  
-  useEffect(() => {
-    const fetchConversation = async () => {
-      if (conversationId) {
-        const conversation = await getAConverstaionById(conversationId as string);
-        setMessages(conversation.data.messages);
-      }
-    }
-    fetchConversation();
-  }, [conversationId]);
-
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide">
     {messages?.length > 0 && (
@@ -69,9 +57,9 @@ const ChatWindow = () => {
           </div>
           <ActiveTypingBubble />
         </div>
-      )}
+      )} */}
 
-      <div ref={messagesEndRef} /> */}
+      {/* <div ref={messagesEndRef} /> */}
     </div>
   );
 };

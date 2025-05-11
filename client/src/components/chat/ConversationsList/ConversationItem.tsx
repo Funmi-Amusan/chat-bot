@@ -1,34 +1,23 @@
 'use client'
 
-import { DeleteAConversationAction, fetchAConversationAction, fetchAllConversationsAction } from '@/store/conversation/action';
+import { DeleteAConversationAction, fetchAllConversationsAction } from '@/store/conversation/action';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useState } from 'react';
 import DeleteModal from './DeleteModal';
+import Link from 'next/link';
 
-const ConversationItem = ({ title, id }: { title: string, id: string }) => {
+const ConversationItem = ({ title, id, isActive }: { title: string, id: string, isActive: boolean }) => { 
    const dispatch = useAppDispatch();
-   const { conversationData, loading, user: userId } = useAppSelector((state) => state.conversationReducer);
+   const { loading, user: userId } = useAppSelector((state) => state.conversationReducer);
    const [openModal, setOpen] = useState(false);
    const [isDeleting, setIsDeleting] = useState(false);
    const handleCloseModal = () => setOpen(false);
 
    if(!userId) return null;
 
-   const isCurrentConversation = conversationData?.id === id;
-
-   const getAConversation = async () => {
-      await dispatch(fetchAConversationAction(id));
-    };
-
-  const getOneConversation = () => {
-    if (!isCurrentConversation) {
-    getAConversation()
-    }
-  }
-
   const openDeleteModal = () => {
-    if (!isCurrentConversation) {
+    if (!isActive) {
       setOpen(true)
     }
     // show toast explaining 
@@ -46,14 +35,14 @@ const ConversationItem = ({ title, id }: { title: string, id: string }) => {
 
   return (
     <>
-    <div className={` px-4 w-full rounded-2xl h-14 flex gap-3 items-center justify-between ${isCurrentConversation ? 'bg-[#D0C7DE]' : 'bg-[#E8DEF8]'}`} >
-      <div onClick={()=>getOneConversation()} className=' cursor-pointer flex-grow font-normal whitespace-nowrap py-4'>
+    <Link href={`/chat/${id}`} className={` px-4 w-full rounded-2xl h-14 flex gap-3 items-center justify-between ${isActive ? 'bg-[#D0C7DE]' : 'bg-[#E8DEF8]'}`} >
+      <div className=' cursor-pointer flex-grow font-normal whitespace-nowrap py-4'>
         <p>{title}</p>
       </div>
-      <div onClick={()=> openDeleteModal()} className=' h-full px-4 flex items-center cursor-pointer'>
+      <button onClick={()=> openDeleteModal()} className=' h-full px-4 flex items-center cursor-pointer'>
         <DeleteOutlinedIcon />
-      </div>
-    </div>
+      </button>
+    </Link>
 
     <DeleteModal
         isOpen={openModal}

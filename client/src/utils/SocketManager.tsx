@@ -32,20 +32,23 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
   useEffect(() => {
     if (socket && conversationId) {
       socket.emit('join_conversation', conversationId);
-      
+      console.log('from socket', conversationId);
       socket.on('ai_typing_start', (data: Message) => {
+        console.log('ai_typing_start')
         if (data.conversationId === conversationId) {
           dispatch(setAITyping(true));
         }
       });
       
       socket.on('ai_typing_stop', (data: Message) => {
+        console.log('ai_typing_stop')
         if (data.conversationId === conversationId) {
           dispatch(setAITyping(false));
         }
       });
       
       socket.on('new_message', (newMessage: Message) => {
+        console.log('-------')
         if (newMessage.isFromAI && newMessage.conversationId === conversationId) {
           dispatch(setAITyping(false));
         }

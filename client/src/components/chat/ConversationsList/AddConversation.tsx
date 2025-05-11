@@ -16,7 +16,6 @@ const AddConversation = () => {
       const response = await createNewConversation(user);
       if (response.success) {
         router.push(`/chat/${response.data.conversation.id}`);
-         console.log('response', response)
       }
     
   }
