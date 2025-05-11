@@ -45,7 +45,7 @@ const ChatInterface = async ({ params }: { params: { id: string } }) => {
             <ChatWindow messages={messages} />
           </div>
           <div className='absolute bottom-0 left-0 right-0 mb-4'>
-            <TextInput conversationId={id} /> {/* Potentially pass conversationId to TextInput */}
+            <TextInput conversationId={id} /> 
           </div>
         </div>
       </div>

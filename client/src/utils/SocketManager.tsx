@@ -52,7 +52,7 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
         if (newMessage.isFromAI && newMessage.conversationId === conversationId) {
           dispatch(setAITyping(false));
         }
-        dispatch(addMessageToConversationAction(newMessage));
+        dispatch(addMessageToConversationAction({newMessage, conversationId}));
       });
       
       socket.on('conversation_deleted', ({ id }: { id: string }) => {

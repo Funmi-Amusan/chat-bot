@@ -15,9 +15,9 @@ const MessageSchema = z.object({
 
 type MessageData = z.infer<typeof MessageSchema>;
 
-const TextInput = () => {
+const TextInput = ({ conversationId }: { conversationId: string }) => {
     const dispatch = useAppDispatch();
-    const { conversationData, loading, isAITyping } = useAppSelector((state) => state.conversationReducer);
+    const { loading, isAITyping } = useAppSelector((state) => state.conversationReducer);
     const [message, setMessage] = useState("");
     const [isFocused, setIsFocused] = useState(false); 
     const [socket, setSocket] = useState<Socket | null>(null);
@@ -37,12 +37,12 @@ const TextInput = () => {
       setValidationError(null);
       
       if (message.trim() === "") return;
-      if (!conversationData || !conversationData.id) return;
+      if (!conversationId) return;
       
       try {
         const data = {
           content: message,
-          conversationId: conversationData.id
+          conversationId
         };
         
         const validatedData: MessageData = MessageSchema.parse(data);
@@ -75,7 +75,7 @@ const TextInput = () => {
     return (
       <>
         <SocketManager 
-          conversationId={conversationData?.id} 
+          conversationId={conversationId} 
           setSocket={setSocket} 
           socket={socket}
         />

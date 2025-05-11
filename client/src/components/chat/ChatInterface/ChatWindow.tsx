@@ -1,21 +1,28 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import MessageBubble from './MessageBubble';
 import Image from 'next/image';
 import { ImageAssets } from '@/assets/images';
-import { Message } from '@/store/conversation/types';
-import { useAppSelector } from '@/utils/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import ActiveTypingBubble from './ActiveTypingBubble';
+import { Message } from '@/store/conversation/types';
+import { setMessagesData } from '@/store/conversation';
 
-const ChatWindow = ({messages}: {messages: Message[]}) => {
+const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
+
+ const dispatch = useAppDispatch();
+
+useEffect(() => {
+  dispatch(setMessagesData(messagesProp));
+  }, []);
+
 
   const {
     isAITyping,
-    conversationData,
-    loading,
+    messages,
   } = useAppSelector((state) => state.conversationReducer);
-  console.log('isAITyping', isAITyping);
+  console.log('isAITyping', messages);
  
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide">
@@ -44,7 +51,7 @@ const ChatWindow = ({messages}: {messages: Message[]}) => {
         ))
       )}
 
-      {/* {isAITyping && (
+      {isAITyping && (
         <div className="flex items-start">
           <div className="mr-2">
             <Image
@@ -57,7 +64,7 @@ const ChatWindow = ({messages}: {messages: Message[]}) => {
           </div>
           <ActiveTypingBubble />
         </div>
-      )} */}
+      )}
 
       {/* <div ref={messagesEndRef} /> */}
     </div>

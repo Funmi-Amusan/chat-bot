@@ -1,6 +1,6 @@
 export type InitialState = {
     loading: boolean;
-    conversationData: Conversation | null;
+    messages: Message[] | [];
     conversations: Conversation[] | []
     error: boolean;
     message: string | null;
