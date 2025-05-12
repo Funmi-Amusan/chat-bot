@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Ubuntu } from "next/font/google";
+import{ Toaster } from 'react-hot-toast';
 import "./globals.css";
 import StoreProvider from "./storeProvider";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         className={`${inter.variable} ${ubuntu.variable} antialiased`}
       >
       <StoreProvider>
+        <Toaster />
         {children}
         </StoreProvider>
       </body>

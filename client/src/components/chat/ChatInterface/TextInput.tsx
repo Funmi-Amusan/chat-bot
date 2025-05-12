@@ -10,6 +10,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const MessageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty").max(5000, "Message is too long"),
@@ -59,7 +60,9 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           content: message,
           conversationId
         };
+        toast('Here is your toast')
         const validatedData: MessageData = MessageSchema.parse(data);
+        console.log('=====')
         setMessage("");
         await dispatch(SendMessageAction(validatedData));
         router.push(`/chat/${conversationId}`)
@@ -93,7 +96,6 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           setSocket={setSocket} 
           socket={socket}
         />
-        
         <div className="flex flex-col p-4 bg-amber-300 w-full">
           <div className={`flex items-center justify-between bg-[#ECE6F0] w-full md:p-1 rounded-4xl max-h-[150px] ${ isFocused ? 'border' : 'border-none'} ${ isAITyping ? 'opacity-40 ' : 'opacity-100'} `}>
             <textarea 
