@@ -21,14 +21,13 @@ const AddConversation = () => {
   }
 
   return (
-    <button
-      onClick={handleCreateConversation}
+    <Link
       className='my-2 p-2 w-full rounded-2xl h-14 flex gap-3 items-center justify-center bg-[#EADDFF] shadow-lg text-[#21005D] hover:bg-[#D0BCFF] transition-colors'
-      type="button"
+      
     >
       <AddCircleOutlineOutlinedIcon />
       New Conversation
-    </button>
+    </Link>
   );
 };
 

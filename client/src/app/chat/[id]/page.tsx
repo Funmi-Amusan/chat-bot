@@ -23,7 +23,7 @@ const ChatInterface = async ({ params }: { params: { id: string } }) => {
     messages = []; 
   } else {
     try {
-      conversation = await getAConverstaionById(id);
+      conversation = await getAConverstaionById(id) as Conversation;
       if (conversation?.data?.messages) {
         messages = conversation.data.messages;
       } else {
@@ -37,20 +37,16 @@ const ChatInterface = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className='w-full h-full lg:bg-white rounded-2xl relative'>
+    <div className='w-full h-screen lg:bg-white rounded-2xl relative'>
       <div className='flex flex-col h-full '>
         <ChatInterfaceHeader />
-        <div className='flex-grow overflow-hidden lg:mx-4 relative'>
-          <div className='h-full pb-16 overflow-y-auto '>
+          <div className='h-full overflow-y-auto relative '>
             <ChatWindow messages={messages} />
           </div>
-          <div className='absolute bottom-0 left-0 right-0 mb-4'>
+
             <TextInput conversationId={id} /> 
-          </div>
-        </div>
       </div>
     </div>
   );
 };
-
 export default ChatInterface;

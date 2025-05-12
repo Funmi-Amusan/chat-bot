@@ -52,7 +52,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, title, loading, isDeleting }: 
           <Typography
             id="delete-modal-title"
             variant="h6"
-            component="h2"
+            component="h3"
             sx={{ marginBottom: 2, textAlign: 'center' }}
           >
             Are you sure you want to delete {title}?

@@ -101,15 +101,10 @@ export async function sendMessage(content: string, conversationId: string) {
 
 export async function deleteConversation( conversationId: string) {
     
-    // const session = await auth();
-    // if (!session || session.user?.id !== userId) {
-    //     console.warn("Server Action: Unauthorized attempt to create conversation for different user.");
-    //     return { success: false, error: "Unauthorized." };
-    // }
     try {
         const deleteConversation = await http.delete({ url: deleteConversationByIdURL(conversationId) });
         if (deleteConversation) {
-            // revalidatePath('/chats'); 
+            revalidatePath('/chats'); 
             return { success: true, data: deleteConversation }; 
         } else {
              console.error("Server Action: Failed to delete conversation:", deleteConversation);

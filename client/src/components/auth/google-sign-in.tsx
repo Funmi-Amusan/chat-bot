@@ -8,7 +8,6 @@ const GoogleSignIn = () => {
     <form
       action={async () => {
         "use server";
-
         await signIn("google");
       }}
     >

@@ -1,20 +1,19 @@
 'use client'
 
-import { DeleteAConversationAction, fetchAllConversationsAction } from '@/store/conversation/action';
-import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useState } from 'react';
 import DeleteModal from './DeleteModal';
 import Link from 'next/link';
+import { deleteConversation } from '@/lib/actions/ConversationActions';
+import { useParams, useRouter } from 'next/navigation';
 
 const ConversationItem = ({ title, id, isActive }: { title: string, id: string, isActive: boolean }) => { 
-   const dispatch = useAppDispatch();
-   const { loading, user: userId } = useAppSelector((state) => state.conversationReducer);
+  const {id:currentConversationId} = useParams();
+  const router = useRouter()
    const [openModal, setOpen] = useState(false);
    const [isDeleting, setIsDeleting] = useState(false);
    const handleCloseModal = () => setOpen(false);
 
-   if(!userId) return null;
 
   const openDeleteModal = () => {
     if (!isActive) {
@@ -25,12 +24,12 @@ const ConversationItem = ({ title, id, isActive }: { title: string, id: string, 
 
   const handleDeleteConversation = async () => {
     setIsDeleting(true);
-    const res = await dispatch(DeleteAConversationAction(id));
-    if (res) {
-      await dispatch(fetchAllConversationsAction({userId, forceRefresh: false}));
-      setIsDeleting(false);
-      handleCloseModal()
+    const res = await deleteConversation(id)
+    const isCurrentConversation = id === currentConversationId;
+    if (res.success && isCurrentConversation) {
+router.push('/chat/new')
     }
+  
   }
 
   return (
@@ -49,7 +48,7 @@ const ConversationItem = ({ title, id, isActive }: { title: string, id: string, 
         onClose={handleCloseModal}
         onDelete={handleDeleteConversation}
         title={title}
-        loading={loading}
+        loading={false}
         isDeleting={isDeleting}
       />
     </>

@@ -1,23 +1,30 @@
 'use client'
 
+import { createNewConversation } from '@/lib/actions/ConversationActions';
 import { SendMessageAction } from '@/store/conversation/action';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import SocketManager from '@/utils/SocketManager';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+import { redirect } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 
 const MessageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty").max(5000, "Message is too long"),
-  conversationId: z.string().uuid("Invalid conversation ID")
+  conversationId: z.union([
+    z.string().uuid("Invalid conversation ID"),
+    z.literal('new')
+  ])
 });
 
 type MessageData = z.infer<typeof MessageSchema>;
 
 const TextInput = ({ conversationId }: { conversationId: string }) => {
     const dispatch = useAppDispatch();
-    const { loading, isAITyping } = useAppSelector((state) => state.conversationReducer);
+    const router = useRouter();
+    const { loading, isAITyping, user } = useAppSelector((state) => state.conversationReducer);
     const [message, setMessage] = useState("");
     const [isFocused, setIsFocused] = useState(false); 
     const [socket, setSocket] = useState<Socket | null>(null);
@@ -40,15 +47,22 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
       if (!conversationId) return;
       
       try {
+        if (conversationId === 'new') {
+          if (!user) {
+            alert('No user when trying to create new conversation before sending message')
+            redirect('/login')
+          }
+          const {data} = await createNewConversation(user)
+          conversationId = data.conversation.id;
+        }
         const data = {
           content: message,
           conversationId
         };
-        
         const validatedData: MessageData = MessageSchema.parse(data);
-        
         setMessage("");
         await dispatch(SendMessageAction(validatedData));
+        router.push(`/chat/${conversationId}`)
       } catch (error) {
         if (error instanceof z.ZodError) {
           const firstError = error.errors[0];
@@ -80,13 +94,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           socket={socket}
         />
         
-        <div className="flex flex-col w-full">
-          {validationError && (
-            <div className="text-red-500 text-sm mb-1 px-3">
-              {validationError}
-            </div>
-          )}
-          
+        <div className="flex flex-col p-4 bg-amber-300 w-full">
           <div className={`flex items-center justify-between bg-[#ECE6F0] w-full md:p-1 rounded-4xl max-h-[150px] ${ isFocused ? 'border' : 'border-none'} ${ isAITyping ? 'opacity-40 ' : 'opacity-100'} `}>
             <textarea 
               ref={textareaRef}
