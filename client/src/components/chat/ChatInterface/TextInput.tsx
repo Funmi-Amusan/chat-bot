@@ -29,7 +29,6 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
     const [message, setMessage] = useState("");
     const [isFocused, setIsFocused] = useState(false); 
     const [socket, setSocket] = useState<Socket | null>(null);
-    const [validationError, setValidationError] = useState<string | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
@@ -42,16 +41,22 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
     }, [message]);
 
     const sendMessage = async() => {
-      setValidationError(null);
       
-      if (message.trim() === "") return;
-      if (!conversationId) return;
+      if (message.trim() === "") {
+        toast.error("Message cannot be empty"); 
+        return;
+    }
+    if (!conversationId) {
+        toast.error("Invalid conversation ID");
+        return;
+    }
       
       try {
         if (conversationId === 'new') {
           if (!user) {
-            alert('No user when trying to create new conversation before sending message')
+            toast.error('User not found. Please log in.');
             redirect('/login')
+            return;
           }
           const {data} = await createNewConversation(user)
           conversationId = data.conversation.id;
@@ -60,20 +65,16 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           content: message,
           conversationId
         };
-        toast('Here is your toast')
         const validatedData: MessageData = MessageSchema.parse(data);
-        console.log('=====')
         setMessage("");
         await dispatch(SendMessageAction(validatedData));
         router.push(`/chat/${conversationId}`)
       } catch (error) {
         if (error instanceof z.ZodError) {
           const firstError = error.errors[0];
-          setValidationError(firstError.message);
-          console.error("Validation error:", error.errors);
+          toast.error(firstError.message);
         } else {
-          console.error("Error sending message:", error);
-          setValidationError("Failed to send message");
+          toast.error("Failed to send message");
         }
       }
     };

@@ -1,5 +1,5 @@
 import prisma from "../db/prisma.js"
-import { io } from '../server.js';
+import { io, model } from '../server.js';
 
 export const createConversation = async (req, res) => {
     try {
@@ -155,6 +155,10 @@ export const sendMessage = async (req, res) => {
             return res.status(404).json({ error: "Conversation not found" });
         }
 
+         if (conversationExists.userId !== userId) {
+            return res.status(403).json({ error: "User not authorized to send messages in this conversation" });
+        }
+
         const message = await prisma.message.create({
             data: {
                 content,
@@ -164,7 +168,7 @@ export const sendMessage = async (req, res) => {
         });
 
         io.to(conversationId).emit('new_message', message);
-console.log('new_message')
+
         io.emit(`user_${conversationExists.userId}_conversation_updated`, {
             conversationId,
             lastMessage: message
@@ -191,7 +195,14 @@ export const sendAIMessage = async (conversationId) => {
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
-            include: { user: true }
+            include: { user: true,
+                messages: {
+                    orderBy: {
+                        createdAt: 'asc'
+                    },
+                    take: 1,
+                }
+             }
         });
 
         if (!conversation) {
@@ -199,21 +210,56 @@ export const sendAIMessage = async (conversationId) => {
             return;
         }
 
-        const message = await prisma.message.create({
-            data: {
-                content: "This is an AI generated response",
-                conversationId,
-                isFromAI: true,
+        const formattedHistory = conversation.messages.map(msg => ({
+            role: msg.isFromAI ? 'model' : 'user',
+            parts: [{ text: msg.content }],
+        }));
+
+        const latestUserMessage = formattedHistory.findLast(msg => msg.role === 'user');
+
+        let aiResponseContent = "Sorry, I couldn't generate a response."; 
+
+        if (latestUserMessage) {
+            const historyForChat = formattedHistory.slice(0, formattedHistory.lastIndexOf(latestUserMessage));
+            const chat = model.startChat({
+                history: historyForChat,
+            });
+
+           try {
+                const result = await chat.sendMessage(latestUserMessage.parts[0].text);
+                const response = await result.response;
+                aiResponseContent = response.text(); 
+
+                if (!aiResponseContent) {
+                    aiResponseContent = "The AI generated an empty response.";
+                    console.warn("AI generated empty response for conversation", conversationId);
+                }
+
+            } catch (aiError) {
+                console.error('Error generating content from Gemini API:', aiError);
+                aiResponseContent = "Error generating response from AI."; 
             }
-        });
+
+       } else {
+            console.warn("sendAIMessage called for conversation", conversationId, "but no user message found in history.");
+       }
+
+       const aiMessage = await prisma.message.create({
+           data: {
+               content: aiResponseContent, 
+               conversationId,
+               isFromAI: true,
+               senderId: 'ai', 
+           }
+       });
 
         io.to(conversationId).emit('ai_typing_stop', { conversationId });
 
-        io.to(conversationId).emit('new_message', message);
+        io.to(conversationId).emit('new_message', aiMessage);
 
         io.emit(`user_${conversation.userId}_conversation_updated`, {
             conversationId,
-            lastMessage: message
+            lastMessage: aiMessage
         });
     } catch (error) {
         console.log("error sending AI message", error);
