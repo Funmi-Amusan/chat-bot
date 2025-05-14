@@ -15,7 +15,7 @@ interface Conversation {
 }
 
 const ChatInterface = async ({ params }: { params: { id: string } }) => {
-  const id = params.id; 
+  const id = await params.id; 
   let conversation: Conversation | null = null;
   let messages: Message[] = [];
 

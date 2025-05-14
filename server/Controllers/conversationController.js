@@ -154,10 +154,10 @@ export const sendMessage = async (req, res) => {
         if (!conversationExists) {
             return res.status(404).json({ error: "Conversation not found" });
         }
-
-         if (conversationExists.userId !== userId) {
-            return res.status(403).json({ error: "User not authorized to send messages in this conversation" });
-        }
+// console.log('conversationExists', conversationExists)
+//          if (conversationExists.userId !== userId) {
+//             return res.status(403).json({ error: "User not authorized to send messages in this conversation" });
+//         }
 
         const message = await prisma.message.create({
             data: {
@@ -181,10 +181,7 @@ export const sendMessage = async (req, res) => {
         });
 
         io.to(conversationId).emit('ai_typing_start', { conversationId });
-
-        setTimeout(() => {
             sendAIMessage(conversationId);
-        }, 2000);
     } catch (error) {
         res.status(500).json(error);
         console.log("error sending message", error);
@@ -198,7 +195,7 @@ export const sendAIMessage = async (conversationId) => {
             include: { user: true,
                 messages: {
                     orderBy: {
-                        createdAt: 'asc'
+                        createdAt: 'desc'
                     },
                     take: 1,
                 }
@@ -249,7 +246,6 @@ export const sendAIMessage = async (conversationId) => {
                content: aiResponseContent, 
                conversationId,
                isFromAI: true,
-               senderId: 'ai', 
            }
        });
 
