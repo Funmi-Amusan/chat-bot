@@ -1,7 +1,8 @@
 
 import { signIn } from "@/lib/auth";
 import BaseButton from "../ui/BaseButton";
-import { ImageAssets } from "@/assets/images";
+import { FcGoogle } from "react-icons/fc";
+
 
 const GoogleSignIn = () => {
   return (
@@ -10,8 +11,9 @@ const GoogleSignIn = () => {
         "use server";
         await signIn("google");
       }}
+      className="w-full"
     >
-     <BaseButton text='Login to Google' type="submit" imgSrc={ImageAssets.googleLogo.src} className='w-full bg-white border-gray-300' />
+     <BaseButton text='Login to Google' type="submit" icon={<FcGoogle size={18} />} className='w-full bg-white border-gray-300' />
     </form>
   );
 };

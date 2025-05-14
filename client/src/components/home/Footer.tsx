@@ -4,8 +4,8 @@ import { RiInstagramFill } from "react-icons/ri";
 
 export const Footer = () => {
   return (
-    <footer className="dark:bg-black bg-white flex flex-col justify-center md:flex-row md:!justify-between py-10 px-8">
-        <p className="text-black/50 dark:text-white/50 text-body-gray text-sm font-inter text-center">
+    <footer className="bg-black flex flex-col justify-center md:flex-row md:!justify-between py-10 px-8">
+        <p className="text-white/50 text-body-gray text-sm font-inter text-center">
         @ 2024 Your Company, Inc. All rights reserved
         </p>
       <div className=" flex flex-row items-center mx-auto md:m-0 gap-4 ">

@@ -35,7 +35,7 @@
   }
 
   h1 {
-    @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-30 tracking-tight font-semibold text-black dark:text-white ;
+    @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-15 tracking-tight font-semibold text-black dark:text-white ;
   }
 
   h2 {
