@@ -35,15 +35,15 @@
   }
 
   h1 {
-    @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-30 tracking-tight font-semibold text-white;
+    @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-30 tracking-tight font-semibold text-black dark:text-white ;
   }
 
   h2 {
-    @apply text-4xl md:text-[54px] lg:text-[62px] py-12 tracking-tight font-semibold text-white;
+    @apply text-4xl md:text-[54px] lg:text-[62px] py-12 tracking-tight font-semibold text-black dark:text-white ;
   }
 
   h5 {
-    @apply text-lg font-bold text-white;
+    @apply text-lg font-bold text-black dark:text-white ;
   }
   a {
     @apply no-underline
@@ -58,7 +58,7 @@
   }
 
   .text-body-lg {
-    @apply text-[22px] text-white font-medium leading-8 tracking-tighter
+    @apply text-[22px] text-black dark:text-white  font-medium leading-8 tracking-tighter
   }
 
   .text-body-tag {
@@ -89,16 +89,27 @@
   }
 
   .btn {
-    @apply py-2 px-4 bg-white font-semibold text-black rounded-lg w-fit text-sm;
+    @apply py-2 px-4 dark:bg-white bg-black font-semibold dark:text-black text-white rounded-lg w-fit text-sm;
   }
 
   .tag {
-    @apply py-2 px-4 border border-white/20 rounded-xl w-fit text-sm;
+    @apply py-2 px-4 border border-black/20 dark:border-white/20  text-black/50 dark:text-white/50 rounded-xl w-fit text-sm;
   }
 
-  
+  .mask-gradient {
+    @apply absolute top-0 w-1/5 h-full dark:from-black from-white from-20% via-transparent via-30% to-transparent to-100%  z-10;
+  }
+
+  .bg-gradient {
+    @apply  from-white dark:from-black from-20% to-[#DDBCFF] dark:to-[#5D2CA8] to-90%  ;
+  }
+
   .fade-in {
     animation: fade-in 3s ease-in-out;
+  }
+
+  .bg-hero {
+    @apply bg-cover bg-center bg-no-repeat  ;
   }
 
 }

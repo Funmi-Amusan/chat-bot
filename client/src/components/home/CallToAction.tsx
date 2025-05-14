@@ -5,11 +5,11 @@ import Image from "next/image";
 
 export const CallToAction = () => {
   return (
-    <section className="bg-black flex-center-col py-20 px-8 relative">
+    <section className="bg-white dark:bg-black flex-center-col py-20 px-8 relative">
       <div className=" max-w-[540px] flex-center-col ">
 
       <h2>Get instant access</h2>
-      <p className="text-white/50 text-body-gray font-inter text-center">
+      <p className="text-black/50 dark:text-white/50 text-body-gray font-inter text-center">
       Celebrate the joy of accomplishment with
  an app designed to track your progress
  and motivate your efforts.

@@ -18,7 +18,7 @@ export async function createNewConversation(userId: string) {
         };
         const newConversation = await http.post({ url: createConversationURL, body });
         if (newConversation) {
-            revalidatePath('/chats'); 
+            revalidatePath('/chat'); 
             return { success: true, data: newConversation }; 
         } else {
              console.error("Server Action: Failed to create conversation:", newConversation);
@@ -42,7 +42,7 @@ export async function getAllConverstaions(userId: string) {
         
         const allConversations = await http.get({ url: findConversationsByUserIdURL(userId) });
         if (allConversations) {
-            // revalidatePath('/chats'); 
+            // revalidatePath('/chat'); 
             return { success: true, data: allConversations.conversations }; 
         } else {
              console.error("Server Action: Failed to fetch all conversations:", allConversations);
@@ -60,7 +60,7 @@ export async function getAConverstaionById(conversationId: string) {
     try {
         const conversation = await http.get({ url: findConversationByIdURL(conversationId) });
         if (conversation) {
-            // revalidatePath('/chats'); 
+            // revalidatePath('/chat'); 
             return { success: true, data: conversation.conversation }; 
         } else {
              console.error("Server Action: Failed to fetch conversation:", conversation);
@@ -86,7 +86,7 @@ export async function sendMessage(content: string, conversationId: string) {
         };
         const newMessage = await http.post({ url: sendMessageURL, body });
         if (newMessage) {
-            // revalidatePath('/chats'); 
+            // revalidatePath('/chat'); 
             return { success: true, data: newMessage }; 
         } else {
              console.error("Server Action: Failed to send message:", newMessage);
@@ -104,7 +104,7 @@ export async function deleteConversation( conversationId: string) {
     try {
         const deleteConversation = await http.delete({ url: deleteConversationByIdURL(conversationId) });
         if (deleteConversation) {
-            revalidatePath('/chats'); 
+            revalidatePath('/chat'); 
             return { success: true, data: deleteConversation }; 
         } else {
              console.error("Server Action: Failed to delete conversation:", deleteConversation);

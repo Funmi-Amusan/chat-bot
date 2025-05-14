@@ -5,7 +5,7 @@ export const Navbar = () => {
   return (
     <nav className="p-6 flex-between ">
       <img src={ImageAssets.Logo.src} alt="logo" width={40}/>
-      <IoMdMenu color="white" size={30} />
+      <IoMdMenu className="text-black dark:text-white" size={30} />
     </nav>
   );
 };

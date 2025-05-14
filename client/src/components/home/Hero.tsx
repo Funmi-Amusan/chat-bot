@@ -3,24 +3,20 @@
 import { IconAssets } from "@/assets/icons";
 import { Navbar } from "./Navbar";
 import { ImageAssets } from "@/assets/images";
+import { IoIosArrowRoundForward } from "react-icons/io";
 import Image from "next/image";
 import {motion} from "framer-motion";
 
 export const Hero = () => {
   return (
-    <section className=" overflow-clip"
-    style={{ 
-      backgroundImage: `url(${ImageAssets.landingBGHero.src})`, 
-      backgroundSize: 'cover',  
-      backgroundPosition: 'center'  
-    }}
+    <section className={` overflow-clip bg-cover bg-center bg-[url(@/assets/images/landingBgHeroLight.png)] dark:bg-[url(@/assets/images/landingBgHero.png)] `}
     >
       <Navbar />
       <div className=" container pt-12 pb-20 flex-col-center flex-col justify-center text-center">
-        <a href="" className="tag inline-flex text-white/50 ">
+        <a href="" className="tag inline-flex ">
         Version 2.0 is here 
-        <span className="text-white inline-flex pl-2 gap-2 flex-center">Read more 
-           <img src={IconAssets.arrowWhite.src} alt="mobile menu" width={10}/> 
+        <span className="text-black dark:text-white inline-flex pl-2 gap-2 flex-center">Read more 
+        <IoIosArrowRoundForward className="text-black dark:text-white" />
         </span> 
            </a>
            <div className="relative">

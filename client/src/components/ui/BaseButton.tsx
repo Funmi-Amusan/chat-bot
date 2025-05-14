@@ -13,7 +13,7 @@ type BaseButtonProps = {
 const BaseButton = ({ text, onClick, imgSrc, className, variant = "default", type = 'button' }: BaseButtonProps) => {
   
   const buttonStyles = {
-    default: "bg-white text-gray-700 hover:border hover:bg-gray-100",
+    default: "dark:bg-white bg-black text-gray-200 dark:text-gray-700 hover:border hover:bg-gray-100",
     dark: "bg-gray-900 text-white border-gray-800 hover:bg-gray-700",
     primary: "bg-blue-500 text-white border-blue-600 hover:bg-blue-600",
   };

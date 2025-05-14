@@ -97,7 +97,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           setSocket={setSocket} 
           socket={socket}
         />
-        <div className="flex flex-col p-4 bg-amber-300 w-full">
+        <div className="flex flex-col p-4  w-full">
           <div className={`flex items-center justify-between bg-[#ECE6F0] w-full md:p-1 rounded-4xl max-h-[150px] ${ isFocused ? 'border' : 'border-none'} ${ isAITyping ? 'opacity-40 ' : 'opacity-100'} `}>
             <textarea 
               ref={textareaRef}

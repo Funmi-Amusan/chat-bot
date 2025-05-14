@@ -14,7 +14,7 @@ export const ProductShowcase = () => {
   const rotateX = useTransform(scrollYProgress, [0, 1], [25, 0])
   const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1])
   return (
-    <section className="bg-gradient-to-b from-black from-20%  to-[#5D2CA8] to-90%  px-4 py-18 gap-6 flex-center-col">
+    <section className="bg-gradient bg-gradient-to-b px-4 py-18 gap-6 flex-center-col">
       <h2>Intuitive Interface</h2>
       <p className="text-body-lg max-w-[450px] font-inter text-center">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes, one task at a time.</p>
     <motion.div
