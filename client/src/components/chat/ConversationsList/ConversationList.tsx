@@ -7,6 +7,8 @@ import SidebarButton from '@/components/ui/SidebarButton';
 import { PiChatsCircleLight, PiPlusCircleFill } from "react-icons/pi";
 import { User } from 'next-auth';
 import SignOut from '@/components/auth/sign-out';
+import NameIcon from '@/components/ui/NameIcon';
+import { useRouter } from 'next/navigation';
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -14,15 +16,20 @@ interface ConversationListProps {
 }
 
 const ConversationList = ({ conversations, user }: ConversationListProps) => {
+  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const  addNewChat = () => {
+  router.push('/chat/new');
+  };
+
   return (
     <aside 
-      className={`flex-col flex p-4 justify-between h-full transition-all duration-1000 ease-in-out ${
+      className={`flex-col flex p-4 justify-between h-full transition-all duration-300 ease-in-out ${
         isSidebarOpen ? 'w-64' : 'w-14'
       }`}
     >
@@ -33,14 +40,14 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
         {isSidebarOpen && <h3 className='text-2xl font-semibold inline-flex whitespace-nowrap'>Chat Bot</h3>}
       </div>
 
-      <div className='flex gap-2 items-center'>
+      <button onClick={() => addNewChat()} className='flex gap-2 items-center'>
         <div className='p-1' >
 
       <PiPlusCircleFill color='#5d0ec0' size={28} />
         </div>
         
         {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap'>New Chat</p>}
-      </div>
+      </button>
 
       <div className='flex gap-2 items-center'>
         <div className='p-1'>
@@ -68,7 +75,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
 
 <div className='flex flex-col gap-4'>
       <div className='inline-flex whitespace-nowrap items-center gap-1 '>
-    <p className=' bg-violet-200 text-violet-800 font-bold text-base h-6 w-6 items-center justify-center text-center rounded-full inline-flex whitespace-nowrap '>F</p>
+      <NameIcon />
     {isSidebarOpen && (
       <p className='text-sm font-medium inline-flex whitespace-nowrap'>{user?.email}</p>
     )}

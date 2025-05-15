@@ -1,3 +1,5 @@
+import { User } from "next-auth";
+
 export type InitialState = {
     loading: boolean;
     messages: Message[] | [];
@@ -5,7 +7,7 @@ export type InitialState = {
     error: boolean;
     message: string | null;
     isAITyping: boolean;
-    user: string | null;
+    user: User | null;
     allowTypwriterAnimation: string | null;
 };
 

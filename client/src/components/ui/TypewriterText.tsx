@@ -12,8 +12,6 @@ type TypewriterTextType = {
 
 const TypewriterText = ({ text, delay = 0.01, duration = 4, staggerChildren = 0.01 }: TypewriterTextType) => {
 
-  console.log('999999')
-
   const characters = Array.from(text);
 
   const containerVariants = {

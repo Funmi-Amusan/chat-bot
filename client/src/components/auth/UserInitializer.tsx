@@ -3,19 +3,20 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '@/utils/hooks'; 
 import { setLoggedInUserAction } from '@/store/conversation'; 
+import { User } from 'next-auth';
 
 type UserInitializerProps = {
-  userId: string | null;
+  user: User | null;
 }
 
-const UserInitializer = ({ userId }: UserInitializerProps) => {
+const UserInitializer = ({ user }: UserInitializerProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (userId) {
-      dispatch(setLoggedInUserAction(userId));
+    if (user) {
+      dispatch(setLoggedInUserAction(user));
     }
-  }, [userId, dispatch]); 
+  }, [user, dispatch]); 
 
   return null;
 }

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from 'react';
 import MessageBubble from './MessageBubble';
-import Image from 'next/image';
 import { ImageAssets } from '@/assets/images';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import { motion } from 'framer-motion';
@@ -10,6 +9,7 @@ import { Message } from '@/store/conversation/types';
 import { setMessagesData } from '@/store/conversation';
 import EmptyChat from './EmptyChat';
 import ShinyText from '@/components/ui/BaseShinyText';
+import NameIcon from '@/components/ui/NameIcon';
 
 const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
 
@@ -26,18 +26,11 @@ const {
 } = useAppSelector((state) => state.conversationReducer);
 
 
-useEffect(() => {
-  if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
-  }
-}, []); 
-
-
-  // useEffect(() => {
-  //   if (messagesEndRef.current) {
-  //     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // }, [messages, isAITyping]); 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
+    }
+  }, [messages, isAITyping]); 
 
 
   return (
@@ -52,13 +45,7 @@ useEffect(() => {
             >
              <div className="flex-shrink-0 w-8 h-8 rounded-full">
   {!message?.isFromAI && (
-    <Image
-      src={ImageAssets.userAvatar}
-      alt="User Avatar"
-      width={48}
-      height={48}
-      className="rounded-full object-cover"
-    />
+  <NameIcon />
   )}
 </div>
               <div className="flex-grow">
