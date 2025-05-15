@@ -10,7 +10,7 @@
 @layer components {
 
   body {
-    @apply bg-zinc-100 text-zinc-900;
+    @apply bg-purple-100 ;
   }
 
   a {
@@ -35,11 +35,11 @@
   }
 
   h1 {
-    @apply text-6xl md:text-[154px] lg:text-[165px] md:leading-15 tracking-tight font-semibold text-black dark:text-white ;
+    @apply text-6xl md:text-[154px]  tracking-tight font-semibold text-black dark:text-white ;
   }
 
   h2 {
-    @apply text-4xl md:text-[54px] lg:text-[62px] py-12 tracking-tight font-semibold text-black dark:text-white ;
+    @apply text-4xl md:text-[54px] pt-12 tracking-tight font-semibold text-black dark:text-white ;
   }
 
   h5 {
@@ -58,7 +58,7 @@
   }
 
   .text-body-lg {
-    @apply text-[22px] text-black dark:text-white  font-medium leading-8 tracking-tighter
+    @apply text-[22px] text-black dark:text-white  font-normal leading-8 tracking-tighter text-center
   }
 
   .text-body-tag {
@@ -89,11 +89,11 @@
   }
 
   .btn {
-    @apply py-2 px-4 dark:bg-white bg-black font-semibold dark:text-black text-white rounded-lg w-fit text-sm;
+    @apply py-3 px-5 dark:bg-white bg-black font-semibold dark:text-black text-white inline-flex whitespace-nowrap rounded-lg w-fit text-sm;
   }
 
   .tag {
-    @apply py-2 px-4 border border-black/20 dark:border-white/20  text-black/50 dark:text-white/50 rounded-xl w-fit text-sm;
+    @apply py-2 px-4 border border-black/20 dark:border-white/20  text-black/50 dark:text-white/50 rounded-xl w-fit text-sm inline-flex ;
   }
 
   .mask-gradient {
@@ -112,7 +112,21 @@
     @apply bg-cover bg-center bg-no-repeat  ;
   }
 
+  .animate-shine {
+    animation: shine linear infinite; 
+  }
 }
+
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0; 
+  }
+  100% {
+    background-position: -200% 0; 
+  }
+}
+
 
 @keyframes fade-in {
   from {

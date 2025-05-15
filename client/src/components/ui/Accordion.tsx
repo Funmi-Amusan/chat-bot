@@ -14,7 +14,7 @@ type AccordionProps = {
 const Accordion = ({ question, answer, id, isOpen, onToggle }: AccordionProps) => {
 
   return (
-    <div onClick={() => onToggle(id)} className={`flex-center-col max-w-2xl mx-auto gap-2 w-full rounded-lg py-4 px-4 cursor-pointer border-b border-black/30 dark:border-white/30 `}>
+    <div onClick={() => onToggle(id)} className={`flex-center-col max-w-2xl gap-2 w-full py-4 mx-4 cursor-pointer border-b border-black/30 dark:border-white/30 `}>
         <div className='flex justify-between items-center py-2 w-full text-start'> 
             <h5>{question}</h5>
             {isOpen ? <FaMinus className="text-black dark:text-white" size={20} /> : <FaPlus className="text-black dark:text-white" size={20} />}

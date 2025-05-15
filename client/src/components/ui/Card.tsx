@@ -25,6 +25,7 @@ return () => {
   window.removeEventListener('mousemove', updateMousePosition)
 }
   }, [])
+
   return (
     <div className='flex-center-col border-[0.5px] max-w-88 gap-2 border-black/30 dark:border-white/30 w-fit rounded-xl py-8 px-4 relative'>
       <motion.div ref={borderRef} className='absolute inset-0 border border-purple-400 rounded-xl' 
@@ -34,10 +35,10 @@ return () => {
 }}
         ></motion.div>
         <div className=' p-4 mb-2 rounded-lg bg-black dark:bg-white'>
-        <img src={image} alt=""  className='h-5 w-auto invert'/>
+        <img src={image} alt=""  className='h-5 w-auto invert dark:invert-0'/>
         </div>
         <h5>{title}</h5>
-        <p className='text-md font-inter text-center !text-black dark:text-white'>{content}</p>
+        <p className='text-md font-inter text-center text-black dark:text-white'>{content}</p>
     </div>
   )
 }

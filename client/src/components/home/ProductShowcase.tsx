@@ -16,7 +16,7 @@ export const ProductShowcase = () => {
   return (
     <section className="bg-gradient bg-gradient-to-b px-4 py-18 gap-6 flex-center-col">
       <h2>Intuitive Interface</h2>
-      <p className="text-body-lg max-w-[450px] font-inter text-center">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes, one task at a time.</p>
+      <p className="text-body-lg font-inter max-w-[540px] ">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes, one task at a time.</p>
     <motion.div
 style={{
   opacity: opacity,

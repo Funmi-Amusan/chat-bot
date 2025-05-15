@@ -34,25 +34,6 @@ export const createConversation = async (req, res) => {
 
         io.emit(`user_${userId}_new_conversation`, conversation);
 
-        const message = await prisma.message.create({
-            data: {
-                content: "How can I help you?",
-                conversationId: conversation.id,
-                isFromAI: true,
-            },
-        });
-
-        io.to(conversation.id).emit('new_message', message);
-        io.emit(`user_${conversation.userId}_conversation_updated`, {
-            conversationId: conversation.id,
-            lastMessage: message,
-        });
-
-        res.status(201).json({
-            conversation,
-            initialMessage: message,
-        });
-
     } catch (error) {
         res.status(500).json({ error: error.message });
         console.log("Error creating conversation:", error.message);

@@ -8,7 +8,7 @@ export const LogoTicker = () => {
   const allImages = [...comapnyLogos, ...comapnyLogos];
   
   return (
-    <section className="dark:bg-black bg-white py-12 text-center flex flex-col items-center gap-9">
+    <section className="dark:bg-black bg-white py-8 text-center flex flex-col items-center gap-9">
       <p className="text-black/50 dark:text-white/50 text-body-gray px-12 font-inter leading-5">
         Trusted by the world&apos;s most innovative teams
       </p>
@@ -17,7 +17,7 @@ export const LogoTicker = () => {
         <div className="mask-gradient left-0  bg-gradient-to-r"></div>
         
         <motion.div className="flex gap-8 animate-scroll"
-        animate={{ translateX: "-50%"}}
+        animate={{ translateX: "-49%"}}
         transition={{ 
           duration: 15, 
           repeat: Infinity, 

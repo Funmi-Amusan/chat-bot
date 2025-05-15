@@ -4,13 +4,13 @@ import { createNewConversation } from '@/lib/actions/ConversationActions';
 import { SendMessageAction } from '@/store/conversation/action';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import SocketManager from '@/utils/SocketManager';
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import { redirect } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { LuGlobe, LuPaperclip, LuSend, LuPlus } from "react-icons/lu";
 
 const MessageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty").max(5000, "Message is too long"),
@@ -97,32 +97,53 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           setSocket={setSocket} 
           socket={socket}
         />
-        <div className="flex flex-col p-4  w-full">
-          <div className={`flex items-center justify-between bg-[#ECE6F0] w-full md:p-1 rounded-4xl max-h-[150px] ${ isFocused ? 'border' : 'border-none'} ${ isAITyping ? 'opacity-40 ' : 'opacity-100'} `}>
-            <textarea 
+      <div className="flex flex-col w-full px-18 pb-6">
+      <div className="relative rounded-2xl p-0.5  overflow-hidden">
+     
+        <div className="flex flex-col w-full rounded-2xl border py-3 border-neutral-500/50 bg-white dark:bg-black/50 overflow-hidden">
+ 
+          <div className="relative flex w-full">
+              <textarea 
               ref={textareaRef}
               name="chat-input" 
               id="chat-input" 
               value={message}
               onChange={(e) => setMessage(e.target.value)} 
               onKeyDown={handleKeyDown}
-              placeholder='Reply to chatbot' 
-              className='text-[#625B71] placeholder:text-[#625B71] w-full outline-none bg-transparent resize-none min-h-[36px] max-h-[120px] overflow-y-auto py-2 px-3 disabled:cursor-not-allowed '
+               placeholder="Imagine Something...✦˚"
+              className="w-full h-16 bg-transparent rounded-2xl dark:text-white text-base px-3  resize-none outline-none dark:placeholder-white/90 focus:placeholder-gray-700"
               rows={1}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)} 
               disabled={loading }
             />
-           <div 
-    onClick={() =>  message.trim() !== "" && sendMessage()} 
-    className={`px-4 flex-shrink-0 ${
-      message.trim() === "" ? "text-gray-400 cursor-not-allowed" : "text-[#625B71] cursor-pointer"
-    }`}
-  >
-    <SendOutlinedIcon style={{ color: isAITyping ? "#A0A0A0" : "#625B71" }} />
-  </div>
-          </div>
+    </div>
+          <div className="flex justify-between items-end px-2.5 pb-2.5">
+            <div className="flex gap-4">
+              <button className="text-black/30 hover:text-black transition-all hover:-translate-y-1">
+                <LuPaperclip size={20} />
+              </button>
+              <button className="text-black/30 hover:text-black transition-all hover:-translate-y-1">
+                <LuPlus size={20} />
+              </button>
+              <button className="text-black/30 hover:text-black transition-all hover:-translate-y-1">
+                <LuGlobe size={20} />
+              </button>
+            </div>
+            
+            <button 
+            onClick={() =>  message.trim() !== "" && sendMessage()} 
+              className="flex items-center justify-center bg-purple-400 p-2 rounded-lg transition-all hover:scale-105 active:scale-90"
+            >
+                <LuSend 
+                  size={18} 
+                  className="text-white transition-all hover:rotate-45 hover:text-white hover:filter hover:drop-shadow-md focus:text-white" 
+                />
+            </button>
         </div>
+      </div>
+    </div>
+    </div>
       </>
     );
 };

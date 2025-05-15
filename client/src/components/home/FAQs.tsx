@@ -14,7 +14,7 @@ export const FAQs = () => {
 
   return (
     <section className="bg-gradient bg-gradient-to-t flex flex-col items-center text-center py-18 "> {/* Used flex-col and items-center for better centering */}
-      <h2>Frequently asked questions</h2>
+      <h2 className='pb-6'>Frequently asked questions</h2>
       {
         faqs.map((faq) => (
           <Accordion
