@@ -40,10 +40,9 @@ const ChatInterface = async ({ params }: { params: { id: string } }) => {
     <div className='w-full h-screen lg:bg-white p-4 relative'>
       <div className='flex flex-col h-full '>
         <ChatInterfaceHeader />
-          <div className='h-full overflow-y-auto relative '>
+          <div className='h-full w-full md:max-w-3xl mx-auto overflow-y-auto relative '>
             <ChatWindow messages={messages} />
           </div>
-
             <TextInput conversationId={id} /> 
       </div>
     </div>

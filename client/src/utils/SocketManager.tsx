@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { addMessageToConversationAction, setAITyping } from '@/store/conversation';
+import { addMessageToConversationAction, setAITyping, setAllowTypwriterAnimation } from '@/store/conversation';
 import { Message } from '@/store/conversation/types';
 import { useAppDispatch } from '@/utils/hooks';
 
@@ -32,27 +32,25 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
   useEffect(() => {
     if (socket && conversationId) {
       socket.emit('join_conversation', conversationId);
-      console.log('from socket', conversationId);
       socket.on('ai_typing_start', (data: Message) => {
-        console.log('ai_typing_start')
         if (data.conversationId === conversationId) {
           dispatch(setAITyping(true));
         }
       });
       
       socket.on('ai_typing_stop', (data: Message) => {
-        console.log('ai_typing_stop')
         if (data.conversationId === conversationId) {
           dispatch(setAITyping(false));
         }
       });
       
       socket.on('new_message', (newMessage: Message) => {
-        console.log('-------')
         if (newMessage.isFromAI && newMessage.conversationId === conversationId) {
           dispatch(setAITyping(false));
         }
         dispatch(addMessageToConversationAction({newMessage, conversationId}));
+        console.log('---newMessage', newMessage);
+        dispatch(setAllowTypwriterAnimation(newMessage.id));
       });
       
       socket.on('conversation_deleted', ({ id }: { id: string }) => {

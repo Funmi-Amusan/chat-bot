@@ -5,10 +5,11 @@ import MessageBubble from './MessageBubble';
 import Image from 'next/image';
 import { ImageAssets } from '@/assets/images';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
-import ActiveTypingBubble from './ActiveTypingBubble';
+import { motion } from 'framer-motion';
 import { Message } from '@/store/conversation/types';
 import { setMessagesData } from '@/store/conversation';
 import EmptyChat from './EmptyChat';
+import ShinyText from '@/components/ui/BaseShinyText';
 
 const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
 
@@ -42,17 +43,19 @@ const {
                 message?.isFromAI ? 'flex-row' : 'flex-row-reverse'
               }`}
             >
-              <div className="flex-shrink-0 w-8 h-8 rounded-full">
-                <Image
-                  src={message?.isFromAI ? ImageAssets.Logo : ImageAssets.userAvatar}
-                  alt={message?.isFromAI ? 'Chat Bot Avatar' : 'User Avatar'}
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover"
-                />
-              </div>
+             <div className="flex-shrink-0 w-8 h-8 rounded-full">
+  {!message?.isFromAI && (
+    <Image
+      src={ImageAssets.userAvatar}
+      alt="User Avatar"
+      width={48}
+      height={48}
+      className="rounded-full object-cover"
+    />
+  )}
+</div>
               <div className="flex-grow">
-                <MessageBubble isFromAI={message?.isFromAI} content={message?.content} />
+                <MessageBubble isFromAI={message?.isFromAI} content={message?.content} id={message?.id} />
               </div>
             </div>
           </div>
@@ -64,17 +67,23 @@ const {
 {isAITyping && (
         <div className="flex gap-2 items-end mb-4"> 
            <div className="flex-shrink-0 w-8 h-8 rounded-full">
-            <Image
-              src={ImageAssets.Logo}
+            <motion.img
+            initial={{ opacity: 0.7, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 0.9, 
+              repeat: Infinity, 
+              repeatType: "loop"
+            }}
+
+              src={ImageAssets.Logo.src}
               alt="bot avatar"
               width={32}
               height={32}
               className="rounded-full object-cover"
             />
           </div>
-          <div className="flex-grow">
-             <ActiveTypingBubble />
-          </div>
+         <ShinyText text='ChatBot is thinking...' />
         </div>
       )}
 

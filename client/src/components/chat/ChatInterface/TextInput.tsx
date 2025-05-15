@@ -97,7 +97,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           setSocket={setSocket} 
           socket={socket}
         />
-      <div className="flex flex-col w-full px-18 pb-6">
+      <div className="flex flex-col w-full px-4 max-w-3xl mx-auto pb-6">
       <div className="relative rounded-2xl p-0.5  overflow-hidden">
      
         <div className="flex flex-col w-full rounded-2xl border py-3 border-neutral-500/50 bg-white dark:bg-black/50 overflow-hidden">
@@ -137,7 +137,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
             >
                 <LuSend 
                   size={18} 
-                  className="text-white transition-all hover:rotate-45 hover:text-white hover:filter hover:drop-shadow-md focus:text-white" 
+                  className="text-white transition-all hover:-rotate-45 hover:text-white hover:filter hover:drop-shadow-md focus:text-white" 
                 />
             </button>
         </div>

@@ -7,6 +7,7 @@ const initialState: InitialState = {
     messages: [],
     conversations: [],
     isAITyping: false,
+    allowTypwriterAnimation: null,
     user: null,
 }
 
@@ -15,8 +16,7 @@ const conversationSlice = createSlice({
     initialState,
     reducers: {
         addMessageToConversationAction: (state, action: PayloadAction<{ conversationId: string, newMessage: Message }>) => {
-            const { conversationId, newMessage } = action.payload;
-            console.log('first', conversationId, newMessage);
+            const { newMessage } = action.payload;
             state.messages = [...state.messages, newMessage]
         },        
         setAITyping: (state, action) => {
@@ -27,6 +27,9 @@ const conversationSlice = createSlice({
         },
         setMessagesData: (state, action) => {
             state.messages = action.payload;
+        },
+        setAllowTypwriterAnimation: (state, action) => {
+            state.allowTypwriterAnimation = action.payload;
         }
     }
 });
@@ -36,5 +39,6 @@ export const {
     addMessageToConversationAction,
     setAITyping,
     setLoggedInUserAction,
-    setMessagesData
+    setMessagesData,
+    setAllowTypwriterAnimation
 } = conversationSlice.actions;

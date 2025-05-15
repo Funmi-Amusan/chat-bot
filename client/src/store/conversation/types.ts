@@ -6,6 +6,7 @@ export type InitialState = {
     message: string | null;
     isAITyping: boolean;
     user: string | null;
+    allowTypwriterAnimation: string | null;
 };
 
 export type Conversation = {
