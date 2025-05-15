@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -8,7 +10,9 @@ type TypewriterTextType = {
   staggerChildren?: number;
 };
 
-const TypewriterText = ({ text, delay = 0.5, duration = 500, staggerChildren = 0.9 }: TypewriterTextType) => {
+const TypewriterText = ({ text, delay = 0.01, duration = 4, staggerChildren = 0.01 }: TypewriterTextType) => {
+
+  console.log('999999')
 
   const characters = Array.from(text);
 
@@ -28,11 +32,10 @@ const TypewriterText = ({ text, delay = 0.5, duration = 500, staggerChildren = 0
     },
     visible: {
       opacity: 1, 
-      y: 0,
       transition: {
         duration,
-        ease: [0.2, 0.65, 0.3, 0.9], 
-      },
+        ease: [0.2, 0.65, 0.3, 0.9],
+      }
     },
   };
 

@@ -26,11 +26,18 @@ const {
 } = useAppSelector((state) => state.conversationReducer);
 
 
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, isAITyping]); 
+useEffect(() => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
+  }
+}, []); 
+
+
+  // useEffect(() => {
+  //   if (messagesEndRef.current) {
+  //     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, [messages, isAITyping]); 
 
 
   return (

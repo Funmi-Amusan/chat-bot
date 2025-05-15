@@ -6,6 +6,7 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import ShinyText from "../ui/BaseShinyText";
+import RevealText from "../ui/RevealText";
 
 export const Hero = () => {
   return (
@@ -26,6 +27,8 @@ export const Hero = () => {
           >
             One Task <br /> at a Time
           </h1>
+          {/* <RevealText text={"One Task"} />
+          <RevealText text={"at a Time"} /> */}
           <div className=" flex justify-center">
             <p className="text-body-lg font-inter max-w-[450px] ">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes.</p>
 
