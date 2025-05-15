@@ -1,17 +1,21 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import BaseButton from "../ui/BaseButton";
+import { LuLogOut } from "react-icons/lu";
 
-const SignOut = () => {
+const SignOut = ({isSidebarOpen}: {isSidebarOpen?: boolean}) => {
   const handleSignOut = async () => {
     await signOut()
   };
   return (
   
-     <BaseButton text='Sign Out' onClick={handleSignOut} className='!w-fit' variant="dark" />
+    <button onClick={handleSignOut} className="text-sm font-medium text-neutral-700 hover:text-gray-700 inline-flex gap-2 whitespace-nowrap items-center">
+      <LuLogOut size={18} />
+      {isSidebarOpen && 'Sign Out'}
+    </button>
+   
    
   );
 };
 
-export { SignOut };
+export default SignOut;

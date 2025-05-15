@@ -10,7 +10,7 @@
 @layer components {
 
   body {
-    @apply bg-purple-100 ;
+    @apply bg-neutral-100 ;
   }
 
   a {
@@ -84,6 +84,7 @@
   .flex-center-col {
     @apply flex flex-col items-center justify-center
   }
+
   .flex-between {
     @apply flex items-center justify-between
   }

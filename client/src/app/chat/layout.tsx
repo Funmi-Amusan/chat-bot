@@ -1,4 +1,6 @@
+import { auth } from "@/lib/auth";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Chat Bot",
@@ -8,20 +10,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   sidebar,
 }: Readonly<{
     children: React.ReactNode;
     sidebar: React.ReactNode;
 }>) {
+
+    const session = await auth();
+    const userId = session?.user?.id;
+  
+    if (!userId) {
+      redirect('/login');
+    }
+
   return (
     <div className="h-screen">
-          <main className="grid grid-cols-2 lg:grid-cols-[300px_1fr] h-screen lg:gap-4 "> 
+          <main className="flex h-screen lg:gap-4 relative "> 
             <div className="hidden lg:flex flex-col h-full overflow-scroll ">
               {sidebar}
             </div>
-            <div className=" ">
+            <div className="flex-grow ">
               {children}
             </div>
           </main>

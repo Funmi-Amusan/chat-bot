@@ -1,18 +1,20 @@
 'use client'
 
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { IoMdTrash } from "react-icons/io";
 import { useState } from 'react';
 import DeleteModal from './DeleteModal';
 import Link from 'next/link';
 import { deleteConversation } from '@/lib/actions/ConversationActions';
 import { useParams, useRouter } from 'next/navigation';
 
-const ConversationItem = ({ title, id, isActive }: { title: string, id: string, isActive: boolean }) => { 
+const ConversationItem = ({ title, id }: { title: string, id: string }) => { 
   const {id:currentConversationId} = useParams();
   const router = useRouter()
    const [openModal, setOpen] = useState(false);
    const [isDeleting, setIsDeleting] = useState(false);
    const handleCloseModal = () => setOpen(false);
+
+   const isActive = currentConversationId === id;
 
 
   const openDeleteModal = () => {
@@ -34,12 +36,12 @@ router.push('/chat/new')
 
   return (
     <>
-    <Link href={`/chat/${id}`} className={` px-4 w-full rounded-2xl h-14 flex gap-3 items-center justify-between ${isActive ? 'bg-[#D0C7DE]' : 'bg-[#E8DEF8]'}`} >
-      <div className=' cursor-pointer flex-grow font-normal whitespace-nowrap py-4'>
+    <Link href={`/chat/${id}`} className={` rounded-lg flex items-center justify-between ${isActive ? 'bg-neutral-300' : ''}`} >
+      <div className=' cursor-pointer flex-grow font-normal truncate whitespace-nowrap py-1'>
         <p>{title}</p>
       </div>
-      <button onClick={()=> openDeleteModal()} className=' h-full px-4 flex items-center cursor-pointer'>
-        <DeleteOutlinedIcon />
+      <button onClick={()=> openDeleteModal()} className=' h-full opacity-0 hover:opacity-100 transition-opacity duration-150 ease-in flex items-center cursor-pointer'>
+        <IoMdTrash size={20} />
       </button>
     </Link>
 

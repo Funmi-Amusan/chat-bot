@@ -1,80 +1,85 @@
-import { auth } from '@/lib/auth'; 
-import { conversationService } from '@/store/conversation/service';
-import { redirect } from 'next/navigation';
-import { z } from 'zod';
-import ConversationDisplay from './ConversationDisplay';
-import ConversationItem from './ConversationItem';
+'use client'
 
-const UserIdSchema = z.string().uuid("Invalid user ID format");
+import { useState } from 'react';
+import ConversationItem from '@/components/chat/ConversationsList/ConversationItem';
+import { Conversation } from '@/store/conversation/types';
+import SidebarButton from '@/components/ui/SidebarButton';
+import { PiChatsCircleLight, PiPlusCircleFill } from "react-icons/pi";
+import { User } from 'next-auth';
+import SignOut from '@/components/auth/sign-out';
 
-const ConversationSchema = z.object({
-  id: z.string().uuid("Invalid conversation ID"),
-  title: z.string().optional().nullable(), 
-});
+interface ConversationListProps {
+  conversations: Conversation[];
+  user: User;
+}
 
-const ConversationsSchema = z.array(ConversationSchema);
-
-type ValidConversation = z.infer<typeof ConversationSchema>;
-
-const ConversationList = async () => {
-  const session = await auth();
-  const userId = session?.user?.id;
-
-  if (!userId) {
-    redirect('/login');
-  }
-
-  let validUserId: z.infer<typeof UserIdSchema>;
-  try {
-    validUserId = UserIdSchema.parse(userId);
-  } catch (error) {
-    console.error("Server: Invalid user ID format after authentication:", error);
-    return (
-      <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 '>
-        <p className="text-center text-red-500 mt-4">Authentication error: Invalid user ID format.</p>
-      </div>
-    );
-  }
-
-  let conversations: ValidConversation[] = [];
-  let fetchError: string | null = null;
-
-  try {
-    const response = await conversationService.getConversation(validUserId); 
-
-    if (response && response.conversations) {
-        conversations = ConversationsSchema.parse(response.conversations);
-    } else {
-        console.warn("Server: conversationService.getConversation returned no conversations or unexpected structure", response);
-        conversations = []; 
-    }
-
-
-  } catch (error) {
-    console.error("Server: Error fetching or validating conversations:", error);
-    if (error instanceof z.ZodError) {
-        fetchError = "Invalid conversation data format from server.";
-    } else if (error instanceof Error) {
-         fetchError = `Failed to fetch conversations: ${error.message}`;
-    } else {
-         fetchError = "An unknown error occurred while fetching conversations.";
-    }
-    conversations = [];
-  }
+const ConversationList = ({ conversations, user }: ConversationListProps) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
-    <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 '>
-    <div className=' overflow-y-auto scrollbar-hide flex-1 flex flex-col gap-2'>
-       
-          {conversations.map((conversation) => (
-                <ConversationItem
-                    key={conversation.id}
-                    title={conversation?.title || "Untitled Conversation"}
-                    id={conversation?.id}
-                />
-            ))}
-    </div>
+    <aside 
+      className={`flex-col flex p-4 justify-between h-full transition-all duration-1000 ease-in-out ${
+        isSidebarOpen ? 'w-64' : 'w-14'
+      }`}
+    >
+      <div>
+      <div className='flex gap-1 items-center pb-6'>
+       <SidebarButton onClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+        
+        {isSidebarOpen && <h3 className='text-2xl font-semibold inline-flex whitespace-nowrap'>Chat Bot</h3>}
+      </div>
+
+      <div className='flex gap-2 items-center'>
+        <div className='p-1' >
+
+      <PiPlusCircleFill color='#5d0ec0' size={28} />
+        </div>
+        
+        {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap'>New Chat</p>}
+      </div>
+
+      <div className='flex gap-2 items-center'>
+        <div className='p-1'>
+      <PiChatsCircleLight color='gray' size={24}  />
+        </div>
+        
+        {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap'>Recent Chats</p>}
+      </div>
+      
+      {isSidebarOpen && (
+        <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 mt-4'>
+            <div className='overflow-y-auto scrollbar-hide flex-1 flex flex-col gap-2'>
+                {conversations.map((conversation: Conversation) => (
+                    <ConversationItem
+                        key={conversation.id}
+                        title={conversation?.title || "Untitled Conversation"}
+                        id={conversation?.id}
+                    />
+                ))}
+            </div>
+        </div>
+      )}
+
+      </div>
+
+<div className='flex flex-col gap-4'>
+      <div className='inline-flex whitespace-nowrap items-center gap-1 '>
+    <p className=' bg-violet-200 text-violet-800 font-bold text-base h-6 w-6 items-center justify-center text-center rounded-full inline-flex whitespace-nowrap '>F</p>
+    {isSidebarOpen && (
+      <p className='text-sm font-medium inline-flex whitespace-nowrap'>{user?.email}</p>
+    )}
+      </div>
+
+  <SignOut isSidebarOpen={isSidebarOpen} />
+
 </div>
+ 
+
+    </aside>
   );
 };
 
