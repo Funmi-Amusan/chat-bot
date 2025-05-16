@@ -1,11 +1,16 @@
-import { IoMdMenu } from "react-icons/io";
+
 import { ImageAssets } from "@/assets/images";
+import Link from "next/link";
+import ThemeSwitch from "../ui/ThemeSwitch";
 
 export const Navbar = () => {
   return (
     <nav className="p-6 flex-between ">
       <img src={ImageAssets.Logo.src} alt="logo" width={40}/>
-      <IoMdMenu className="text-black dark:text-white" size={30} />
+      <div className="flex gap-4 items-center">
+        <ThemeSwitch />
+        <Link href={'/login'} className="btn !py-2 ">Sign In</Link>
+      </div>
     </nav>
   );
 };

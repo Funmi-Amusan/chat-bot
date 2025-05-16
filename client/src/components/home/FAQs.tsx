@@ -13,7 +13,7 @@ export const FAQs = () => {
   };
 
   return (
-    <section className="bg-gradient bg-gradient-to-t flex flex-col items-center text-center py-18 "> {/* Used flex-col and items-center for better centering */}
+    <section className="bg-gradient bg-gradient-to-t flex flex-col items-center text-center px-4 py-18 "> {/* Used flex-col and items-center for better centering */}
       <h2 className='pb-6'>Frequently asked questions</h2>
       {
         faqs.map((faq) => (

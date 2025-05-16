@@ -3,6 +3,7 @@ import { Inter, Ubuntu } from "next/font/google";
 import{ Toaster } from 'react-hot-toast';
 import "./globals.css";
 import StoreProvider from "./storeProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,10 +34,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${ubuntu.variable} antialiased`}
       >
+        <ThemeProvider>
       <StoreProvider>
         <Toaster />
         {children}
         </StoreProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { Navbar } from "./Navbar";
 import { ImageAssets } from "@/assets/images";
@@ -6,9 +6,13 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import ShinyText from "../ui/BaseShinyText";
-import RevealText from "../ui/RevealText";
+import { useRouter } from "next/navigation";
+
 
 export const Hero = () => {
+
+  const router = useRouter();
+
   return (
     <section className={` overflow-clip bg-cover bg-center bg-[url(@/assets/images/landingBgHeroLight.png)] dark:bg-[url(@/assets/images/landingBgHero.png)] `}
     >
@@ -54,10 +58,10 @@ export const Hero = () => {
               <Image src={ImageAssets.cursor.src} alt="cursor image" aria-hidden className="" width={150} height={150} draggable={false} />
             </motion.div>
           </div>
-          <motion.button initial={{ opacity: 0}} 
+          <motion.button onClick={()=> router.push('/login')} initial={{ opacity: 0}} 
              animate={{ opacity: 1}} 
              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="btn mt-8">Get For Free</motion.button>
+              className="btn mt-8 hover:scale-105">Get Started</motion.button>
         </div>
       </div>
     </section>

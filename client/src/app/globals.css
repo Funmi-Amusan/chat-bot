@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --main-header-height: 68px;
   --font-inter: "Inter", sans-serif;
