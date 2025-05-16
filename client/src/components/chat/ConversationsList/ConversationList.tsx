@@ -29,7 +29,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
 
   return (
     <aside 
-      className={`flex-col flex p-4 justify-between h-full transition-all duration-300 ease-in-out ${
+      className={`flex-col flex p-4 justify-between h-full transition-all duration-300 ease-in-out border-[0.5px] border-r border-r-neutral-300/40 ${
         isSidebarOpen ? 'w-64' : 'w-14'
       }`}
     >
@@ -37,16 +37,16 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
       <div className='flex gap-1 items-center pb-6'>
        <SidebarButton onClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         
-        {isSidebarOpen && <h3 className='text-2xl font-semibold inline-flex whitespace-nowrap'>Chat Bot</h3>}
+        {isSidebarOpen && <h3 className='text-2xl font-semibold inline-flex whitespace-nowrap dark:text-white'>Chat Bot</h3>}
       </div>
 
-      <button onClick={() => addNewChat()} className='flex gap-2 items-center'>
+      <button onClick={() => addNewChat()} className='flex gap-2 items-center hover:bg-violet-800/30'>
         <div className='p-1' >
 
       <PiPlusCircleFill color='#5d0ec0' size={28} />
         </div>
         
-        {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap'>New Chat</p>}
+        {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap dark:text-violet-800  '>New Chat</p>}
       </button>
 
       <div className='flex gap-2 items-center'>

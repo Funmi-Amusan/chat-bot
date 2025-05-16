@@ -100,7 +100,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
       <div className="flex flex-col w-full px-4 max-w-3xl mx-auto pb-6">
       <div className="relative rounded-2xl p-0.5  overflow-hidden">
      
-        <div className="flex flex-col w-full rounded-2xl border py-3 border-neutral-500/50 bg-white dark:bg-black/50 overflow-hidden">
+        <div className="flex flex-col w-full rounded-2xl border py-3 border-neutral-500/50 bg-white dark:bg-neutral-800 overflow-hidden">
  
           <div className="relative flex w-full">
               <textarea 
@@ -120,20 +120,20 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
     </div>
           <div className="flex justify-between items-end px-2.5 pb-2.5">
             <div className="flex gap-4">
-              <button className="text-black/30 hover:text-black transition-all hover:-translate-y-1">
+              <button className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuPaperclip size={20} />
               </button>
-              <button className="text-black/30 hover:text-black transition-all hover:-translate-y-1">
+              <button className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuPlus size={20} />
               </button>
-              <button className="text-black/30 hover:text-black transition-all hover:-translate-y-1">
+              <button className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuGlobe size={20} />
               </button>
             </div>
             
             <button 
             onClick={() =>  message.trim() !== "" && sendMessage()} 
-              className="flex items-center justify-center bg-purple-400 p-2 rounded-lg transition-all hover:scale-105 active:scale-90"
+              className="flex items-center justify-center bg-violet-800 p-2 rounded-lg transition-all hover:scale-105 active:scale-90"
             >
                 <LuSend 
                   size={18} 

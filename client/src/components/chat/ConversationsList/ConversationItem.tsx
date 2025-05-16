@@ -34,14 +34,14 @@ router.push('/chat/new')
 
   return (
     <>
-    <div  className={` rounded-lg px-2 flex items-center justify-between ${isActive ? 'bg-neutral-300' : ''} hover:bg-neutral-300 transition-all duration-150`}>
+    <div  className={` rounded-lg px-2 flex items-center justify-between ${isActive ? 'bg-neutral-300' : ''} hover:bg-neutral-300 dark:hover:bg-black   transition-all duration-150`}>
     <Link href={`/chat/${id}`} className=" flex-grow" >
       <div className=' cursor-pointer flex-grow font-normal truncate whitespace-nowrap py-1'>
-        <p>{title}</p>
+        <p className="dark:text-neutral-300">{title}</p>
       </div>
     </Link>
       <button onClick={()=> openDeleteModal()} className=' h-full opacity-0 hover:opacity-100 transition-opacity duration-150 ease-in flex items-center cursor-pointer'>
-        <IoMdTrash size={20} />
+        <IoMdTrash size={20} className=" text-neutral-800 dark:text-neutral-300" />
       </button>
 
     </div>

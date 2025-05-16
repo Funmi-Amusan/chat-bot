@@ -6,9 +6,10 @@ import http from '../../utils/https';
 import { createConversationURL, deleteConversationByIdURL, findConversationByIdURL, findConversationsByUserIdURL, sendMessageURL } from '@/utils/end-point';
 
 export async function createNewConversation(userId: string) {
-    
+    console.log('ooo')
     const session = await auth();
     if (!session || session.user?.id !== userId) {
+
         console.warn("Server Action: Unauthorized attempt to create conversation for different user.");
         return { success: false, error: "Unauthorized." };
     }
@@ -16,7 +17,9 @@ export async function createNewConversation(userId: string) {
         const body  = {
             userId: userId,
         };
+        console.log('body', body)
         const newConversation = await http.post({ url: createConversationURL, body });
+        console.log('new', newConversation)
         if (newConversation) {
             revalidatePath('/chat'); 
             return { success: true, data: newConversation }; 

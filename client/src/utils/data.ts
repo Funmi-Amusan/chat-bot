@@ -1,5 +1,7 @@
 import { IconAssets } from "@/assets/icons";
 import { ImageAssets } from "@/assets/images";
+import { CiGlobe } from "react-icons/ci";
+import { IoArrowForwardSharp } from "react-icons/io5";
 
 export const features = [
     {
@@ -57,3 +59,4 @@ export const features = [
     { src: ImageAssets.pulse.src, alt: "Pulse Logo" },
     { src: ImageAssets.apex.src, alt: "Apex Logo" },
   ];
+

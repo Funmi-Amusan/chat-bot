@@ -12,7 +12,7 @@ const SidebarButton = ({ onClick, isSidebarOpen }: { onClick?: () => void; isSid
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="p-2 rounded-md transition-all duration-200 hover:bg-neutral-200 dark:hover:bg-gray-800"
+      className="p-2 rounded-md transition-all duration-200 hover:bg-neutral-200 dark:hover:bg-black"
       aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
     >
       {isHovered ? (

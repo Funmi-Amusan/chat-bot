@@ -37,7 +37,7 @@ const ChatInterface = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className='w-full h-screen lg:bg-white p-4 relative'>
+    <div className='w-full h-screen md:bg-white dark:md:bg-neutral-800 p-4 relative'>
       <div className='flex flex-col h-full '>
         <ChatInterfaceHeader />
           <div className='h-full w-full md:max-w-3xl mx-auto overflow-y-auto relative '>

@@ -23,6 +23,7 @@ useEffect(() => {
 const {
   isAITyping,
   messages,
+  user
 } = useAppSelector((state) => state.conversationReducer);
 
 
@@ -55,7 +56,7 @@ const {
           </div>
         ))
       ): (
-        <EmptyChat />
+        <EmptyChat user={user} />
       )}
 
 {isAITyping && (
@@ -83,11 +84,8 @@ const {
 
       <div ref={messagesEndRef} />
       <div
-            className="absolute bottom-0 left-0 right-0 h-14 pointer-events-none" 
-            style={{
-              background: 'linear-gradient(to top, rgba(255,255,255,0.6), rgba(255,255,255,0))',
-              zIndex: 1,
-            }}
+            className="absolute bottom-0 left-0 right-0 h-14 pointer-events-none bg-linear-to-t from-white/60 to-transparent dark:from-neutral-800/60 z-10 " 
+         
           />
           
     </div>

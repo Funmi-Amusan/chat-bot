@@ -3,6 +3,7 @@ import { io, model } from '../server.js';
 
 export const createConversation = async (req, res) => {
     try {
+        console.log('userId')
         const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
