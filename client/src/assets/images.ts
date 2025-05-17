@@ -17,8 +17,6 @@ import message from './images/message.png';
 import pulse from './images/pulse.png';
 import quantum from './images/quantum.png';
 import userAvatar from './images/UserAvatar.png';
-import landingBGHero from './images/landingBgHero.png';
-import landingBgHeroLight from './images/landingBgHeroLight.png';
 
 export const ImageAssets = {
 acme,
@@ -40,6 +38,4 @@ message,
 pulse,
 quantum,
 userAvatar,
-landingBGHero,
-landingBgHeroLight
 };

@@ -7,6 +7,8 @@ const ConversationsPage = async () => {
   const session = await auth();
   const userId = session?.user?.id;
 
+  console.log('first', session)
+
   if (!userId) {
     redirect('/login');
   }

@@ -1,7 +1,5 @@
 import { IconAssets } from "@/assets/icons";
 import { ImageAssets } from "@/assets/images";
-import { CiGlobe } from "react-icons/ci";
-import { IoArrowForwardSharp } from "react-icons/io5";
 
 export const features = [
     {

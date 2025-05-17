@@ -20,9 +20,8 @@ export default async function RootLayout({
 }>) {
 
     const session = await auth();
-    const userId = session?.user?.id;
   
-    if (!userId) {
+    if (!session) {
       redirect('/login');
     }
 

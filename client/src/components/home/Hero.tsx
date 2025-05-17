@@ -7,14 +7,21 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import ShinyText from "../ui/BaseShinyText";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/providers/ThemeProvider";
 
 
 export const Hero = () => {
+  const {theme} = useTheme();
 
   const router = useRouter();
 
+  const heroBackground = theme === "light"
+  ? "/landingBgHeroLight.png"
+  : "/landingBgHero.png";
+
   return (
-    <section className={` overflow-clip bg-cover bg-center bg-[url(@/assets/images/landingBgHeroLight.png)] dark:bg-[url(@/assets/images/landingBgHero.png)] `}
+    <section className={` overflow-clip bg-cover bg-center `}
+    style={{ backgroundImage: `url(${heroBackground})` }}
     >
       <Navbar />
       <div className="pb-25 flex-col-center flex-col justify-center text-center">

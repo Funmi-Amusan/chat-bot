@@ -18,10 +18,6 @@ export function LoginForm() {
           return await signIn("credentials", formData);
         }
       });
-
-      if (result?.error) {
-        toast.error(result.error);
-      }
     } catch (error) {
         console.error('Error during form submission:', error);
       toast.error('An error occurred. Please try again.');

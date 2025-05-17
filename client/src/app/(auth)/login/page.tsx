@@ -37,7 +37,7 @@ const SignUpForm = async () => {
                     "use server"
                     await executeAction({
                         actionFn: async () => {
-                          const res = await signIn("credentials", formData);
+                          await signIn("credentials", formData);
                         }
                       })
                 }}

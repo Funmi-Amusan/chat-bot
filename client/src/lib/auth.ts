@@ -52,7 +52,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             email: data.userResponse.email,
           };
         } catch (error) {
-          console.error("Authentication error:", error.message);
+          console.error("Authentication error:", error);
           throw error;
         }
       }

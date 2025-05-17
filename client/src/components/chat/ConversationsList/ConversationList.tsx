@@ -9,7 +9,7 @@ import { User } from 'next-auth';
 import SignOut from '@/components/auth/sign-out';
 import NameIcon from '@/components/ui/NameIcon';
 import { useRouter } from 'next/navigation';
-import ThemeSwitch from '@/components/ui/ThemeSwitchSmall';
+import ThemeSwitch from '@/components/ui/ThemeSwitch';
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -48,7 +48,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
 <PiPlusBold color='white' size={14} />
   </div>
         
-        {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap dark:text-violet-800  '>New Chat</p>}
+        {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap dark:text-violet-500  '>New Chat</p>}
       </button>
 
       <div className='flex gap-2 items-center'>
