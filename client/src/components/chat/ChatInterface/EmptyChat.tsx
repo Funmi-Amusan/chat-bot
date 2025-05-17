@@ -1,57 +1,51 @@
 'use client';
 
-import PromptCard from '@/components/ui/PromptCard';
-import { createNewConversation } from '@/lib/actions/ConversationActions';
-import { SendMessageAction } from '@/store/conversation/action';
-import { useAppDispatch } from '@/utils/hooks';
 import { User } from 'next-auth';
-import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
-import { toast } from 'react-toastify';
-import { CiBeaker1, CiGlobe, CiStar } from "react-icons/ci";
+
 
 const EmptyChat = ({user}: {user: User|null}) => {
- const dispatch = useAppDispatch();
- const router = useRouter()
-   const emptyChatPrompts = [
-    {
-      icon: <CiGlobe color='purple' size={24} />,
-      title: 'Last 24 hours',
-      content: 'Tell me what has happened ver the last 24 hours',
-    },
-    {
-      icon: <CiBeaker1 color='purple' size={24} />,
-      title: 'Learn',
-      content: 'Explain Quantum computing in simple terms',
-    },
-    {
-      icon: <CiStar color='purple' size={24} />,
-      title: 'Random',
-      content: 'Tell me an interesting random fact',
-    },
+//  const dispatch = useAppDispatch();
+//  const router = useRouter()
+  //  const emptyChatPrompts = [
+  //   {
+  //     icon: <CiGlobe color='purple' size={24} />,
+  //     title: 'Last 24 hours',
+  //     content: 'Tell me what has happened ver the last 24 hours',
+  //   },
+  //   {
+  //     icon: <CiBeaker1 color='purple' size={24} />,
+  //     title: 'Learn',
+  //     content: 'Explain Quantum computing in simple terms',
+  //   },
+  //   {
+  //     icon: <CiStar color='purple' size={24} />,
+  //     title: 'Random',
+  //     content: 'Tell me an interesting random fact',
+  //   },
 
-  ]
+  // ]
 
-  const sendPromptMessage = async (content: string) => {
-    if(!user) {
-        redirect( '/login')
-    }
-    const userId = user as string
-    try {
-      const {data: conversationData} = await createNewConversation(userId)
-      const conversationId = conversationData.conversation.id;
+  // const sendPromptMessage = async (content: string) => {
+  //   if(!user) {
+  //       redirect( '/login')
+  //   }
+  //   const userId = user as string
+  //   try {
+  //     const {data: conversationData} = await createNewConversation(userId)
+  //     const conversationId = conversationData.conversation.id;
       
-      const data = {
-        content,
-        conversationId
-      };
-      await dispatch(SendMessageAction(data));
-      router.push(`/chat/${conversationId}`)
-    } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'An unexpected error occurred');
+  //     const data = {
+  //       content,
+  //       conversationId
+  //     };
+  //     await dispatch(SendMessageAction(data));
+  //     router.push(`/chat/${conversationId}`)
+  //   } catch (error) {
+  //       toast.error(error instanceof Error ? error.message : 'An unexpected error occurred');
      
-    }
-  }
+  //   }
+  // }
   
 
   return (

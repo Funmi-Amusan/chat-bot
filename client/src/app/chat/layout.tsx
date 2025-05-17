@@ -1,3 +1,4 @@
+import MainHeader from "@/components/layout/MainHeader";
 import { auth } from "@/lib/auth";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -26,12 +27,13 @@ export default async function RootLayout({
     }
 
   return (
-    <div className="h-screen">
-          <main className="flex h-screen lg:gap-4 relative "> 
-            <div className="hidden lg:flex flex-col h-full overflow-scroll ">
+    <div className="h-screen ">
+          <main className="flex h-screen relative "> 
+            <div className="absolute z-50 bg-white dark:bg-neutral-800 top-0 md:static md:flex flex-col h-full overflow-scroll ">
               {sidebar}
             </div>
             <div className="flex-grow ">
+       <MainHeader />
               {children}
             </div>
           </main>

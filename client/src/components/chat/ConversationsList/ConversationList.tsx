@@ -4,11 +4,12 @@ import { useState } from 'react';
 import ConversationItem from '@/components/chat/ConversationsList/ConversationItem';
 import { Conversation } from '@/store/conversation/types';
 import SidebarButton from '@/components/ui/SidebarButton';
-import { PiChatsCircleLight, PiPlusCircleFill } from "react-icons/pi";
+import { PiChatsCircleLight, PiPlusBold } from "react-icons/pi";
 import { User } from 'next-auth';
 import SignOut from '@/components/auth/sign-out';
 import NameIcon from '@/components/ui/NameIcon';
 import { useRouter } from 'next/navigation';
+import ThemeSwitch from '@/components/ui/ThemeSwitchSmall';
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -29,7 +30,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
 
   return (
     <aside 
-      className={`flex-col flex p-4 justify-between h-full transition-all duration-300 ease-in-out border-[0.5px] border-r border-r-neutral-300/40 ${
+      className={`flex-col flex p-4 justify-between h-screen transition-all duration-300 ease-in-out border-[0.5px] border-r border-r-neutral-300/40 ${
         isSidebarOpen ? 'w-64' : 'w-14'
       }`}
     >
@@ -41,10 +42,11 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
       </div>
 
       <button onClick={() => addNewChat()} className='flex gap-2 items-center hover:bg-violet-800/30'>
-        <div className='p-1' >
+    
+        <div className='p-1.5 bg-[#5d0ec0] rounded-full' >
 
-      <PiPlusCircleFill color='#5d0ec0' size={28} />
-        </div>
+<PiPlusBold color='white' size={14} />
+  </div>
         
         {isSidebarOpen && <p className='text-sm font-medium inline-flex whitespace-nowrap dark:text-violet-800  '>New Chat</p>}
       </button>
@@ -74,6 +76,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
       </div>
 
 <div className='flex flex-col gap-4'>
+  <ThemeSwitch className={`${isSidebarOpen ? '' : 'scale-50'}`} />
       <div className='inline-flex whitespace-nowrap items-center gap-1 '>
       <NameIcon />
     {isSidebarOpen && (

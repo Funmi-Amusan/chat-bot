@@ -1,9 +1,7 @@
-import Image from 'next/image'
+
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { ImageAssets } from '@/assets/images';
 import UserInitializer from '../auth/UserInitializer';
-import SignOut from '../auth/sign-out';
 
 const MainHeader  = async () => {
   const session = await auth();
@@ -14,10 +12,9 @@ const MainHeader  = async () => {
 
   return (
 
-    <header className=' p-2 justify-between hidden flex bg-tranparent items-center'>
-      <Image src={ImageAssets.Logo} alt={'Logo'} width={20} height={20} />
+    <header className=' p-2 justify-between hidden md:flex md:bg-white dark:md:bg-neutral-500 fixed w-full items-center'>
       <UserInitializer user={user} />
-  <SignOut />
+  {/* <SignOut /> */}
     </header>
   )
 }

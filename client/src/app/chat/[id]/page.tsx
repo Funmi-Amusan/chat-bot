@@ -1,6 +1,7 @@
 import ChatWindow from "@/components/chat/ChatInterface/ChatWindow";
 import TextInput from "@/components/chat/ChatInterface/TextInput";
 import MainHeader from "@/components/layout/MainHeader";
+import MobileMenuContainer from "@/components/layout/MobileMenuContainer";
 import { getAConverstaionById } from "@/lib/actions/ConversationActions";
 import { Message } from "@/store/conversation/types";
 
@@ -37,9 +38,12 @@ const ChatInterface = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className='w-full h-screen md:bg-white dark:md:bg-neutral-800 p-4 relative'>
-      <div className='flex flex-col h-full '>
+    <div className='w-full h-screen bg-white dark:bg-neutral-800 relative'>
        <MainHeader />
+      {/* <div className="md:hidden px-4">
+       <MobileMenuContainer />
+      </div> */}
+      <div className='flex flex-col h-full p-4 '>
           <div className='h-full w-full md:max-w-3xl mx-auto overflow-y-auto relative '>
             <ChatWindow messages={messages} />
           </div>
