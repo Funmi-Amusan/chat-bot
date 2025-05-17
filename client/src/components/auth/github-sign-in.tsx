@@ -12,7 +12,7 @@ const GithubSignIn = () => {
       }}
       className="w-full"
     >
-     <BaseButton text='Login to Github' type="submit" icon={<FaGithub size={18} />} className='w-full bg-white border-gray-300' />
+     <BaseButton text='Login with Github' type="submit" icon={<FaGithub size={18} />} className='w-full bg-white border-gray-300' />
     </form>
   );
 };

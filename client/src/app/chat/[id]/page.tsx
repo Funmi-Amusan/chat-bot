@@ -1,6 +1,7 @@
 import ChatInterfaceHeader from "@/components/chat/ChatInterface/ChatInterfaceHeader";
 import ChatWindow from "@/components/chat/ChatInterface/ChatWindow";
 import TextInput from "@/components/chat/ChatInterface/TextInput";
+import MainHeader from "@/components/layout/MainHeader";
 import { getAConverstaionById } from "@/lib/actions/ConversationActions";
 import { Message } from "@/store/conversation/types";
 
@@ -39,7 +40,7 @@ const ChatInterface = async ({ params }: { params: { id: string } }) => {
   return (
     <div className='w-full h-screen md:bg-white dark:md:bg-neutral-800 p-4 relative'>
       <div className='flex flex-col h-full '>
-        <ChatInterfaceHeader />
+       <MainHeader />
           <div className='h-full w-full md:max-w-3xl mx-auto overflow-y-auto relative '>
             <ChatWindow messages={messages} />
           </div>

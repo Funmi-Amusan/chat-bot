@@ -34,6 +34,7 @@ export const Hero = () => {
           {/* <RevealText text={"One Task"} />
           <RevealText text={"at a Time"} /> */}
           <div className=" flex justify-center">
+            
             <p className="text-body-lg font-inter max-w-[450px] ">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes.</p>
 
             <motion.div

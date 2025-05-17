@@ -16,13 +16,16 @@ export default function AuthLayout({
   children: React.ReactNode
 }>) {
   return (
-  
-        <div className="grid grid-cols-2">
-          <div className="flex items-center justify-center">
-            {children}
-          </div>
-          <AuthCarousel />
-        </div>
+  <>
+    <div className="min-h-screen w-full flex flex-col lg:grid lg:grid-cols-2">
+    <div className="flex-1 w-full flex items-center justify-center">
+      {children}
+    </div>
+    <div className="hidden lg:block">
+      <AuthCarousel />
+    </div>
+  </div>
+  </>
   
   );
 }

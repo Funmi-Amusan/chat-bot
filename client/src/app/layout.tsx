@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Ubuntu } from "next/font/google";
-import{ Toaster } from 'react-hot-toast';
 import "./globals.css";
 import StoreProvider from "./storeProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,6 +29,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en" >
       <body
@@ -36,7 +37,18 @@ export default function RootLayout({
       >
         <ThemeProvider>
       <StoreProvider>
-        <Toaster />
+      <ToastContainer
+position="top-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+/>
         {children}
         </StoreProvider>
         </ThemeProvider>

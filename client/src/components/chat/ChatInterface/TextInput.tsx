@@ -41,30 +41,32 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
     }, [message]);
 
     const sendMessage = async() => {
-      
       if (message.trim() === "") {
         toast.error("Message cannot be empty"); 
         return;
     }
     if (!conversationId) {
+      console.log('first')
         toast.error("Invalid conversation ID");
         return;
     }
       
       try {
         if (conversationId === 'new') {
-          if (!user) {
+          if (!user?.id) {
+            console.log(user)
             toast.error('User not found. Please log in.');
-            redirect('/login')
-            return;
+            redirect('/login');
           }
-          const {data} = await createNewConversation(user)
+          const {data} = await createNewConversation(user.id)
+          console.log('first----', data)
           conversationId = data.conversation.id;
         }
         const data = {
           content: message,
           conversationId
         };
+        console.log('da----ta', data)
         const validatedData: MessageData = MessageSchema.parse(data);
         setMessage("");
         await dispatch(SendMessageAction(validatedData));
@@ -111,7 +113,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
               onChange={(e) => setMessage(e.target.value)} 
               onKeyDown={handleKeyDown}
                placeholder="Imagine Something...✦˚"
-              className="w-full h-16 bg-transparent rounded-2xl dark:text-white text-base px-3  resize-none outline-none dark:placeholder-white/90 focus:placeholder-gray-700"
+              className="w-full h-16 bg-transparent rounded-2xl dark:text-white text-base px-3  resize-none outline-none dark:placeholder-white/90 focus:placeholder-neutral-700"
               rows={1}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)} 

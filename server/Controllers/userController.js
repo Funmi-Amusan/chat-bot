@@ -88,6 +88,43 @@ export const login = async (req, res) => {
     }
 }
 
+export const fetchUser = async (req, res) => {
+    try {
+        console.log('got to fetch user');
+        const { email } = req.body;
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        });
+        if (!user) {
+            console.log('user not found');
+            return res.status(404).json({ message: "User not found" });
+        }
+      
+        const conversations = await prisma.conversation.findMany({
+            where: {
+                userId: user.id
+            }
+        });
+        const userResponse = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        };
+        console.log('successfully logged in');
+        res.status(200).json({
+            userResponse,
+            conversations
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log("error logging in:", error.message);
+    }
+}
+
 export const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;

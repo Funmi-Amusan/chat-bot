@@ -11,12 +11,12 @@ const MainHeader  = async () => {
     redirect('/login');
   }
   const user = session?.user || null;
-
+console.log('user', user)
 
   return (
 
-    <header className=' p-2.5 shadow-md justify-between flex bg-white items-center'>
-      <Image src={ImageAssets.Logo} alt={'Logo'} width={40} height={40} />
+    <header className=' p-2 justify-between hidden flex bg-tranparent items-center'>
+      <Image src={ImageAssets.Logo} alt={'Logo'} width={20} height={20} />
       <UserInitializer user={user} />
   <SignOut />
     </header>

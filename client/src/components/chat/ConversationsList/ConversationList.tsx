@@ -77,7 +77,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
       <div className='inline-flex whitespace-nowrap items-center gap-1 '>
       <NameIcon />
     {isSidebarOpen && (
-      <p className='text-sm font-medium inline-flex whitespace-nowrap'>{user?.email}</p>
+      <p className='text-sm font-medium inline-flex whitespace-nowrap'>{user?.name}</p>
     )}
       </div>
 

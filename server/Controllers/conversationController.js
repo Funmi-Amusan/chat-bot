@@ -3,7 +3,7 @@ import { io, model } from '../server.js';
 
 export const createConversation = async (req, res) => {
     try {
-        console.log('userId')
+        console.log('userId', req.body.userId)
         const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
@@ -25,14 +25,14 @@ export const createConversation = async (req, res) => {
                 nextTitleNumber = lastTitleNumber + 1;
             }
         }
-
+console.log('firstConversation', lastConversation)
         const conversation = await prisma.conversation.create({
             data: {
                 title: `Conversation ${nextTitleNumber}`,
                 userId: userId,
             },
         });
-
+console.log('firstConversation', conversation)
         io.emit(`user_${userId}_new_conversation`, conversation);
 
     } catch (error) {

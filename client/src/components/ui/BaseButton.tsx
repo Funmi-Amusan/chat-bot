@@ -14,8 +14,8 @@ type BaseButtonProps = {
 const BaseButton = ({ text, onClick, imgSrc, icon, className, variant = "default", type = 'button' }: BaseButtonProps) => {
   
   const buttonStyles = {
-    default: "dark:bg-white bg-black text-gray-800 dark:text-gray-700 hover:border hover:bg-gray-100",
-    dark: "bg-gray-900 text-white border-gray-800 hover:bg-gray-700",
+    default: "dark:bg-neutral-900 bg-black text-gray-800 dark:text-neutral-200 dark:text-gray-700 hover:border dark:hover:border-neutral-600 hover:bg-gray-100 dark:hover:bg-neutral-800",
+    dark: "bg-neutral-900 text-white border-gray-800 hover:bg-neutral-700 dark:hover:bg-neutral-800 dark:hover:border dark:hover:border-neutral-600",
     primary: "bg-blue-500 text-white border-blue-600 hover:bg-blue-600",
   };
 

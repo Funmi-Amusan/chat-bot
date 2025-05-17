@@ -37,7 +37,7 @@
   }
 
   h1 {
-    @apply text-6xl md:text-[154px]  tracking-tight font-semibold text-black dark:text-white ;
+    @apply text-6xl md:text-[154px] tracking-tight font-semibold text-black dark:text-white ;
   }
 
   h2 {
@@ -96,7 +96,7 @@
   }
 
   .tag {
-    @apply py-2 px-4 border border-black/20 dark:border-white/20  text-black/50 dark:text-white/50 rounded-xl w-fit text-sm inline-flex ;
+    @apply py-2 px-4 border border-white/40 dark:border-white/20  text-black dark:text-white/50 rounded-xl w-fit text-sm inline-flex ;
   }
 
   .mask-gradient {

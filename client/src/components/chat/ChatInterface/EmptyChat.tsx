@@ -7,7 +7,7 @@ import { useAppDispatch } from '@/utils/hooks';
 import { User } from 'next-auth';
 import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { CiBeaker1, CiGlobe, CiStar } from "react-icons/ci";
 
 const EmptyChat = ({user}: {user: User|null}) => {
@@ -60,13 +60,13 @@ console.log('77777',user)
 
   return (
     <div className="h-full flex justify-center items-center text-center w-full md:p-2 flex-col gap-6">
-                      <h3 className='text-2xl text-black/50 dark:text-white/70 font-semibold'>Welcome to Chat Bot</h3>
-                      <h3 className='text-3xl dark:text-white font-semibold'>Good day! How may I assist you today?</h3>
-                      <div className='flex items-center gap-6'>
+                      <h3 className='text-2xl text-black/50 dark:text-white/70 font-semibold'>Hi, {user?.name}</h3>
+                      <h3 className='text-3xl dark:text-white font-semibold'> How may I assist you today?</h3>
+                      {/* <div className='flex items-center gap-6'>
                {emptyChatPrompts.map((chatPrompt) => (
                 <PromptCard key={chatPrompt.title} icon={chatPrompt.icon} title={chatPrompt.title} content={chatPrompt.content} onClick={(e)=>sendPromptMessage(e)} />
                ))}
-                      </div>
+                      </div> */}
                       
     </div>
   );
