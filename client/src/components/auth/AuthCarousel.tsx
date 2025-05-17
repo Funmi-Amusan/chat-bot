@@ -27,7 +27,7 @@ export default function AuthCarousel() {
   return (
     <section className="p-4 h-screen">
       
-      <div className="bg-purple-200/60 dark:bg-neutral-900 rounded-3xl h-full py-16 pt-40 flex flex-col items-center justify-between">
+      <div className="bg-neutral-200/60 dark:bg-neutral-900 rounded-3xl h-full py-16 pt-40 flex flex-col items-center justify-between">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}

@@ -23,7 +23,6 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: '90%', 
   maxWidth: 400,
-  bgcolor: '#FEF7FF',
   boxShadow: 24,
   borderRadius: '24px', 
   p: 4,
@@ -48,12 +47,13 @@ const DeleteModal = ({ isOpen, onClose, onDelete, title, loading, isDeleting }: 
       }}
     >
       <Fade in={isOpen}>
-        <Box sx={modalStyle}>
+      <Box sx={modalStyle} className="bg-neutral-200 dark:bg-neutral-800">
           <Typography
             id="delete-modal-title"
             variant="h6"
             component="h3"
             sx={{ marginBottom: 2, textAlign: 'center', fontWeight: '600' }}
+            className='dark:text-neutral-200 text-neutral-700'
           >
          Delete {title}?
           </Typography>
@@ -63,6 +63,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, title, loading, isDeleting }: 
             variant="body1"
             component="p"
             sx={{ marginBottom: 2, textAlign: 'center', fontSize: '12' }}
+            className='dark:text-neutral-200 text-neutral-700'
           >
            This will delete prompts and responses from your ChatBot Activity.
           </Typography>
@@ -73,6 +74,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, title, loading, isDeleting }: 
                 backgroundColor: '#e5e5e5',
                 borderRadius: '8px',
                 flex: 1,
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
               }}
               onClick={onClose}
               disabled={loading}

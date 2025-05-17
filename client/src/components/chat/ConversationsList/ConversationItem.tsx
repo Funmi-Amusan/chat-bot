@@ -34,7 +34,7 @@ router.push('/chat/new')
 
   return (
     <>
-    <div  className={` rounded-lg px-2 flex items-center justify-between ${isActive ? 'bg-neutral-300' : ''} hover:bg-neutral-300 dark:hover:bg-black   transition-all duration-150`}>
+    <div  className={` rounded-lg px-2 flex items-center justify-between ${isActive ? 'bg-neutral-300 dark:bg-neutral-900' : ''} hover:bg-neutral-300 dark:hover:bg-black   transition-all duration-150`}>
     <Link href={`/chat/${id}`} className=" flex-grow" >
       <div className=' cursor-pointer flex-grow font-normal truncate whitespace-nowrap py-1'>
         <p className="dark:text-neutral-300">{title}</p>
