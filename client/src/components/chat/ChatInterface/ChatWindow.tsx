@@ -48,7 +48,7 @@ const {
   <NameIcon />
   )}
 </div>
-              <div className="flex-grow">
+              <div className="flex-grow px-4 lg:px-0">
                 <MessageBubble isFromAI={message?.isFromAI} content={message?.content} id={message?.id} />
               </div>
             </div>

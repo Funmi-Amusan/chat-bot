@@ -95,10 +95,10 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           setSocket={setSocket} 
           socket={socket}
         />
-      <div className="flex flex-col w-full px-4 max-w-3xl mx-auto pb-6">
+      <div className="flex flex-col w-full px-4 pl-12 lg:pl-0 max-w-3xl mx-auto pb-6">
       <div className="relative rounded-2xl p-0.5  overflow-hidden">
      
-        <div className="flex flex-col w-full rounded-2xl border py-3 border-neutral-500/50 bg-white dark:bg-neutral-800 overflow-hidden">
+        <div className={`flex flex-col w-full rounded-2xl border py-3  border-neutral-500/50 bg-white dark:bg-neutral-800 overflow-hidden ${isFocused ? 'border-neutral-600' : ''}`}>
  
           <div className="relative flex w-full">
               <textarea 

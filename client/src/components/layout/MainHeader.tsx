@@ -12,7 +12,7 @@ const MainHeader  = async () => {
 
   return (
 
-    <header className=' p-2 justify-between hidden md:flex md:bg-white dark:md:bg-neutral-500 fixed w-full items-center'>
+    <header className=' p-2 justify-between hidden md:flex bg-transparent fixed w-full items-center'>
       <UserInitializer user={user} />
   {/* <SignOut /> */}
     </header>
