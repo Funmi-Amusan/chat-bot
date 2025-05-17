@@ -8,7 +8,7 @@
     "dev": "nodemon server/server.js",
     "start": "node server/server.js",
     "swagger": "node server/swagger.js",
-    "postinstall": "prisma generate" 
+    "postinstall": "npx prisma generate --schema ./server/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
