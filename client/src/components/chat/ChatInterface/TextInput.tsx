@@ -1,8 +1,8 @@
 'use client'
 
 import { createNewConversation } from '@/lib/actions/ConversationActions';
-import { SendMessageAction } from '@/store/conversation/action';
-import { useAppDispatch, useAppSelector } from '@/utils/hooks';
+import { sendMessageAction } from '@/lib/actions/ConversationActions';
+import { useAppSelector } from '@/utils/hooks';
 import SocketManager from '@/utils/SocketManager';
 import { redirect } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { LuGlobe, LuPaperclip, LuSend, LuPlus } from "react-icons/lu";
+import { TbFidgetSpinner } from "react-icons/tb";
 
 const MessageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty").max(5000, "Message is too long"),
@@ -23,7 +24,6 @@ const MessageSchema = z.object({
 type MessageData = z.infer<typeof MessageSchema>;
 
 const TextInput = ({ conversationId }: { conversationId: string }) => {
-    const dispatch = useAppDispatch();
     const router = useRouter();
     const { loading, isAITyping, user } = useAppSelector((state) => state.conversationReducer);
     const [message, setMessage] = useState("");
@@ -65,7 +65,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
         };
         const validatedData: MessageData = MessageSchema.parse(data);
         setMessage("");
-        await dispatch(SendMessageAction(validatedData));
+        await sendMessageAction(validatedData.content, validatedData.conversationId);
         router.push(`/chat/${conversationId}`)
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -133,10 +133,17 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
             onClick={() =>  message.trim() !== "" && sendMessage()} 
               className="flex items-center justify-center bg-violet-800 p-2 rounded-lg transition-all hover:scale-105 active:scale-90"
             >
-                <LuSend 
-                  size={18} 
-                  className="text-white transition-all hover:-rotate-45 hover:text-white hover:filter hover:drop-shadow-md focus:text-white" 
-                />
+              {isAITyping ? (
+                <div className="animate-pulse text-white">
+                  <TbFidgetSpinner className="animate-spin" size={20} />
+                </div>
+              ) :
+              (<LuSend 
+                size={18} 
+                className="text-white transition-all hover:-rotate-45 hover:text-white hover:filter hover:drop-shadow-md focus:text-white" 
+              />)
+
+              }
             </button>
         </div>
       </div>

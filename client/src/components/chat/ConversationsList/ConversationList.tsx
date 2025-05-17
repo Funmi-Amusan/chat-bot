@@ -13,7 +13,7 @@ import ThemeSwitch from '@/components/ui/ThemeSwitchSmall';
 
 interface ConversationListProps {
   conversations: Conversation[];
-  user: User;
+  user: User | undefined;
 }
 
 const ConversationList = ({ conversations, user }: ConversationListProps) => {

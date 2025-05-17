@@ -71,7 +71,7 @@ export async function getAConverstaionById(conversationId: string) {
     }
 }
 
-export async function sendMessage(content: string, conversationId: string) {
+export async function sendMessageAction(content: string, conversationId: string) {
     
     // const session = await auth();
     // if (!session || session.user?.id !== userId) {
