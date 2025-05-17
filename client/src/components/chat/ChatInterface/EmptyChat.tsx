@@ -31,24 +31,20 @@ const EmptyChat = ({user}: {user: User|null}) => {
     },
 
   ]
-console.log('77777',user)
 
   const sendPromptMessage = async (content: string) => {
     if(!user) {
         redirect( '/login')
     }
-    console.log('-----', user)
     const userId = user as string
     try {
       const {data: conversationData} = await createNewConversation(userId)
-      console.log('dataaaa', conversationData)
       const conversationId = conversationData.conversation.id;
       
       const data = {
         content,
         conversationId
       };
-    console.log('-----------', conversationId)
       await dispatch(SendMessageAction(data));
       router.push(`/chat/${conversationId}`)
     } catch (error) {

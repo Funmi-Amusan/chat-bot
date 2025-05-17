@@ -11,7 +11,6 @@ const MainHeader  = async () => {
     redirect('/login');
   }
   const user = session?.user || null;
-console.log('user', user)
 
   return (
 

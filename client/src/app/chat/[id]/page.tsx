@@ -1,4 +1,3 @@
-import ChatInterfaceHeader from "@/components/chat/ChatInterface/ChatInterfaceHeader";
 import ChatWindow from "@/components/chat/ChatInterface/ChatWindow";
 import TextInput from "@/components/chat/ChatInterface/TextInput";
 import MainHeader from "@/components/layout/MainHeader";

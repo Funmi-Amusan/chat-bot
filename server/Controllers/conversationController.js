@@ -3,7 +3,6 @@ import { io, model } from '../server.js';
 
 export const createConversation = async (req, res) => {
     try {
-        console.log('userId', req.body.userId)
         const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
@@ -25,16 +24,14 @@ export const createConversation = async (req, res) => {
                 nextTitleNumber = lastTitleNumber + 1;
             }
         }
-console.log('firstConversation', lastConversation)
         const conversation = await prisma.conversation.create({
             data: {
                 title: `Conversation ${nextTitleNumber}`,
                 userId: userId,
             },
         });
-console.log('firstConversation', conversation)
         io.emit(`user_${userId}_new_conversation`, conversation);
-
+        return res.status(201).json(conversation);
     } catch (error) {
         res.status(500).json({ error: error.message });
         console.log("Error creating conversation:", error.message);
@@ -42,7 +39,6 @@ console.log('firstConversation', conversation)
 };
 
 export const findConversationsByUserId = async (req, res) => {
-    console.log("----Finding conversations by user ID----");
     try {
         const { userId } = req.params;
         if (!userId) {
@@ -92,7 +88,6 @@ export const findConversationsByUserId = async (req, res) => {
 
 
 export const findConversationById = async (req, res) => {
-    console.log("----Finding conversation by ID----");
     try {
         const { id } = req.params;
         if (!id) {

@@ -38,7 +38,6 @@ const SignUpForm = async () => {
                     await executeAction({
                         actionFn: async () => {
                           const res = await signIn("credentials", formData);
-                          console.log('res--------', res)
                         }
                       })
                 }}

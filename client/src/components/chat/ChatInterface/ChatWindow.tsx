@@ -33,7 +33,6 @@ const {
     }
   }, [messages, isAITyping]); 
 
-
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide flex-col">
     {messages?.length > 0 ? (

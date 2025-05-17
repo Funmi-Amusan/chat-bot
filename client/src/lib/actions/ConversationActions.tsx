@@ -8,7 +8,6 @@ import { createConversationURL, deleteConversationByIdURL, findConversationByIdU
 export async function createNewConversation(userId: string) {
     const session = await auth();
     if (!session || session.user?.id !== userId) {
-console.log('4444')
         console.warn("Server Action: Unauthorized attempt to create conversation for different user.");
         return { success: false, error: "Unauthorized." };
     }
@@ -17,7 +16,6 @@ console.log('4444')
             userId: userId,
         };
         const newConversation = await http.post({ url: createConversationURL, body });
-        console.log('new', newConversation)
         if (newConversation) {
             revalidatePath('/chat'); 
             return { success: true, data: newConversation }; 

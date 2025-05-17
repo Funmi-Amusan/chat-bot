@@ -46,7 +46,6 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
         return;
     }
     if (!conversationId) {
-      console.log('first')
         toast.error("Invalid conversation ID");
         return;
     }
@@ -54,19 +53,16 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
       try {
         if (conversationId === 'new') {
           if (!user?.id) {
-            console.log(user)
             toast.error('User not found. Please log in.');
             redirect('/login');
           }
           const {data} = await createNewConversation(user.id)
-          console.log('first----', data)
-          conversationId = data.conversation.id;
+          conversationId = data?.id
         }
         const data = {
           content: message,
           conversationId
         };
-        console.log('da----ta', data)
         const validatedData: MessageData = MessageSchema.parse(data);
         setMessage("");
         await dispatch(SendMessageAction(validatedData));

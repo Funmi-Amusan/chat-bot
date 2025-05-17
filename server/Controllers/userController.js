@@ -39,7 +39,6 @@ export const createUser = async (req, res) => {
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
-console.log('user created successfully');
         res.status(201).json({ message: "User created successfully. Please log in." });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while creating the user' });
@@ -49,7 +48,6 @@ console.log('user created successfully');
 
 export const login = async (req, res) => {
     try {
-        console.log('got to login');
         const { email, password } = req.body;
         const user = await prisma.user.findUnique({
             where: {
@@ -57,7 +55,6 @@ export const login = async (req, res) => {
             }
         });
         if (!user) {
-            console.log('user not found');
             return res.status(404).json({ message: "User not found" });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -77,7 +74,6 @@ export const login = async (req, res) => {
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
-        console.log('successfully logged in');
         res.status(200).json({
             userResponse,
             conversations
@@ -90,7 +86,6 @@ export const login = async (req, res) => {
 
 export const fetchUser = async (req, res) => {
     try {
-        console.log('got to fetch user');
         const { email } = req.body;
         const user = await prisma.user.findUnique({
             where: {
@@ -98,7 +93,6 @@ export const fetchUser = async (req, res) => {
             }
         });
         if (!user) {
-            console.log('user not found');
             return res.status(404).json({ message: "User not found" });
         }
       

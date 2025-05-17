@@ -12,7 +12,7 @@ const MessageBubble = ({ content, isFromAI, id }: { content: string; isFromAI?: 
 
 
     return (
-      <div className={` w-fit text-sm md:text-base ${!isFromAI ? 'ml-auto rounded-lg px-4 py-1 my-1 shadow-sm bg-neutral-200 ' : 'mr-auto text-gray-800'} `}>
+      <div className={` w-fit text-sm md:text-base ${!isFromAI ? 'ml-auto rounded-lg px-4 py-1 my-1 shadow-sm bg-neutral-200 ' : 'mr-auto text-neutral-800 dark:text-neutral-200'} `}>
        { allowTypwriterAnimation === id ? (
          <Typewriter text={content} />
         ): (

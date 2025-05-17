@@ -49,7 +49,6 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
           dispatch(setAITyping(false));
         }
         dispatch(addMessageToConversationAction({newMessage, conversationId}));
-        console.log('---newMessage', newMessage);
         dispatch(setAllowTypwriterAnimation(newMessage.id));
       });
       

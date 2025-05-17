@@ -15,12 +15,9 @@ export function LoginForm() {
     try {
       const result = await executeAction({
         actionFn: async () => {
-            console.log('first')
           return await signIn("credentials", formData);
         }
       });
-      
-      console.log('result--------', result)
 
       if (result?.error) {
         toast.error(result.error);
