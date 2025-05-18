@@ -15,7 +15,7 @@ export const createUser = async (req, res) => {
         });
 
         if (existingUser) {
-            return res.status(400).json({ error: 'User with this email already exists' });
+            return res.status(400).json({ error: 'User with this email already exists. Pls login.' });
         }
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);

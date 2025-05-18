@@ -68,7 +68,7 @@ export const Hero = () => {
              animate={{ opacity: 1}} 
              transition={{ duration: 0.8, ease: 'easeOut' }}
               className="btn mt-8 hover:scale-105">
-                <Link href={'/login'} className="btn">
+                <Link href={'/signup'} className="btn">
                 Get Started </Link> 
                 </motion.div>
         </div>

@@ -1,30 +1,26 @@
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
-type Options<T> = {
-  actionFn: () => Promise<T>;
-  successMessage?: string;
-};
+interface ActionResponse {
+  success: boolean;
+  message?: string; // User-friendly message (success or error)
+  errors?: Record<string, string>; // Optional: field-specific errors
+}
 
-const executeAction = async <T>({
-  actionFn,
-  successMessage = "The action was successful",
-}: Options<T>): Promise<{ success: boolean; message: string }> => {
+async function executeAction({ actionFn }: { actionFn: () => Promise<void> }): Promise<ActionResponse> {
   try {
     await actionFn();
-
-    return {
-      success: true,
-      message: successMessage,
-    };
+    console.log("Action executed successfully");
+    return { success: true, message: 'Sign in successful' }; 
   } catch (error) {
-    if (isRedirectError(error)) {
-      throw error;
+    console.error("Action execution failed:", error); 
+
+    let message = 'An unexpected error occurred.';
+    if (error instanceof Error) {
+        message = error.message;
     }
-    return {
-      success: false,
-      message: "An error has occurred during executing the action",
-    };
+console.log('first error', message)
+    return { success: false, message };
   }
-};
+}
 
 export { executeAction };

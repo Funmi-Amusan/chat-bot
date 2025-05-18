@@ -6,9 +6,12 @@ type BaseInputProps = {
   name: string;
   className?: string;
   security?: string;
+  required?: boolean;
+  hasError?: boolean;
+  error: string | undefined;
 };
 
-const BaseInput = ({ placeholder, id, name, className, security='false' }: BaseInputProps) => {
+const BaseInput = ({ placeholder, id, name, className, hasError, error="", security='false', required=true }: BaseInputProps) => {
   return (
     <div className="w-full ">
       <input 
@@ -18,7 +21,13 @@ const BaseInput = ({ placeholder, id, name, className, security='false' }: BaseI
         id={id}
         security={security}
         name={name}
+        required={required}
       />
+      {hasError && (
+        <p className="text-red-500/60 text-sm mb-1">{error}</p>
+      )}
+
+      
     </div>
   );
 }

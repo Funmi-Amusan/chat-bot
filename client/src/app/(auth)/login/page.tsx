@@ -1,21 +1,49 @@
-import React from 'react'
+'use client'
+
+import React, { useActionState, useEffect } from 'react'
 import Image from 'next/image'
-import BaseButton from '@/components/ui/BaseButton'
 import BaseInput from '@/components/ui/BaseInput'
-import { auth, signIn } from '@/lib/auth'
-import { redirect } from 'next/navigation'
-import { executeAction } from '@/lib/executeAction'
 import { GithubSignIn } from '@/components/auth/github-sign-in'
 import { GoogleSignIn } from '@/components/auth/google-sign-in'
 import { ImageAssets } from '@/assets/images'
+import { SubmitButton } from '@/components/auth/SubmitButton'
+import { loginAction } from '@/lib/actions/UserActions'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
 
-const SignUpForm = async () => {
+interface FormState {
+  success: boolean;
+  error: {
+    message?: string; 
+    fieldErrors?: Record<string, string>; 
+  } | null;
+  data?: unknown;
+}
 
-    const session = await auth();
-    // if (session) {
-    //   redirect("/chat/new");
-    // }
-    
+const SignUpForm = () => {
+  const router = useRouter()
+  const [state, formAction] = useActionState<FormState, FormData>(
+    async (prevState, formData) => {
+      const result = await loginAction(prevState, formData);
+      return {
+        success: result?.success,
+        error: result?.error || null
+      } as FormState;
+    },
+    { success: false, error: null }
+  );
+  const getFieldError = (fieldName: string): string | undefined => {
+    return state.error?.fieldErrors?.[fieldName];
+  };
+
+  useEffect(() => {
+    if (state.error?.message) {
+      toast.error(state.error.message);
+    } else if (state.success) {
+      toast.success('Login successful!');
+router.push('/chat/new')
+    }
+  }, [state]);
   
   return (
         <section className=' w-full flex flex-col items-center justify-center p-4 lg:p-8 h-screen my-auto'>
@@ -30,22 +58,27 @@ const SignUpForm = async () => {
                <GithubSignIn />
                <GoogleSignIn />
                 <p className='text-sm'>OR</p>
-                {
-
-                }
-                <form action={async (formData: FormData) => {
-                    "use server"
-                    await executeAction({
-                        actionFn: async () => {
-                          await signIn("credentials", formData);
-                        }
-                      })
-                }}
+                <form action={formAction}
                 className='w-full'
                 >
-                <BaseInput placeholder='Email' name='email' id='email' className='mb-2 w-full'/>
-                <BaseInput placeholder='Password' name='password' id='password' security='true' className='mb-2' />
-                <BaseButton text='Continue with email' variant='dark' type='submit' />
+                 <BaseInput
+                            placeholder='Email'
+                            name='email'
+                            id='email'
+                            className='mb-2 w-full'
+                            hasError={!!getFieldError('email')}
+                            error={getFieldError('email')}
+                        />
+                        <BaseInput
+                            placeholder='Password'
+                            name='password'
+                            id='password'
+                            security='true' 
+                            className='mb-2'
+                             hasError={!!getFieldError('password')} 
+                            error={getFieldError('password')} 
+                        />
+                         <SubmitButton text='Continue with Email' />
                 </form>
                 <p className='text-center text-sm'>Don&apos;t have an account?  <a href="/signup" className='!underline' >Sign Up</a>.</p>
                 <p className='text-center text-sm'>By continuing, you agree to Funmilayo&apos;s <a href="" className='!underline' >Consumer Terms </a>and <a href="" className='!underline' > Usage Policy</a>, and acknowledge our <a href="" className='!underline' >Privacy Policy</a>.</p>
@@ -53,8 +86,6 @@ const SignUpForm = async () => {
 
             </div>
         </section>
- 
   )
 }
-
 export default SignUpForm;

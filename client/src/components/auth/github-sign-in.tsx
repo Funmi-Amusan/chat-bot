@@ -7,7 +7,6 @@ const GithubSignIn = () => {
   return (
     <form
       action={async () => {
-        "use server";
         await signIn("github");
       }}
       className="w-full"

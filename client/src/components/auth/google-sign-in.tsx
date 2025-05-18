@@ -8,7 +8,6 @@ const GoogleSignIn = () => {
   return (
     <form
       action={async () => {
-        "use server";
         await signIn("google");
       }}
       className="w-full"

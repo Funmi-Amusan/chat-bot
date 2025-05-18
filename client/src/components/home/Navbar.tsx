@@ -9,7 +9,7 @@ export const Navbar = () => {
       <img src={ImageAssets.Logo.src} alt="logo" width={40}/>
       <div className="flex gap-4 items-center">
         <ThemeSwitch />
-        <Link href={'/login'} className="btn !py-2 ">Sign In</Link>
+        <Link href={'/signup'} className="btn !py-2 ">Sign In</Link>
       </div>
     </nav>
   );
