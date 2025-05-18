@@ -21,9 +21,9 @@ export default async function RootLayout({
 
     const session = await auth();
   
-    if (!session) {
-      redirect('/login');
-    }
+    // if (!session) {
+    //   redirect('/login');
+    // }
 
   return (
     <div className="h-screen ">
