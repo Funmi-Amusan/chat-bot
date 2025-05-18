@@ -5,9 +5,7 @@ import ConversationList from '@/components/chat/ConversationsList/ConversationLi
 
 const ConversationsPage = async () => {
   const session = await auth();
-  const userId = session?.user?.id;
-
-  console.log('first', session)
+  const userId = session?.user?.id
 
   if (!userId) {
     redirect('/login');

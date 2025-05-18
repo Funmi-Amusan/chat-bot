@@ -49,7 +49,7 @@ const EmptyChat = ({user}: {user: User|null}) => {
   
 
   return (
-    <div className="h-full flex justify-center items-center text-center w-full md:p-2 flex-col gap-6">
+    <div className="h-full flex justify-center items-center text-center w-full  px-12 md:px-4 flex-col gap-6">
                       <h3 className='text-2xl text-black/50 dark:text-white/70 font-semibold'>Hi, {user?.name}</h3>
                       <h3 className='text-3xl dark:text-white font-semibold'> How may I assist you today?</h3>
                       {/* <div className='flex items-center gap-6'>

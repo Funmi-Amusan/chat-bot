@@ -61,7 +61,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
       
       {isSidebarOpen && (
         <div className='h-full w-full flex flex-col gap-5 text-[#1D1B20] pb-6 mt-4'>
-            <div className='overflow-y-auto scrollbar-hide flex-1 flex flex-col gap-2'>
+            <div className='overflow-y-auto max-h-64 flex-1 flex flex-col gap-2'>
                 {conversations.map((conversation: Conversation) => (
                     <ConversationItem
                         key={conversation.id}

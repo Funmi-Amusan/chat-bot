@@ -40,7 +40,7 @@ router.push('/chat/new')
         <p className="dark:text-neutral-300">{title}</p>
       </div>
     </Link>
-      <button onClick={()=> openDeleteModal()} className=' h-full opacity-0 hover:opacity-100 transition-opacity duration-150 ease-in flex items-center cursor-pointer'>
+      <button onClick={()=> openDeleteModal()} className=' h-full opacity-100 md:opacity-0 hover:opacity-100 transition-opacity duration-150 ease-in flex items-center cursor-pointer'>
         <IoMdTrash size={20} className=" text-neutral-800 dark:text-neutral-300" />
       </button>
 

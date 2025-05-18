@@ -3,6 +3,7 @@ import TextInput from "@/components/chat/ChatInterface/TextInput";
 import MainHeader from "@/components/layout/MainHeader";
 import { getAConverstaionById } from "@/lib/actions/ConversationActions";
 import { Message } from "@/store/conversation/types";
+import { Suspense } from "react";
 
 interface ConversationData {
   messages: Message[];
@@ -46,7 +47,9 @@ const ChatInterface = async ({ params }: any) => {
       <MainHeader />
       <div className='flex flex-col h-full p-4'>
         <div className='h-full w-full md:max-w-3xl mx-auto overflow-y-auto relative'>
+          <Suspense fallback={<div>Loading...</div>}>
           <ChatWindow messages={messages} />
+          </Suspense>
         </div>
         <TextInput conversationId={id} /> 
       </div>
