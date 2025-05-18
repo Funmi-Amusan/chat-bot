@@ -1,4 +1,3 @@
-
 import { signIn } from "@/lib/auth";
 import BaseButton from "../ui/BaseButton";
 import { FcGoogle } from "react-icons/fc";
@@ -8,7 +7,8 @@ const GoogleSignIn = () => {
   return (
     <form
       action={async () => {
-        await signIn("google");
+        'use server';
+      await signIn("google");
       }}
       className="w-full"
     >

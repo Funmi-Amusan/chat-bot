@@ -21,7 +21,6 @@ const signupSchema = z.object({
 });
 
 export async function loginAction(
-  prevState: unknown,
   formData: FormData
 ) {
   const email = formData.get('email') as string;
