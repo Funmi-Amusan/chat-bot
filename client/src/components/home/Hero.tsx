@@ -13,13 +13,13 @@ import Link from "next/link";
 export const Hero = () => {
   const {theme} = useTheme();
 
-  const heroBackground = theme === "light"
-  ? "/landingBgHeroLight.png"
-  : "/landingBgHero.png";
+  // const heroBackground = theme === "light"
+  // ? "/landingBgHeroLight.png"
+  // : "/landingBgHero.png";
 
   return (
-    <section className={` overflow-clip bg-cover bg-center `}
-    style={{ backgroundImage: `url(${heroBackground})` }}
+    <section className={` bg-purple-200 dark:bg-violet-800 `}
+    // style={{ backgroundImage: `url(${heroBackground})` }}
     >
       <Navbar />
       <div className="pb-25 flex-col-center flex-col justify-center text-center">
