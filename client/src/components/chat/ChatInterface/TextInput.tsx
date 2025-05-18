@@ -26,6 +26,7 @@ type MessageData = z.infer<typeof MessageSchema>;
 const TextInput = ({ conversationId }: { conversationId: string }) => {
     const router = useRouter();
     const { loading, isAITyping, user } = useAppSelector((state) => state.conversationReducer);
+    const [isSending, setIsSending] = useState(false);
     const [message, setMessage] = useState("");
     const [isFocused, setIsFocused] = useState(false); 
     const [socket, setSocket] = useState<Socket | null>(null);
@@ -41,6 +42,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
     }, [message]);
 
     const sendMessage = async() => {
+      setIsSending(true);
       if (message.trim() === "") {
         toast.error("Message cannot be empty"); 
         return;
@@ -66,6 +68,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
         const validatedData: MessageData = MessageSchema.parse(data);
         setMessage("");
         await sendMessageAction(validatedData.content, validatedData.conversationId);
+        setIsSending(false);
         router.push(`/chat/${conversationId}`)
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -133,7 +136,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
             onClick={() =>  message.trim() !== "" && sendMessage()} 
               className="flex items-center justify-center bg-violet-800 p-2 rounded-lg transition-all hover:scale-105 active:scale-90"
             >
-              {isAITyping ? (
+              {isAITyping || isSending ? (
                 <div className="animate-pulse text-white">
                   <TbFidgetSpinner className="animate-spin" size={20} />
                 </div>
