@@ -12,9 +12,9 @@ import { ImageAssets } from '@/assets/images'
 const SignUpForm = async () => {
 
     const session = await auth();
-    if (session) {
-      redirect("/chat/new");
-    }
+    // if (session) {
+    //   redirect("/chat/new");
+    // }
     
   
   return (
