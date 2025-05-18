@@ -6,14 +6,12 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import ShinyText from "../ui/BaseShinyText";
-import { useRouter } from "next/navigation";
 import { useTheme } from "@/providers/ThemeProvider";
+import Link from "next/link";
 
 
 export const Hero = () => {
   const {theme} = useTheme();
-
-  const router = useRouter();
 
   const heroBackground = theme === "light"
   ? "/landingBgHeroLight.png"
@@ -66,10 +64,13 @@ export const Hero = () => {
               <Image src={ImageAssets.cursor.src} alt="cursor image" aria-hidden className="" width={150} height={150} draggable={false} />
             </motion.div>
           </div>
-          <motion.button onClick={()=> router.push('/login')} initial={{ opacity: 0}} 
+          <motion.div initial={{ opacity: 0}} 
              animate={{ opacity: 1}} 
              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="btn mt-8 hover:scale-105">Get Started</motion.button>
+              className="btn mt-8 hover:scale-105">
+                <Link href={'/login'} className="btn">
+                Get Started </Link> 
+                </motion.div>
         </div>
       </div>
     </section>

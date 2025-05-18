@@ -1,6 +1,7 @@
 import BaseInput from "../ui/BaseInput";
 import { ImageAssets } from "@/assets/images";
 import Image from "next/image";
+import Link from "next/link";
 
 export const CallToAction = () => {
   return (
@@ -14,8 +15,8 @@ export const CallToAction = () => {
  and motivate your efforts.
       </p>
       <div className="flex w-full flex-col items-center md:flex-row gap-2 mt-8">
-      <BaseInput placeholder={"name@email.com"} id={"name"} name={"name"} className="!w-full"/>
-      <button className="btn">Get Access</button>
+      {/* <BaseInput placeholder={"name@email.com"} id={"name"} name={"name"} className="!w-full"/> */}
+      <Link href='/login' className="btn">Get Access</Link>
       </div>
          <Image src={ImageAssets.helix2.src} alt="cursor image" aria-hidden className="absolute top-10 -left-12 lg:left-40 lg:top-30 hidden md:block "  width={150} height={150} />
            <Image src={ImageAssets.emojiStar.src} alt="message image" aria-hidden className="absolute top-20 -right-15 lg:right-36 hidden md:block"  width={150} height={150} />
