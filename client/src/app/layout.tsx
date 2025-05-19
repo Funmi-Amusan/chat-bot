@@ -4,6 +4,7 @@ import "./globals.css";
 import StoreProvider from "./storeProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ToastContainer } from 'react-toastify';
+import CustomToastContainer from "@/components/ui/CustomToast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,18 +38,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
       <StoreProvider>
-      <ToastContainer
-position="top-right"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick={false}
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
+     <CustomToastContainer />
         {children}
         </StoreProvider>
         </ThemeProvider>
