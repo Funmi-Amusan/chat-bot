@@ -9,9 +9,10 @@ import { useState, useRef, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import { LuGlobe, LuPaperclip, LuSend, LuPlus } from "react-icons/lu";
 import { TbFidgetSpinner } from "react-icons/tb";
+import Tooltip from '@/components/ui/Tooltip';
+import { toast } from 'react-toastify';
 
 const MessageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty").max(5000, "Message is too long"),
@@ -90,6 +91,10 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
       }
     };
 
+    const handleNotYetActive = () => {
+      toast.info("This feature is not yet active");
+    };
+
     return (
       <>
         <SocketManager 
@@ -98,9 +103,9 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           socket={socket}
         />
       <div className="flex flex-col w-full px-4  max-w-3xl mx-auto pb-6">
-      <div className="relative rounded-2xl p-0.5  overflow-hidden">
+      <div className="relative rounded-2xl p-0.5 ">
      
-        <div className={`flex flex-col w-full rounded-2xl border py-3  border-neutral-500/50 bg-white dark:bg-neutral-800 overflow-hidden ${isFocused ? 'border-neutral-600' : ''}`}>
+        <div className={`flex flex-col w-full rounded-2xl border py-3  border-neutral-500/50 bg-white dark:bg-neutral-800 ${isFocused ? 'border-neutral-600' : ''}`}>
  
           <div className="relative flex w-full">
               <textarea 
@@ -119,17 +124,34 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
             />
     </div>
           <div className="flex justify-between items-end px-2.5 pb-2.5">
-            <div className="flex gap-4">
-              <button className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
+          <div className="flex gap-4">
+      <Tooltip 
+        tooltip="Attach files"
+        className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
+      >
+       <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuPaperclip size={20} />
               </button>
-              <button className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
+      </Tooltip>
+      
+      <Tooltip 
+        tooltip="Add item" 
+        className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
+      >
+          <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuPlus size={20} />
               </button>
-              <button className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
+      </Tooltip>
+      
+      <Tooltip 
+        tooltip="Browse web"
+        className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
+      >
+        <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuGlobe size={20} />
               </button>
-            </div>
+      </Tooltip>
+    </div>
             
             <button 
             onClick={() =>  message.trim() !== "" && sendMessage()} 
