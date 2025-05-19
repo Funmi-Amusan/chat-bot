@@ -4,11 +4,13 @@ import React from 'react';
 interface ThemeSwitchProps {
   defaultChecked?: boolean;
   className?: string;
+  width?: string;
 }
 
 const ThemeSwitch: React.FC<ThemeSwitchProps> = ({
  
   className = '',
+  width = 'w-14',
 }) => {
  
     const { theme, toggleTheme } = useTheme();
@@ -20,7 +22,7 @@ const ThemeSwitch: React.FC<ThemeSwitchProps> = ({
 
   return (
     <div className={`  ${className}`}>
-      <label htmlFor="theme-switch" className="relative inline-block w-14 h-8 cursor-pointer ">
+      <label htmlFor="theme-switch" className={`relative inline-block h-8 cursor-pointer ${width}`}>
         <input
           id="theme-switch"
           type="checkbox"
