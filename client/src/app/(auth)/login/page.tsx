@@ -10,14 +10,22 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
 
-const SignUpForm = async ({ searchParams }: { searchParams?: { error?: string } }) => {
+type Params = Promise<{ slug: string }>
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+ 
+const SignUpForm = async (props: {
+  params: Params
+  searchParams: SearchParams
+}) => {
 
   const session = await auth();
   if (session?.user) {
     redirect('/chat/new');
   }
+  const searchParams = await props.searchParams
 
-  const error = await searchParams?.error;
+  const error = typeof searchParams?.error === 'string' ? searchParams.error : undefined;
+
 
   async function login(formData: FormData) {
     'use server'
