@@ -9,7 +9,7 @@ const MainHeader  = async () => {
 
   return (
 
-    <header className=' p-2 justify-between hidden bg-transparent fixed w-full items-center'>
+    <header className=' p-2 justify-between lg:hidden bg-transparent fixed w-full items-center'>
       <UserInitializer user={user} />
   {/* <SignOut /> */}
     </header>
