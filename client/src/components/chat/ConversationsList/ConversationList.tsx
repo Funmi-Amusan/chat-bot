@@ -35,8 +35,8 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
 
   return (
     <>
-      {/* Mobile toggle button - visible only on mobile when sidebar is closed */}
-      <div className="fixed top-4 left-4 z-30 lg:hidden">
+      {/* Mobile toggle button - always visible on mobile regardless of sidebar state */}
+      <div className="fixed top-4 left-4 z-30 block lg:hidden">
         {!isMobileSidebarOpen && (
           <SidebarButton 
             onClick={toggleMobileSidebar} 
@@ -77,7 +77,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
 
           <button 
             onClick={addNewChat} 
-            className='flex gap-4 items-center  rounded-lg hover:bg-violet-100 dark:hover:bg-violet-800/30 w-full transition-colors duration-200'
+            className='flex gap-4 items-center rounded-lg hover:bg-violet-100 dark:hover:bg-violet-800/30 w-full transition-colors duration-200'
           >
             <div className='p-1 bg-violet-600 dark:bg-violet-800 rounded-full' >
               <PiPlusBold color='white' size={14} />
@@ -88,9 +88,9 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
             }
           </button>
 
-          <div className='flex gap-2 mt-3 items-center '>
+          <div className='flex gap-2 mt-3 items-center'>
             <div className='p-1'>
-              <PiChatsCircleLight className='dark:text-neutral-300 text-neutral-600 ' size={22} />
+              <PiChatsCircleLight className='dark:text-neutral-300 text-neutral-600' size={22} />
             </div>
             
             {(isSidebarOpen || isMobileSidebarOpen) && 
@@ -120,7 +120,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
         </div>
 
         <div className='flex flex-col items-start gap-4'>
-          <ThemeSwitch width={`  ${isSidebarOpen || isMobileSidebarOpen ? 'w-14' : 'w-10'}`} />
+          <ThemeSwitch width={`${isSidebarOpen || isMobileSidebarOpen ? 'w-14' : 'w-10'}`} />
           
           <div className='inline-flex items-center gap-2'>
             <NameIcon />

@@ -14,7 +14,7 @@ const ConversationsPage = async () => {
   const conversations = await getAllConverstaions(userId);
 
   return (
-  <div className='h-full  '>
+  <div className='h-screen  '>
     <ConversationList conversations={conversations.data} user={session?.user} />
 
   </div>
