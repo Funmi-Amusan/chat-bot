@@ -36,7 +36,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
   return (
     <>
       {/* Mobile toggle button - always visible on mobile regardless of sidebar state */}
-      <div className="fixed w-full bg-amber-700 top-4 left-4 z-50 block lg:hidden">
+      <div className=" pt-4 pl-4 flex lg:hidden">
         {!isMobileSidebarOpen && (
           <SidebarButton 
             onClick={toggleMobileSidebar} 
@@ -44,18 +44,9 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
           />
         )}
       </div>
-      
-      {/* Overlay for mobile - darkens the background when sidebar is open */}
-      {isMobileSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/30 z-20 lg:hidden"
-          onClick={toggleMobileSidebar}
-        />
-      )}
 
-      {/* Main sidebar */}
       <aside 
-        className={`fixed lg:static flex-col p-4 justify-between h-screen transition-all duration-300 ease-in-out border-r border-r-neutral-300/40 bg-white dark:bg-neutral-800 z-40
+        className={` static flex-col p-4 justify-between h-screen transition-all duration-300 ease-in-out border-r border-r-neutral-300/40 bg-white dark:bg-neutral-800 z-40
           ${isSidebarOpen ? 'lg:w-64' : 'lg:w-16'} 
           ${isMobileSidebarOpen ? 'flex w-64 left-0' : 'hidden lg:flex w-16 -left-full'}
         `}
