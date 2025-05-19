@@ -36,7 +36,7 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
   return (
     <>
       {/* Mobile toggle button - visible only on mobile when sidebar is closed */}
-      <div className="fixed top-4 left-4 z-30 md:hidden">
+      <div className="fixed top-4 left-4 z-30 lg:hidden">
         {!isMobileSidebarOpen && (
           <SidebarButton 
             onClick={toggleMobileSidebar} 
@@ -48,25 +48,25 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
       {/* Overlay for mobile - darkens the background when sidebar is open */}
       {isMobileSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/30 z-20 md:hidden"
+          className="fixed inset-0 bg-black/30 z-20 lg:hidden"
           onClick={toggleMobileSidebar}
         />
       )}
 
       {/* Main sidebar */}
       <aside 
-        className={`fixed md:static flex-col p-4 justify-between h-screen transition-all duration-300 ease-in-out border-r border-r-neutral-300/40 bg-white dark:bg-neutral-800 z-40
-          ${isSidebarOpen ? 'md:w-64' : 'md:w-16'} 
-          ${isMobileSidebarOpen ? 'flex w-64 left-0' : 'hidden md:flex w-16 -left-full'}
+        className={`fixed lg:static flex-col p-4 justify-between h-screen transition-all duration-300 ease-in-out border-r border-r-neutral-300/40 bg-white dark:bg-neutral-800 z-40
+          ${isSidebarOpen ? 'lg:w-64' : 'lg:w-16'} 
+          ${isMobileSidebarOpen ? 'flex w-64 left-0' : 'hidden lg:flex w-16 -left-full'}
         `}
       >
         <div>
           <div className='flex gap-1 items-center pb-10'>
-            <div className='hidden md:block'>
+            <div className='hidden lg:block'>
               <SidebarButton onClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
             </div>
             
-            <div className='block md:hidden'>
+            <div className='block lg:hidden'>
               <SidebarButton onClick={toggleMobileSidebar} isSidebarOpen={true} />
             </div>
             

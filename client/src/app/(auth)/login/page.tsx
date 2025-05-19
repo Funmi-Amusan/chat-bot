@@ -19,7 +19,7 @@ const SignUpForm = async (props: {
 }) => {
 
   const session = await auth();
-  if (session?.user) {
+  if (session?.user?.id) {
     redirect('/chat/new');
   }
   const searchParams = await props.searchParams

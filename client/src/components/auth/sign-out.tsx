@@ -1,11 +1,16 @@
 "use client";
 
+import { setLoggedInUserAction } from "@/store/conversation";
+import { useAppDispatch } from "@/utils/hooks";
 import { signOut } from "next-auth/react";
 import { LuLogOut } from "react-icons/lu";
 
 const SignOut = ({isSidebarOpen}: {isSidebarOpen?: boolean}) => {
+  const dispatch = useAppDispatch();
+
   const handleSignOut = async () => {
     await signOut()
+    dispatch(setLoggedInUserAction(null));
   };
   return (
   

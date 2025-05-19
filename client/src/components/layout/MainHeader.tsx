@@ -5,14 +5,11 @@ import UserInitializer from '../auth/UserInitializer';
 
 const MainHeader  = async () => {
   const session = await auth();
-  if (!session) {
-    redirect('/login');
-  }
   const user = session?.user || null;
 
   return (
 
-    <header className=' p-2 justify-between hidden md:flex bg-transparent fixed w-full items-center'>
+    <header className=' p-2 justify-between hidden bg-transparent fixed w-full items-center'>
       <UserInitializer user={user} />
   {/* <SignOut /> */}
     </header>
