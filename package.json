@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc --build",
-    "start": "node ./dist/index.js",
-    "start:dev": "nodemon ./src/index.ts"
+    "start:dev": "nodemon ./server/src/index.ts",
+    "start": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
