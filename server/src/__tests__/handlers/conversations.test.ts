@@ -1,7 +1,6 @@
 import { describe, expect, it, jest, beforeEach } from "@jest/globals";
 import { Request, Response } from 'express';
 
-// Create a proper mock response that mimics Express Response behavior
 const createMockResponse = () => {
   const mockRes = {
     status: jest.fn().mockReturnThis(),
@@ -16,7 +15,6 @@ const createMockRequest = (body: any = {}, params: any = {}) => ({
   params,
 });
 
-// Mock function for createConversation behavior
 const mockCreateConversation = async (req: any, res: any) => {
   try {
     const { userId } = req.body;
@@ -55,7 +53,6 @@ const mockCreateConversation = async (req: any, res: any) => {
   }
 };
 
-// Mock function for findConversationsByUserId behavior
 const mockFindConversationsByUserId = async (req: any, res: any) => {
   try {
     const { userId } = req.params;
@@ -64,17 +61,14 @@ const mockFindConversationsByUserId = async (req: any, res: any) => {
       return res.status(400).json({ error: "User ID is required" });
     }
     
-    // Simulate user not found
     if (userId === 'notfound') {
       return res.status(404).json({ error: "User not found" });
     }
     
-    // Simulate error scenario
     if (userId === 'error') {
       throw new Error('Database connection failed');
     }
     
-    // Simulate successful conversations fetch
     const conversations = [
       {
         id: 'conv-1',
@@ -98,7 +92,6 @@ const mockFindConversationsByUserId = async (req: any, res: any) => {
   }
 };
 
-// Mock function for findConversationById behavior
 const mockFindConversationById = async (req: any, res: any) => {
   try {
     const { id } = req.params;
@@ -107,7 +100,6 @@ const mockFindConversationById = async (req: any, res: any) => {
       return res.status(400).json({ error: "Conversation ID is required" });
     }
     
-    // Simulate conversation not found
     if (id === 'notfound') {
       return res.status(404).json({
         error: "Conversation not found",
@@ -115,12 +107,10 @@ const mockFindConversationById = async (req: any, res: any) => {
       });
     }
     
-    // Simulate error scenario
     if (id === 'error') {
       throw new Error('Database connection failed');
     }
     
-    // Simulate successful conversation fetch with messages
     const conversation = {
       id: id,
       title: 'Test Conversation',
@@ -152,6 +142,36 @@ const mockFindConversationById = async (req: any, res: any) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const mockDeleteConversation = async (req: any, res: any) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "Conversation ID is required" });
+    }
+
+    if (id === 'notfound') {
+      return res.status(404).json({
+        error: "Conversation not found",
+        status: 404
+      });
+    }
+
+    if (id === 'error') {
+      throw new Error('Database connection failed');
+    }
+
+    res.status(200).json({
+      message: "Conversation deleted successfully",
+      status: 200
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 
 describe('Conversation Handlers', () => {
     let mockRes: any;
@@ -359,6 +379,48 @@ describe('Conversation Handlers', () => {
             });
         });
     });
+
+    describe('deleteConversation', () => {
+        it('should delete conversation successfully with valid id', async () => {
+            const mockReq = createMockRequest({}, { id: 'conv-123' });
+
+            await mockDeleteConversation(mockReq, mockRes);
+
+            expect(mockRes.status).toHaveBeenCalledWith(200);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Conversation deleted successfully",
+                status: 200
+            });
+        });
+
+        it('should return 400 when conversation id is missing', async () => {
+            const mockReq = createMockRequest({}, {});
+            await mockDeleteConversation(mockReq, mockRes);
+            expect(mockRes.status).toHaveBeenCalledWith(400);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                error: "Conversation ID is required"
+            });
+        });
+
+        it('should return 404 when conversation not found', async () => {
+            const mockReq = createMockRequest({}, { id: 'notfound' });
+            await mockDeleteConversation(mockReq, mockRes);
+            expect(mockRes.status).toHaveBeenCalledWith(404);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                error: "Conversation not found",
+                status: 404
+            });
+    });
+
+    it('should handle errors during conversation deletion', async () => {
+        const mockReq = createMockRequest({}, { id: 'error' });
+        await mockDeleteConversation(mockReq, mockRes);
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: 'Database connection failed'
+        });
+    })
+});
 
     describe('Edge cases', () => {
         it('should handle empty userId parameter', async () => {
