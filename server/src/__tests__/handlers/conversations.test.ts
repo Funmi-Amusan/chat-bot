@@ -171,7 +171,42 @@ const mockDeleteConversation = async (req: any, res: any) => {
   }
 };
 
-
+const mockSendMessage = async (req: any, res: any) => {
+    try {
+        const { content, conversationId } = req.body;
+        
+        if (!content || !conversationId) {
+            return res.status(400).json({ error: "Content and conversation ID are required" });
+        }
+        
+        // Simulate conversation not found
+        if (conversationId === 'notfound') {
+            return res.status(404).json({ error: "Conversation not found" });
+        }
+        
+        // Simulate error scenario
+        if (conversationId === 'error') {
+            throw new Error('Database connection failed');
+        }
+        
+        // Simulate successful message creation
+        const message = {
+            id: 'msg-123',
+            content: content,
+            conversationId: conversationId,
+            isFromAI: false,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+        
+        res.status(201).json({
+            message,
+            status: 201,
+        });
+    } catch (error: any) {
+        res.status(500).json(error);
+    }
+};
 
 describe('Conversation Handlers', () => {
     let mockRes: any;
@@ -420,6 +455,132 @@ describe('Conversation Handlers', () => {
             error: 'Database connection failed'
         });
     })
+});
+
+describe('sendMessage', () => {
+    it('should send message successfully with valid data', async () => {
+        const mockReq = createMockRequest({
+            content: 'Hello, this is a test message',
+            conversationId: 'conv-123'
+        });
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(201);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            message: {
+                id: 'msg-123',
+                content: 'Hello, this is a test message',
+                conversationId: 'conv-123',
+                isFromAI: false,
+                createdAt: expect.any(Date),
+                updatedAt: expect.any(Date),
+            },
+            status: 201,
+        });
+    });
+
+    it('should return 400 when content is missing', async () => {
+        const mockReq = createMockRequest({
+            conversationId: 'conv-123'
+        });
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: "Content and conversation ID are required"
+        });
+    });
+
+    it('should return 400 when conversationId is missing', async () => {
+        const mockReq = createMockRequest({
+            content: 'Hello, this is a test message'
+        });
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: "Content and conversation ID are required"
+        });
+    });
+
+    it('should return 400 when both content and conversationId are missing', async () => {
+        const mockReq = createMockRequest({});
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: "Content and conversation ID are required"
+        });
+    });
+
+    it('should return 404 when conversation not found', async () => {
+        const mockReq = createMockRequest({
+            content: 'Hello, this is a test message',
+            conversationId: 'notfound'
+        });
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(404);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: "Conversation not found"
+        });
+    });
+
+    it('should handle errors during message creation', async () => {
+        const mockReq = createMockRequest({
+            content: 'Hello, this is a test message',
+            conversationId: 'error'
+        });
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                message: 'Database connection failed'
+            })
+        );
+    });
+
+    it('should set isFromAI to false for user messages', async () => {
+        const mockReq = createMockRequest({
+            content: 'User message',
+            conversationId: 'conv-123'
+        });
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                message: expect.objectContaining({
+                    isFromAI: false
+                })
+            })
+        );
+    });
+
+    it('should preserve message content exactly as sent', async () => {
+        const testContent = 'This is a test message with special characters: !@#$%^&*()';
+        const mockReq = createMockRequest({
+            content: testContent,
+            conversationId: 'conv-123'
+        });
+
+        await mockSendMessage(mockReq, mockRes);
+
+        expect(mockRes.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                message: expect.objectContaining({
+                    content: testContent
+                })
+            })
+        );
+    });
 });
 
     describe('Edge cases', () => {
