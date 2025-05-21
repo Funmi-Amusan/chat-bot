@@ -1,38 +1,37 @@
 {
-  "name": "chat-bot",
+  "name": "server2",
   "version": "1.0.0",
-  "main": "server/server.js",
-  "type": "module",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server/server.js",
-    "start": "node server/server.js",
-    "swagger": "node server/swagger.js",
-    "postinstall": "npx prisma generate --schema ./server/prisma/schema.prisma"
+    "build": "tsc --build",
+    "start": "node ./dist/index.js",
+    "start:dev": "nodemon ./src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@neondatabase/serverless": "^0.10.4",
-    "@prisma/client": "^6.4.1",
-    "bcrypt": "^5.1.1",
+    "@prisma/client": "^6.8.2",
+    "@types/bcrypt": "^5.0.2",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.15.21",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "helmet": "^8.0.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
     "morgan": "^1.10.0",
-    "motion": "^12.10.4",
-    "nodemailer": "^7.0.2",
-    "socket.io": "^4.8.1",
-    "swagger-autogen": "^2.23.7",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
-    "prisma": "^6.4.1"
+    "@types/express": "^5.0.2",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.8.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
