@@ -120,6 +120,35 @@ export const findConversationById = async (req: Request, res: Response) => {
     }
 };
 
+export const deleteConversationById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ error: "Conversation ID is required" });
+        }
+        const conversationExists = await prisma.conversation.findUnique({ where: { id } });
+        if (!conversationExists) {
+            return res.status(404).json({ error: "Conversation not found" });
+        }
+
+        const userId = conversationExists.userId;
+
+        const deletedConversation = await prisma.conversation.delete({ where: { id } });
+
+        io.to(id).emit('conversation_deleted', { id });
+        io.emit(`user_${userId}_conversation_deleted`, { id });
+
+        res.status(200).json({
+            deletedConversation,
+            status: 200,
+            message: "Conversation deleted successfully"
+        });
+    } catch (error) {
+        res.status(500).json(error);
+        console.log("error deleting conversation", error);
+    }
+};
+
 export const sendMessage = async (req: Request, res: Response) => {
     try {
         const { content, conversationId } = req.body;
@@ -161,35 +190,6 @@ export const sendMessage = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json(error);
         console.log("error sending message", error);
-    }
-};
-
-export const deleteConversationById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        if (!id) {
-            return res.status(400).json({ error: "Conversation ID is required" });
-        }
-        const conversationExists = await prisma.conversation.findUnique({ where: { id } });
-        if (!conversationExists) {
-            return res.status(404).json({ error: "Conversation not found" });
-        }
-
-        const userId = conversationExists.userId;
-
-        const deletedConversation = await prisma.conversation.delete({ where: { id } });
-
-        io.to(id).emit('conversation_deleted', { id });
-        io.emit(`user_${userId}_conversation_deleted`, { id });
-
-        res.status(200).json({
-            deletedConversation,
-            status: 200,
-            message: "Conversation deleted successfully"
-        });
-    } catch (error) {
-        res.status(500).json(error);
-        console.log("error deleting conversation", error);
     }
 };
 
