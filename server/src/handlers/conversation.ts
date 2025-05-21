@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "express-serve-static-core";
 import prisma from "../db/prisma";
 import { io, model } from "..";
 
