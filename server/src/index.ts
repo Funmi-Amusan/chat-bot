@@ -5,14 +5,14 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { Server } from "socket.io";
-import swaggerUi from 'swagger-ui-express';
-import { createRequire } from 'module';
+// import swaggerUi from 'swagger-ui-express';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-const require = createRequire(import.meta.url);
-const swaggerFile = require('./swagger-output.json');
+import userRouter from './routes/users';
+import conversationRouter from './routes/conversation';
+// import { createRequire } from 'module';
+// const customRequire = createRequire(import.meta.url);
+// import swaggerFile from './swagger-output.json';
 
-import userRouter from './Routes/userRoute.js'
-import conversationRouter from './Routes/conversationRoute.js'
 
 dotenv.config();
 
@@ -32,7 +32,7 @@ const io = new Server(server, {
   }
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 // Configure Google Generative AI
 const apiKey = process.env.GEMINI_API_KEY;
 
