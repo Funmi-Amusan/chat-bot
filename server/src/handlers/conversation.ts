@@ -1,6 +1,8 @@
+import * as fs from "fs";
 import { Request, Response } from "express-serve-static-core";
 import prisma from "../db/prisma";
 import { io, model } from "..";
+import { ChatSession } from "@google/generative-ai";
 
 export const createConversation = async (req: Request, res: Response) => {
     try {
@@ -197,63 +199,73 @@ export const sendMessage = async (req: Request, res: Response) => {
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
-            include: { user: true,
+            include: {
+                user: true,
                 messages: {
                     orderBy: {
-                        createdAt: 'desc'
+                        createdAt: 'asc' 
                     },
-                    take: 1,
                 }
-             }
+            }
         });
 
         if (!conversation) {
-            console.log("Conversation not found for AI response");
+            console.log("Conversation not found for AI response:", conversationId);
             return;
         }
-
-        const formattedHistory = conversation.messages.map((msg: { isFromAI: any; content: any; }) => ({
+        const formattedHistory = conversation.messages.map((msg) => ({
             role: msg.isFromAI ? 'model' : 'user',
             parts: [{ text: msg.content }],
         }));
+        const latestUserMessage = formattedHistory[formattedHistory.length - 1];
 
-        const latestUserMessage = formattedHistory.find((msg: { role: string; }) => msg.role === 'user');
+        if (!latestUserMessage || latestUserMessage.role !== 'user') {
+            console.warn("sendAIMessage called for conversation", conversationId, "but no user message found as the latest message.");
+            return; 
+        }
+        const historyForChat = formattedHistory.slice(0, -1);
 
-        let aiResponseContent = "Sorry, I couldn't generate a response."; 
+        const chat: ChatSession = model.startChat({
+            history: historyForChat,
+        });
 
-        if (latestUserMessage) {
-            const historyForChat = formattedHistory.slice(0, formattedHistory.indexOf(latestUserMessage));
-            const chat = model.startChat({
-                history: historyForChat,
-            });
+        let fullAiResponseContent = "";
+        let aiResponseError = false;
 
-           try {
-                const result = await chat.sendMessage(latestUserMessage.parts[0].text);
-                const response = await result.response;
-                aiResponseContent = response.text(); 
-
-                if (!aiResponseContent) {
-                    aiResponseContent = "The AI generated an empty response.";
-                    console.warn("AI generated empty response for conversation", conversationId);
+        try {
+            const result = await chat.sendMessageStream(latestUserMessage.parts[0].text);
+            for await (const chunk of result.stream) {
+                const chunkText = chunk.text();
+                if (chunkText) {
+                    fullAiResponseContent += chunkText;
+                    io.to(conversationId).emit('new_message_chunk', {
+                        conversationId,
+                        content: chunkText,
+                        isFromAI: true,
+                    });
+                    console.log("Sending chunk:", chunkText);
                 }
-
-            } catch (aiError) {
-                console.error('Error generating content from Gemini API:', aiError);
-                aiResponseContent = "Error generating response from AI."; 
             }
 
-       } else {
-            console.warn("sendAIMessage called for conversation", conversationId, "but no user message found in history.");
-       }
+            if (!fullAiResponseContent) {
+                console.warn("AI generated an empty streamed response for conversation", conversationId);
+                fullAiResponseContent = "The AI generated an empty response.";
+                aiResponseError = true;
+            }
 
-       const aiMessage = await prisma.message.create({
-           data: {
-               content: aiResponseContent, 
-               conversationId,
-               isFromAI: true,
-           }
-       });
-
+        } catch (aiError: any) {
+            console.error('Error generating content from Gemini API:', aiError);
+            fullAiResponseContent = "Error generating response from AI.";
+            aiResponseError = true;
+        }
+        const aiMessage = await prisma.message.create({
+            data: {
+                content: fullAiResponseContent,
+                conversationId,
+                isFromAI: true,
+                // error: aiResponseError,
+            }
+        });
         io.to(conversationId).emit('ai_typing_stop', { conversationId });
 
         io.to(conversationId).emit('new_message', aiMessage);
@@ -262,9 +274,35 @@ export const sendMessage = async (req: Request, res: Response) => {
             conversationId,
             lastMessage: aiMessage
         });
+
     } catch (error) {
-        console.log("error sending AI message", error);
+        console.error("Error in sendAIMessage function:", error);
+        io.to(conversationId).emit('server_error', {
+            conversationId,
+            message: "Failed to process AI response due to a server error."
+        });
     }
 };
 
+export const textAIGeneration = async () => {
+
+    const fileToGeneratePart = (path: string, mimeType: string) => {
+        return {
+            inlineData: {
+                data: Buffer.from(fs.readFileSync(path)).toString('base64'),
+                mimeType: mimeType,
+            }
+        }
+    }
+    const imagePart = [fileToGeneratePart('quantum.png', 'image/png')]; // Corrected to 'imagePart'
+
+
+    const prompt = "Generate content with Stranger things innuendos.";
+    // Assuming 'model' is defined and initialized elsewhere in your code
+    const response = await model.generateContent([
+        prompt, ...imagePart
+    ]);
+    const result = await response.response.text();
+    console.log(result);
+}
 

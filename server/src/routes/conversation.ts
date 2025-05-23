@@ -1,8 +1,11 @@
 import {  Router } from "express";
-import { createConversation, deleteConversationById, findConversationById, findConversationsByUserId, sendMessage } from "../handlers/conversation";
+import { createConversation, deleteConversationById, findConversationById, findConversationsByUserId, sendMessage, textAIGeneration } from "../handlers/conversation";
 
 const conversationRouter = Router();
 
+conversationRouter.get("/test", async () => {
+    await textAIGeneration();
+});
 conversationRouter.post("/create", async (req, res) => {
     await createConversation(req, res);
 });
@@ -18,5 +21,7 @@ conversationRouter.get("/:id", async (req, res) => {
 conversationRouter.post("/send", async (req, res) => {
     await sendMessage(req, res);
 });
+
+
 
 export default conversationRouter;

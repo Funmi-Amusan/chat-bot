@@ -14,7 +14,7 @@ export type InitialState = {
 export type Conversation = {
     id: string;
     title: string;
-    messages: Message[] | [];
+    messages: Message[];
     userId: string;
     createdAt: string;
     updatedAt: string;

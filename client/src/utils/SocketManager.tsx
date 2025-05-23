@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { addMessageToConversationAction, setAITyping, setAllowTypwriterAnimation } from '@/store/conversation';
+import { addMessageToConversationAction, appendChunkToAIMessage, setAITyping, setAllowTypwriterAnimation, updateAIMessage } from '@/store/conversation';
 import { Message } from '@/store/conversation/types';
 import { useAppDispatch } from '@/utils/hooks';
 
@@ -44,13 +44,45 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
         }
       });
       
-      socket.on('new_message', (newMessage: Message) => {
-        if (newMessage.isFromAI && newMessage.conversationId === conversationId) {
-          dispatch(setAITyping(false));
+      // socket.on('new_message', (newMessage: Message) => {
+      //   if (newMessage.isFromAI && newMessage.conversationId === conversationId) {
+      //     dispatch(setAITyping(false));
+      //   }
+      //   dispatch(addMessageToConversationAction({newMessage, conversationId}));
+      //   dispatch(setAllowTypwriterAnimation(newMessage.id));
+      // });
+
+      socket.on('new_message_chunk', (chunkData: { conversationId: string, content: string, isFromAI: boolean, messageId?: string }) => {
+        if (chunkData.isFromAI && chunkData.conversationId === conversationId) {
+            dispatch(appendChunkToAIMessage({
+                conversationId: chunkData.conversationId,
+                chunk: chunkData.content,
+            }));
+            if (chunkData.messageId) { 
+                 dispatch(setAllowTypwriterAnimation(chunkData.messageId));
+            }
         }
-        dispatch(addMessageToConversationAction({newMessage, conversationId}));
-        dispatch(setAllowTypwriterAnimation(newMessage.id));
-      });
+    });
+    
+    socket.on('new_message', (fullMessage: Message) => {
+        if (fullMessage.isFromAI && fullMessage.conversationId === conversationId) {
+            dispatch(updateAIMessage({
+                conversationId: fullMessage.conversationId,
+                message: fullMessage 
+            }));
+            dispatch(setAllowTypwriterAnimation(null)); 
+            dispatch(setAITyping(false));
+        } else {
+            dispatch(addMessageToConversationAction({ newMessage: fullMessage, conversationId }));
+        }
+    });
+    
+    socket.on('ai_typing_stop', ({ conversationId: stoppedConversationId }: { conversationId: string }) => {
+        if (stoppedConversationId === conversationId) {
+            dispatch(setAITyping(false));
+            dispatch(setAllowTypwriterAnimation(null)); 
+        }
+    });
       
       socket.on('conversation_deleted', ({ id }: { id: string }) => {
         if (id === conversationId) {

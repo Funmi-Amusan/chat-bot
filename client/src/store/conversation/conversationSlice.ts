@@ -28,7 +28,7 @@ const conversationSlice = createSlice({
         appendChunkToAIMessage: (state, action: PayloadAction<{ conversationId: string, chunk: string }>) => {
             const { chunk } = action.payload;
 
-            const lastAIMessage = state.messages.find(msg => msg.isFromAI && (msg as StreamingAIMessage).isStreaming);
+            const lastAIMessage = state.messages.findLast(msg => msg.isFromAI && (msg as StreamingAIMessage).isStreaming);
 
             if (!lastAIMessage) {
                 const tempId = nanoid();
@@ -38,9 +38,10 @@ const conversationSlice = createSlice({
                     content: chunk,
                     isFromAI: true,
                     createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
                     isStreaming: true, 
                 };
-                state.messages.push(newStreamingMessage); 
+                state.messages.push(newStreamingMessage as Message); 
                 state.allowTypwriterAnimation = tempId; 
                 state.isAITyping = true;
             } else {
@@ -48,14 +49,15 @@ const conversationSlice = createSlice({
                 state.allowTypwriterAnimation = lastAIMessage.id;
                 state.isAITyping = true; 
             }
-        },        updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
+        },
+        updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
             const { message } = action.payload;
             const existingIndex = state.messages.findIndex(msg => msg.id === message.id);
 
             if (existingIndex !== -1) {
                 state.messages[existingIndex] = { ...message, isStreaming: false } as Message; 
             } else {
-                state.messages.push({ ...message, isStreaming: false } as StreamingAIMessage);
+                state.messages.push({ ...message, isStreaming: false } as Message);
             }
             state.allowTypwriterAnimation = null; 
             state.isAITyping = false; 
