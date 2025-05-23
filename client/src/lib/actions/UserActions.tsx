@@ -99,7 +99,6 @@ export async function handleRegistration (prevState: unknown, formData: FormData
       name, email, password })
     });
 const data = await response.json();
-console.log('---------', data)
 if (!response.ok) {
   const error = data.error || 'An error occurred while registering the user.';
   return { success: false, error };
