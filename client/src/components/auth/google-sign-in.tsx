@@ -12,7 +12,7 @@ const GoogleSignIn = () => {
       }}
       className="w-full"
     >
-     <BaseButton text='Login with Google' type="submit" icon={<FcGoogle size={18} />} className='w-full bg-white border-gray-300' />
+     <BaseButton testId="google-signin" text='Login with Google' type="submit" icon={<FcGoogle size={18} />} className='w-full bg-white border-gray-300' />
     </form>
   );
 };

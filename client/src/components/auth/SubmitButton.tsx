@@ -17,9 +17,9 @@ export function SubmitButton({text}:{text:string}) {
   return (
   <>
   { pending ? (
-       <BaseButton text='Processing' disabled variant='dark' type='submit' />
+       <BaseButton testId="submit-button" text='Processing' disabled variant='dark' type='submit' />
   ) : (
-    <BaseButton text={text} variant='dark' type='submit' />
+    <BaseButton testId="submit-button" text={text} variant='dark' type='submit' />
   )}
   </>
   )
