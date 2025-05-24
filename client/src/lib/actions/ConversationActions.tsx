@@ -78,14 +78,12 @@ export async function sendMessageAction(parts: string, conversationId: string) {
     //     console.warn("Server Action: Unauthorized attempt to create conversation for different user.");
     //     return { success: false, error: "Unauthorized." };
     // }
-    console.log("sendMessageAction", parts, conversationId);
     try {
         const body  = {
             parts,
             conversationId
         };
         const newMessage = await http.post({ url: sendMessageURL, body });
-        console.log("newMessage", newMessage);
         if (newMessage) {
             // revalidatePath('/chat'); 
             return { success: true, data: newMessage }; 

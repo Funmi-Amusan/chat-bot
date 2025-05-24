@@ -174,10 +174,7 @@ export const deleteConversationById = async (req: Request, res: Response) => {
 };
 
 export const sendMessage = async (req: Request, res: Response) => {
-    console.log('Received message request body:', req.body);
-    console.log('Type of req.body.parts (before parsing):', typeof req.body.parts);
-    console.log('Is req.body.parts an Array? (before parsing):', Array.isArray(req.body.parts));
-
+console.log("sending message");
     let parts: ServerPart[]; 
     let conversationId: string;
 
@@ -185,7 +182,6 @@ export const sendMessage = async (req: Request, res: Response) => {
         if (typeof req.body.parts === 'string') {
             try {
                 parts = JSON.parse(req.body.parts);
-                console.log('Successfully parsed req.body.parts string into an array.');
             } catch (parseError: any) {
                 console.error("Error parsing req.body.parts string:", parseError);
                 return res.status(400).json({ error: "Invalid JSON format for 'parts' array.", details: parseError.message });
@@ -195,12 +191,6 @@ export const sendMessage = async (req: Request, res: Response) => {
         }
 
         conversationId = req.body.conversationId;
-
-        console.log("parts after potential parsing:", parts);
-        console.log("Type of parts after potential parsing:", typeof parts);
-        console.log("Is parts an Array after potential parsing?", Array.isArray(parts));
-
-        // Now, the validation should work correctly as 'parts' should be an array
         if (!parts || !Array.isArray(parts) || parts.length === 0 || !conversationId) {
             console.error("Validation failed: Missing parts array, empty parts array, or missing conversationId.");
             return res.status(400).json({ error: "Parts array and conversation ID are required." });
@@ -211,13 +201,9 @@ export const sendMessage = async (req: Request, res: Response) => {
             console.error(`Conversation with ID ${conversationId} not found.`);
             return res.status(404).json({ error: "Conversation not found." });
         }
-        console.log('--- Starting parts validation ---');
         const validatedParts: ServerPart[] = parts.map((part: any, index: number) => {
-            console.log(`Validating part ${index}:`, JSON.stringify(part));
-
             if (part.text !== undefined) {
                 if (typeof part.text === 'string') {
-                    console.log(`Part ${index} is a valid text part.`);
                     return { text: part.text };
                 } else {
                     console.error(`Part ${index} has 'text' but it's not a string. Type: ${typeof part.text}`);
@@ -227,7 +213,6 @@ export const sendMessage = async (req: Request, res: Response) => {
             if (part.inlineData !== undefined) {
                 if (typeof part.inlineData === 'object' && part.inlineData !== null &&
                     typeof part.inlineData.mimeType === 'string' && typeof part.inlineData.data === 'string') {
-                    console.log(`Part ${index} is a valid inlineData part.`);
                     return { inlineData: part.inlineData };
                 } else {
                     console.error(`Part ${index} has 'inlineData' but it's malformed. Structure:`, part.inlineData);
@@ -237,19 +222,15 @@ export const sendMessage = async (req: Request, res: Response) => {
             if (part.fileData !== undefined) {
                 if (typeof part.fileData === 'object' && part.fileData !== null &&
                     typeof part.fileData.mimeType === 'string' && typeof part.fileData.uri === 'string') {
-                    console.log(`Part ${index} is a valid fileData part.`);
                     return { fileData: part.fileData };
                 } else {
                     console.error(`Part ${index} has 'fileData' but it's malformed. Structure:`, part.fileData);
                 }
             }
-
-            // If none of the above conditions are met, it's an invalid part structure
             const errorMessage = `Invalid part structure found at index ${index}: ${JSON.stringify(part)}. Expected 'text', 'inlineData', or 'fileData' with correct types.`;
             console.error(errorMessage);
             throw new Error(errorMessage);
         });
-        console.log('--- Parts validation complete ---');
 
         const message = await prisma.message.create({
             data: {
@@ -259,27 +240,18 @@ export const sendMessage = async (req: Request, res: Response) => {
             }
         });
 
-        console.log("Message created:", message);
-
-        // Ensure 'io' is initialized before using it
-        if (io) {
             io.to(conversationId).emit('new_message', message);
             io.emit(`user_${conversationExists.userId}_conversation_updated`, {
                 conversationId,
                 lastMessage: message
             });
-        } else {
-            console.warn("Socket.io 'io' instance is not initialized. Cannot emit events.");
-        }
-
+console.log("Message sent successfully:", message);
         res.status(201).json({
             message,
             status: 201,
         });
-
-        if (io) {
             io.to(conversationId).emit('ai_typing_start', { conversationId });
-        }
+
         sendAIMessage(conversationId);
 
     } catch (error: any) {
@@ -293,6 +265,7 @@ export const sendMessage = async (req: Request, res: Response) => {
 };
 
 const sendAIMessage = async (conversationId: string) => {
+    console.log("sendAIMessage called for conversationId:", conversationId);
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },

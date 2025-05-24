@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { addMessageToConversationAction, appendChunkToAIMessage, setAITyping, setAllowTypwriterAnimation, updateAIMessage } from '@/store/conversation';
 import { Message } from '@/store/conversation/types';
@@ -16,7 +16,9 @@ const ENDPOINT = process.env.NEXT_PUBLIC_API_URL;
 
 const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps) => {
   const dispatch = useAppDispatch();
+  const currentConversationId = useRef<string | undefined>(conversationId);
 
+  // Initialize socket connection once
   useEffect(() => {
     const newSocket = io(ENDPOINT, {
       transports: ['websocket', 'polling']
@@ -24,81 +26,69 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
     
     setSocket(newSocket);
 
+    newSocket.on('new_message_chunk', (chunkData: { conversationId: string, content: string, isFromAI: boolean, messageId?: string }) => {
+      console.log('Received chunk data:', chunkData);
+      if (chunkData.isFromAI && chunkData.conversationId === currentConversationId.current) {
+        dispatch(appendChunkToAIMessage({
+          conversationId: chunkData.conversationId,
+          chunk: chunkData.content,
+        }));
+        if (chunkData.messageId) { 
+          dispatch(setAllowTypwriterAnimation(chunkData.messageId));
+        }
+      }
+    });
+    
+    newSocket.on('new_message', (fullMessage: Message) => {
+      if (fullMessage.conversationId === currentConversationId.current) {
+        if (fullMessage.isFromAI) {
+          dispatch(updateAIMessage({
+            conversationId: fullMessage.conversationId,
+            message: fullMessage 
+          }));
+          dispatch(setAllowTypwriterAnimation(null)); 
+          dispatch(setAITyping(null));
+        } else {
+          dispatch(addMessageToConversationAction({ newMessage: fullMessage, conversationId: currentConversationId.current! }));
+        }
+      }
+    });
+
+    newSocket.on('ai_typing_start', (data: Message) => {
+      if (data.conversationId === currentConversationId.current) {
+        dispatch(setAITyping(currentConversationId.current));
+      }
+    });
+    
+    newSocket.on('ai_typing_stop', (data: { conversationId: string }) => {
+      if (data.conversationId === currentConversationId.current) {
+        dispatch(setAITyping(null));
+        dispatch(setAllowTypwriterAnimation(null));
+      }
+    });
+    
+    newSocket.on('conversation_deleted', ({ id }: { id: string }) => {
+      if (id === currentConversationId.current) {
+        alert('This conversation has been deleted');
+      }
+    });
+
     return () => {
       newSocket.disconnect();
     };
-  }, [setSocket]);
+  }, [setSocket, dispatch]);
 
   useEffect(() => {
+    currentConversationId.current = conversationId;
+
     if (socket && conversationId) {
       socket.emit('join_conversation', conversationId);
-      socket.on('ai_typing_start', (data: Message) => {
-        if (data.conversationId === conversationId) {
-          dispatch(setAITyping(true));
-        }
-      });
-      
-      socket.on('ai_typing_stop', (data: Message) => {
-        if (data.conversationId === conversationId) {
-          dispatch(setAITyping(false));
-        }
-      });
-      
-      // socket.on('new_message', (newMessage: Message) => {
-      //   if (newMessage.isFromAI && newMessage.conversationId === conversationId) {
-      //     dispatch(setAITyping(false));
-      //   }
-      //   dispatch(addMessageToConversationAction({newMessage, conversationId}));
-      //   dispatch(setAllowTypwriterAnimation(newMessage.id));
-      // });
-
-      socket.on('new_message_chunk', (chunkData: { conversationId: string, content: string, isFromAI: boolean, messageId?: string }) => {
-        if (chunkData.isFromAI && chunkData.conversationId === conversationId) {
-            dispatch(appendChunkToAIMessage({
-                conversationId: chunkData.conversationId,
-                chunk: chunkData.content,
-            }));
-            if (chunkData.messageId) { 
-                 dispatch(setAllowTypwriterAnimation(chunkData.messageId));
-            }
-        }
-    });
-    
-    socket.on('new_message', (fullMessage: Message) => {
-        if (fullMessage.isFromAI && fullMessage.conversationId === conversationId) {
-            dispatch(updateAIMessage({
-                conversationId: fullMessage.conversationId,
-                message: fullMessage 
-            }));
-            dispatch(setAllowTypwriterAnimation(null)); 
-            dispatch(setAITyping(false));
-        } else {
-            dispatch(addMessageToConversationAction({ newMessage: fullMessage, conversationId }));
-        }
-    });
-    
-    socket.on('ai_typing_stop', ({ conversationId: stoppedConversationId }: { conversationId: string }) => {
-        if (stoppedConversationId === conversationId) {
-            dispatch(setAITyping(false));
-            dispatch(setAllowTypwriterAnimation(null)); 
-        }
-    });
-      
-      socket.on('conversation_deleted', ({ id }: { id: string }) => {
-        if (id === conversationId) {
-          alert('This conversation has been deleted');
-        }
-      });
       
       return () => {
         socket.emit('leave_conversation', conversationId);
-        socket.off('new_message');
-        socket.off('conversation_deleted');
-        socket.off('ai_typing_start');
-        socket.off('ai_typing_stop');
       };
     }
-  }, [socket, conversationId, dispatch]);
+  }, [socket, conversationId]);
 
   return null; 
 };

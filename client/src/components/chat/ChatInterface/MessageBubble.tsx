@@ -8,8 +8,6 @@ import React from "react";
 
 
 const MessageBubble = ({ parts, isFromAI, id }: { parts: MessagePart[]; isFromAI?: boolean; id: string }) => {
-
-  console.log("_______", parts, isFromAI, id);
   const {
     allowTypwriterAnimation
   } = useAppSelector((state) => state.conversationReducer);

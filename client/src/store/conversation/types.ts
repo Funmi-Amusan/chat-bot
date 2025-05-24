@@ -6,7 +6,7 @@ export type InitialState = {
     conversations: Conversation[] | []
     error: boolean;
     message: string | null;
-    isAITyping: boolean;
+    isAITyping: string | null;
     user: User | null;
     allowTypwriterAnimation: string | null;
 };

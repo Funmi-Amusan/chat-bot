@@ -116,7 +116,6 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
 
       try {
         if (conversationId === 'new') {
-          console.log('Creating new conversation', user);
           if (!user?.id) {
             toast.error('User not found. Please log in.');
             redirect('/login');
@@ -130,7 +129,6 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
         if (hasText) {
           messageParts.push({ text: message.trim() });
         }
-        console.log('Message parts:', messageParts);
 
         for (const file of selectedFiles) {
           const base64Data = await new Promise<string>((resolve, reject) => {
@@ -149,14 +147,11 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
             }
           });
         }
-console.log('sent message parts')
         const data: MessageData = {
           parts: messageParts, 
           conversationId: conversationId
         };
-        console.log('data being sent', data);
         const validatedData: MessageData = MessageSchema.parse(data);
-        console.log('validated data', validatedData);
         setMessage("");
         setSelectedFiles([]);
         setPreviewImages([]);

@@ -6,7 +6,7 @@ import { ImageAssets } from '@/assets/images';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import { motion } from 'framer-motion';
 import { Message } from '@/store/conversation/types';
-import { setMessagesData } from '@/store/conversation';
+import { setAITyping, setMessagesData } from '@/store/conversation';
 import EmptyChat from './EmptyChat';
 import ShinyText from '@/components/ui/BaseShinyText';
 import NameIcon from '@/components/ui/NameIcon';
@@ -31,8 +31,6 @@ const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
       messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
     }
   }, [messages, isAITyping]); 
-
-  console.log("_______", isAITyping);
 
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide flex-col">

@@ -2,7 +2,6 @@ import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 import { InitialState, Message } from "./types";
 
 interface StreamingAIMessage extends Omit<Message, 'content'> {
-    content: string; 
     isStreaming: boolean; 
 }
 
@@ -12,7 +11,7 @@ const initialState: InitialState = {
     message: null,
     messages: [],
     conversations: [],
-    isAITyping: false,
+    isAITyping: null,
     allowTypwriterAnimation: null,
     user: null,
 };
@@ -28,39 +27,45 @@ const conversationSlice = createSlice({
         appendChunkToAIMessage: (state, action: PayloadAction<{ conversationId: string, chunk: string }>) => {
             const { chunk } = action.payload;
 
-            const lastAIMessage = state.messages.find(msg => msg.isFromAI && (msg as StreamingAIMessage).isStreaming);
-
+            const lastAIMessage = state.messages.findLast((msg): msg is StreamingAIMessage => 
+                msg.isFromAI && (msg as StreamingAIMessage).isStreaming
+            );
             if (!lastAIMessage) {
                 const tempId = nanoid();
                 const newStreamingMessage: StreamingAIMessage = {
                     id: tempId,
                     conversationId: action.payload.conversationId,
-                    content: chunk,
+                    parts: [{ text: chunk }], 
                     isFromAI: true,
-                    createdAt: new Date().toISOString(),
                     isStreaming: true, 
+                    createdAt: new Date().toISOString(),
                 };
                 state.messages.push(newStreamingMessage); 
                 state.allowTypwriterAnimation = tempId; 
-                state.isAITyping = true;
+                state.isAITyping = action.payload.conversationId;
             } else {
-                lastAIMessage.content += chunk;
+                if (lastAIMessage.parts.length > 0 && lastAIMessage.parts[0].text !== undefined) {
+                    lastAIMessage.parts[0].text += chunk;
+                } else {
+                    lastAIMessage.parts.push({ text: chunk });
+                }
                 state.allowTypwriterAnimation = lastAIMessage.id;
-                state.isAITyping = true; 
+                state.isAITyping = action.payload.conversationId;
             }
-        },        updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
+        },
+        updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
             const { message } = action.payload;
             const existingIndex = state.messages.findIndex(msg => msg.id === message.id);
 
             if (existingIndex !== -1) {
                 state.messages[existingIndex] = { ...message, isStreaming: false } as Message; 
             } else {
-                state.messages.push({ ...message, isStreaming: false } as StreamingAIMessage);
+                state.messages.push({ ...message, isStreaming: false } as Message);
             }
             state.allowTypwriterAnimation = null; 
-            state.isAITyping = false; 
+            state.isAITyping = null; 
         },
-        setAITyping: (state, action: PayloadAction<boolean>) => {
+        setAITyping: (state, action: PayloadAction<string | null>) => {
             state.isAITyping = action.payload;
         },
         setLoggedInUserAction: (state, action) => {
