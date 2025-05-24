@@ -9,7 +9,8 @@ import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { Socket } from 'socket.io-client';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { LuGlobe, LuPaperclip, LuSend, LuPlus, LuCircleX } from "react-icons/lu";
+import { LuCamera, LuSend, LuCircleX, LuPaperclip } from "react-icons/lu";
+import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { TbFidgetSpinner } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 import { toast } from 'react-toastify';
@@ -228,32 +229,32 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           className="hidden"
       />
       <Tooltip
-        tooltip="Attach files"
+        tooltip="Add images"
         className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
       >
        <button
           onClick={triggerFileInput} 
           className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
        >
+                <LuCamera size={20} />
+              </button>
+      </Tooltip>
+
+      <Tooltip
+        tooltip="Add file"
+        className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
+      >
+          <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuPaperclip size={20} />
               </button>
       </Tooltip>
 
       <Tooltip
-        tooltip="Add item"
-        className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
-      >
-          <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
-                <LuPlus size={20} />
-              </button>
-      </Tooltip>
-
-      <Tooltip
-        tooltip="Browse web"
+        tooltip="Record audio"
         className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
       >
         <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
-                <LuGlobe size={20} />
+                <MdOutlineKeyboardVoice size={20} />
               </button>
       </Tooltip>
     </div>
