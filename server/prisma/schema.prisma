@@ -32,7 +32,7 @@ model Conversation {
 
 model Message {
   id             String       @id @default(uuid())
-  content        String
+   parts          Json       
   isFromAI       Boolean    
   conversationId String
   createdAt      DateTime     @default(now())
