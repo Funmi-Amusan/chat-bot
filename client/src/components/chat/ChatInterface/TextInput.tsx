@@ -5,17 +5,23 @@ import { sendMessageAction } from '@/lib/actions/ConversationActions';
 import { useAppSelector } from '@/utils/hooks';
 import SocketManager from '@/utils/SocketManager';
 import { redirect } from 'next/navigation';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { Socket } from 'socket.io-client';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { LuGlobe, LuPaperclip, LuSend, LuPlus } from "react-icons/lu";
+import { LuGlobe, LuPaperclip, LuSend, LuPlus, LuCircleX } from "react-icons/lu";
 import { TbFidgetSpinner } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 import { toast } from 'react-toastify';
 
 const MessageSchema = z.object({
-  content: z.string().min(1, "Message cannot be empty").max(5000, "Message is too long"),
+  parts: z.array(z.object({
+    text: z.string().optional(),
+    inlineData: z.object({
+      mimeType: z.string(),
+      data: z.string()
+    }).optional()
+  })).min(1, "Message cannot be empty"), 
   conversationId: z.union([
     z.string().uuid("Invalid conversation ID"),
     z.literal('new')
@@ -24,14 +30,31 @@ const MessageSchema = z.object({
 
 type MessageData = z.infer<typeof MessageSchema>;
 
+interface TextPart {
+  text: string;
+}
+
+interface InlineDataPart {
+  inlineData: {
+    mimeType: string;
+    data: string; 
+  };
+}
+
+type ClientPart = TextPart | InlineDataPart; 
+
+
 const TextInput = ({ conversationId }: { conversationId: string }) => {
     const router = useRouter();
     const { loading, isAITyping, user } = useAppSelector((state) => state.conversationReducer);
     const [isSending, setIsSending] = useState(false);
     const [message, setMessage] = useState("");
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]); 
+    const [previewImages, setPreviewImages] = useState<string[]>([]);
     const [isFocused, setIsFocused] = useState(false); 
     const [socket, setSocket] = useState<Socket | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
       const textarea = textareaRef.current;
@@ -42,18 +65,58 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
       }
     }, [message]);
 
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files) {
+          const filesArray = Array.from(event.target.files);
+          const imageFiles = filesArray.filter(file => file.type.startsWith('image/'));
+
+          if (imageFiles.length === 0 && filesArray.length > 0) {
+              toast.error("Only image files are supported for now.");
+              return;
+          }
+          if (selectedFiles.length + imageFiles.length > 2) { 
+              toast.error("You can upload a maximum of 2 files.");
+              return;
+          }
+
+          setSelectedFiles(prevFiles => [...prevFiles, ...imageFiles]);
+
+          imageFiles.forEach(file => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                  setPreviewImages(prevPreviews => [...prevPreviews, reader.result as string]);
+              };
+              reader.readAsDataURL(file);
+          });
+          event.target.value = '';
+      }
+  };
+
+  const removeFile = (indexToRemove: number) => {
+      setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
+      setPreviewImages(prevPreviews => prevPreviews.filter((_, index) => index !== indexToRemove));
+  };
+
     const sendMessage = async() => {
       setIsSending(true);
-      if (message.trim() === "") {
-        toast.error("Message cannot be empty"); 
+
+      const hasText = message.trim().length > 0;
+      const hasFiles = selectedFiles.length > 0;
+
+      if (!hasText && !hasFiles) {
+        toast.error("Message cannot be empty ");
+        setIsSending(false);
         return;
-    }
-    if (!conversationId) {
+      }
+      if (!conversationId) {
         toast.error("Invalid conversation ID");
+        setIsSending(false);
         return;
-    }
+      }
+
       try {
         if (conversationId === 'new') {
+          console.log('Creating new conversation', user);
           if (!user?.id) {
             toast.error('User not found. Please log in.');
             redirect('/login');
@@ -61,13 +124,44 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
           const {data} = await createNewConversation(user.id)
           conversationId = data?.id
         }
-        const data = {
-          content: message,
-          conversationId
+
+        const messageParts: ClientPart[] = [];
+
+        if (hasText) {
+          messageParts.push({ text: message.trim() });
+        }
+        console.log('Message parts:', messageParts);
+
+        for (const file of selectedFiles) {
+          const base64Data = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file); 
+          });
+          const [mimeTypePart, dataPart] = base64Data.split(';base64,');
+          const mimeType = mimeTypePart.replace('data:', '');
+
+          messageParts.push({
+            inlineData: {
+              mimeType: mimeType,
+              data: dataPart
+            }
+          });
+        }
+console.log('sent message parts')
+        const data: MessageData = {
+          parts: messageParts, 
+          conversationId: conversationId
         };
+        console.log('data being sent', data);
         const validatedData: MessageData = MessageSchema.parse(data);
+        console.log('validated data', validatedData);
         setMessage("");
-        await sendMessageAction(validatedData.content, validatedData.conversationId);
+        setSelectedFiles([]);
+        setPreviewImages([]);
+        
+        await sendMessageAction(JSON.stringify(validatedData.parts), validatedData.conversationId);
         setIsSending(false);
         router.push(`/chat/${conversationId}`)
       } catch (error) {
@@ -95,55 +189,92 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
       toast.info("This feature is not yet active");
     };
 
+    const triggerFileInput = () => {
+      fileInputRef.current?.click();
+    };
+
     return (
       <>
-        <SocketManager 
-          conversationId={conversationId} 
-          setSocket={setSocket} 
-          socket={socket}
-        />
-      <div className="flex flex-col w-full px-4  max-w-3xl mx-auto pb-6">
+      <SocketManager
+        conversationId={conversationId}
+        setSocket={setSocket}
+        socket={socket}
+      />
+    <div className="flex flex-col w-full px-4 max-w-3xl mx-auto pb-6">
+      {/* File Preview Area */}
+      {previewImages.length > 0 && (
+          <div className="mb-2 flex flex-wrap gap-2 p-2 border rounded-lg bg-neutral-100 dark:bg-neutral-700">
+              {previewImages.map((src, index) => (
+                  <div key={index} className="relative group">
+                      <img
+                          src={src}
+                          alt={`Preview ${index}`}
+                          className="w-20 h-20 object-cover rounded-md"
+                      />
+                      <button
+                          onClick={() => removeFile(index)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label="Remove file"
+                      >
+                          <LuCircleX size={16} />
+                      </button>
+                  </div>
+              ))}
+          </div>
+      )}
+
       <div className="relative rounded-2xl p-0.5 ">
-     
+
         <div className={`flex flex-col w-full rounded-2xl border py-3  border-neutral-500/50 bg-white dark:bg-neutral-800 ${isFocused ? 'border-neutral-600' : ''}`}>
- 
+
           <div className="relative flex w-full">
-              <textarea 
+              <textarea
               ref={textareaRef}
-              name="chat-input" 
-              id="chat-input" 
+              name="chat-input"
+              id="chat-input"
               value={message}
-              onChange={(e) => setMessage(e.target.value)} 
+              onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
                placeholder="Imagine Something...✦˚"
               className="w-full h-16 bg-transparent rounded-2xl dark:text-white text-base px-3  resize-none outline-none dark:placeholder-white/90 focus:placeholder-neutral-700"
               rows={1}
               onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)} 
-              disabled={loading }
+              onBlur={() => setIsFocused(false)}
+              disabled={loading || isSending }
             />
     </div>
           <div className="flex justify-between items-end px-2.5 pb-2.5">
           <div className="flex gap-4">
-      <Tooltip 
+      <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          multiple 
+          accept="image/*" 
+          className="hidden"
+      />
+      <Tooltip
         tooltip="Attach files"
         className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
       >
-       <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
+       <button
+          onClick={triggerFileInput} 
+          className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
+       >
                 <LuPaperclip size={20} />
               </button>
       </Tooltip>
-      
-      <Tooltip 
-        tooltip="Add item" 
+
+      <Tooltip
+        tooltip="Add item"
         className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
       >
           <button onClick={()=> handleNotYetActive()} className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1">
                 <LuPlus size={20} />
               </button>
       </Tooltip>
-      
-      <Tooltip 
+
+      <Tooltip
         tooltip="Browse web"
         className="text-black/30 dark:text-neutral-500 hover:text-black dark:hover:text-neutral-200 transition-all hover:-translate-y-1"
       >
@@ -152,9 +283,9 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
               </button>
       </Tooltip>
     </div>
-            
-            <button 
-            onClick={() =>  message.trim() !== "" && sendMessage()} 
+
+            <button
+            onClick={() => sendMessage()}
               className="flex items-center justify-center bg-violet-800 p-2 rounded-lg transition-all hover:scale-105 active:scale-90"
             >
               {isAITyping || isSending ? (
@@ -162,9 +293,9 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
                   <TbFidgetSpinner className="animate-spin" size={20} />
                 </div>
               ) :
-              (<LuSend 
-                size={18} 
-                className="text-white transition-all hover:-rotate-45 hover:text-white hover:filter hover:drop-shadow-md focus:text-white" 
+              (<LuSend
+                size={18}
+                className="text-white transition-all hover:-rotate-45 hover:text-white hover:filter hover:drop-shadow-md focus:text-white"
               />)
 
               }
@@ -173,7 +304,7 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
       </div>
     </div>
     </div>
-      </>
+    </>
     );
 };
 

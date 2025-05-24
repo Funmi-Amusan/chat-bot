@@ -13,19 +13,18 @@ import NameIcon from '@/components/ui/NameIcon';
 
 const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
 
- const dispatch = useAppDispatch();
- const messagesEndRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-useEffect(() => {
-  dispatch(setMessagesData(messagesProp));
-}, []);
+  useEffect(() => {
+    dispatch(setMessagesData(messagesProp));
+  }, [dispatch, messagesProp]); 
 
-const {
-  isAITyping,
-  messages,
-  user
-} = useAppSelector((state) => state.conversationReducer);
-
+  const {
+    isAITyping,
+    messages,
+    user
+  } = useAppSelector((state) => state.conversationReducer);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -33,43 +32,50 @@ const {
     }
   }, [messages, isAITyping]); 
 
+  console.log("_______", isAITyping);
+
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide flex-col">
-    {messages?.length > 0 ? (
-        messages.map((message) => (
-          <div key={message.id} className="mb-4">
+      {messages?.length > 0 ? (
+        messages.map((message) => {
+          return (
+            <div key={message.id} className="mb-4">
             <div
               className={`flex gap-2 items-end ${
                 message?.isFromAI ? 'flex-row' : 'flex-row-reverse'
               }`}
             >
-             <div className="flex-shrink-0 w-8 h-8 rounded-full">
-  {!message?.isFromAI && (
-  <NameIcon />
-  )}
-</div>
+              <div className="flex-shrink-0 w-8 h-8 rounded-full">
+                {!message?.isFromAI && (
+                  <NameIcon />
+                )}
+              </div>
               <div className="flex-grow">
-                <MessageBubble isFromAI={message?.isFromAI} content={message?.content} id={message?.id} />
+                <MessageBubble 
+                  isFromAI={message?.isFromAI} 
+                  parts={message?.parts} 
+                  id={message?.id} 
+                />
               </div>
             </div>
           </div>
-        ))
-      ): (
+          );
+        })
+      ) : (
         <EmptyChat user={user} />
       )}
 
-{isAITyping && (
+      {isAITyping && (
         <div className="flex gap-2 items-end mb-4"> 
-           <div className="flex-shrink-0 w-8 h-8 rounded-full">
+          <div className="flex-shrink-0 w-8 h-8 rounded-full">
             <motion.img
-            initial={{ opacity: 0.7, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ 
-              duration: 0.9, 
-              repeat: Infinity, 
-              repeatType: "loop"
-            }}
-
+              initial={{ opacity: 0.7, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                duration: 0.9, 
+                repeat: Infinity, 
+                repeatType: "loop"
+              }}
               src={ImageAssets.Logo.src}
               alt="bot avatar"
               width={32}
@@ -77,16 +83,14 @@ const {
               className="rounded-full object-cover"
             />
           </div>
-         <ShinyText text='ChatBot is thinking...' />
+          <ShinyText text='ChatBot is thinking...' />
         </div>
       )}
 
       <div ref={messagesEndRef} />
       <div
-            className="absolute bottom-0 left-0 right-0 h-14 pointer-events-none bg-linear-to-t from-white/60 to-transparent dark:from-neutral-800/60 z-10 " 
-         
-          />
-          
+        className="absolute bottom-0 left-0 right-0 h-14 pointer-events-none bg-linear-to-t from-white/60 to-transparent dark:from-neutral-800/60 z-10 " 
+      />
     </div>
   );
 };

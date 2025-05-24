@@ -71,19 +71,21 @@ export async function getAConverstaionById(conversationId: string) {
     }
 }
 
-export async function sendMessageAction(content: string, conversationId: string) {
+export async function sendMessageAction(parts: string, conversationId: string) {
     
     // const session = await auth();
     // if (!session || session.user?.id !== userId) {
     //     console.warn("Server Action: Unauthorized attempt to create conversation for different user.");
     //     return { success: false, error: "Unauthorized." };
     // }
+    console.log("sendMessageAction", parts, conversationId);
     try {
         const body  = {
-            content,
+            parts,
             conversationId
         };
         const newMessage = await http.post({ url: sendMessageURL, body });
+        console.log("newMessage", newMessage);
         if (newMessage) {
             // revalidatePath('/chat'); 
             return { success: true, data: newMessage }; 

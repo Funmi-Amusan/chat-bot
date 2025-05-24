@@ -23,10 +23,22 @@ export type Conversation = {
 
 export type Message = {
     id: string;
-    content: string;
     isFromAI: boolean;
     conversationId: string;
     createdAt: string;
+    parts: MessagePart[];
+}
+
+export type MessagePart = {
+    text?: string;
+    inlineData?: {
+        mimeType: string;
+        data: string;
+    };
+    fileData?: {
+        mimeType: string;
+        uri: string;
+    };
 }
 
 export type sendMessagePayload = {
