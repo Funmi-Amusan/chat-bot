@@ -2,7 +2,29 @@ import * as fs from "fs";
 import { Request, Response } from "express-serve-static-core";
 import prisma from "../db/prisma";
 import { io, model } from "..";
-import { ChatSession } from "@google/generative-ai";
+import { ChatSession, Part } from "@google/generative-ai";
+import { Prisma } from "@prisma/client";
+
+
+interface TextPart {
+    text: string;
+  }
+  
+  interface InlineDataPart {
+    inlineData: {
+      mimeType: string;
+      data: string;
+    };
+  }
+  
+  interface FileDataPart {
+      fileData: {
+          mimeType: string;
+          uri: string;
+      };
+  }
+  
+  type ServerPart = TextPart | InlineDataPart | FileDataPart;
 
 export const createConversation = async (req: Request, res: Response) => {
     try {
@@ -152,50 +174,125 @@ export const deleteConversationById = async (req: Request, res: Response) => {
 };
 
 export const sendMessage = async (req: Request, res: Response) => {
+    console.log('Received message request body:', req.body);
+    console.log('Type of req.body.parts (before parsing):', typeof req.body.parts);
+    console.log('Is req.body.parts an Array? (before parsing):', Array.isArray(req.body.parts));
+
+    let parts: ServerPart[]; 
+    let conversationId: string;
+
     try {
-        const { content, conversationId } = req.body;
-        if (!content || !conversationId) {
-            return res.status(400).json({ error: "Content and conversation ID are required" });
+        if (typeof req.body.parts === 'string') {
+            try {
+                parts = JSON.parse(req.body.parts);
+                console.log('Successfully parsed req.body.parts string into an array.');
+            } catch (parseError: any) {
+                console.error("Error parsing req.body.parts string:", parseError);
+                return res.status(400).json({ error: "Invalid JSON format for 'parts' array.", details: parseError.message });
+            }
+        } else {
+            parts = req.body.parts;
+        }
+
+        conversationId = req.body.conversationId;
+
+        console.log("parts after potential parsing:", parts);
+        console.log("Type of parts after potential parsing:", typeof parts);
+        console.log("Is parts an Array after potential parsing?", Array.isArray(parts));
+
+        // Now, the validation should work correctly as 'parts' should be an array
+        if (!parts || !Array.isArray(parts) || parts.length === 0 || !conversationId) {
+            console.error("Validation failed: Missing parts array, empty parts array, or missing conversationId.");
+            return res.status(400).json({ error: "Parts array and conversation ID are required." });
         }
 
         const conversationExists = await prisma.conversation.findUnique({ where: { id: conversationId } });
         if (!conversationExists) {
-            return res.status(404).json({ error: "Conversation not found" });
+            console.error(`Conversation with ID ${conversationId} not found.`);
+            return res.status(404).json({ error: "Conversation not found." });
         }
-// console.log('conversationExists', conversationExists)
-//          if (conversationExists.userId !== userId) {
-//             return res.status(403).json({ error: "User not authorized to send messages in this conversation" });
-//         }
+        console.log('--- Starting parts validation ---');
+        const validatedParts: ServerPart[] = parts.map((part: any, index: number) => {
+            console.log(`Validating part ${index}:`, JSON.stringify(part));
+
+            if (part.text !== undefined) {
+                if (typeof part.text === 'string') {
+                    console.log(`Part ${index} is a valid text part.`);
+                    return { text: part.text };
+                } else {
+                    console.error(`Part ${index} has 'text' but it's not a string. Type: ${typeof part.text}`);
+                }
+            }
+
+            if (part.inlineData !== undefined) {
+                if (typeof part.inlineData === 'object' && part.inlineData !== null &&
+                    typeof part.inlineData.mimeType === 'string' && typeof part.inlineData.data === 'string') {
+                    console.log(`Part ${index} is a valid inlineData part.`);
+                    return { inlineData: part.inlineData };
+                } else {
+                    console.error(`Part ${index} has 'inlineData' but it's malformed. Structure:`, part.inlineData);
+                }
+            }
+
+            if (part.fileData !== undefined) {
+                if (typeof part.fileData === 'object' && part.fileData !== null &&
+                    typeof part.fileData.mimeType === 'string' && typeof part.fileData.uri === 'string') {
+                    console.log(`Part ${index} is a valid fileData part.`);
+                    return { fileData: part.fileData };
+                } else {
+                    console.error(`Part ${index} has 'fileData' but it's malformed. Structure:`, part.fileData);
+                }
+            }
+
+            // If none of the above conditions are met, it's an invalid part structure
+            const errorMessage = `Invalid part structure found at index ${index}: ${JSON.stringify(part)}. Expected 'text', 'inlineData', or 'fileData' with correct types.`;
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        });
+        console.log('--- Parts validation complete ---');
 
         const message = await prisma.message.create({
             data: {
-                content,
+                parts: validatedParts as unknown as Prisma.JsonArray,
                 conversationId,
                 isFromAI: false,
             }
         });
 
-        io.to(conversationId).emit('new_message', message);
+        console.log("Message created:", message);
 
-        io.emit(`user_${conversationExists.userId}_conversation_updated`, {
-            conversationId,
-            lastMessage: message
-        });
+        // Ensure 'io' is initialized before using it
+        if (io) {
+            io.to(conversationId).emit('new_message', message);
+            io.emit(`user_${conversationExists.userId}_conversation_updated`, {
+                conversationId,
+                lastMessage: message
+            });
+        } else {
+            console.warn("Socket.io 'io' instance is not initialized. Cannot emit events.");
+        }
 
         res.status(201).json({
             message,
             status: 201,
         });
 
-        io.to(conversationId).emit('ai_typing_start', { conversationId });
-            sendAIMessage(conversationId);
-    } catch (error) {
-        res.status(500).json(error);
-        console.log("error sending message", error);
+        if (io) {
+            io.to(conversationId).emit('ai_typing_start', { conversationId });
+        }
+        sendAIMessage(conversationId);
+
+    } catch (error: any) {
+        console.error("Error sending message:", error);
+        if (error.message.includes("Invalid part structure") || error.message.includes("Invalid JSON format for 'parts' array")) {
+            res.status(400).json({ message: "Invalid message format: " + error.message, status: 400 });
+        } else {
+            res.status(500).json({ message: "Internal server error.", error: error.message, status: 500 });
+        }
     }
 };
 
- const sendAIMessage = async (conversationId: string) => {
+const sendAIMessage = async (conversationId: string) => {
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
@@ -213,18 +310,21 @@ export const sendMessage = async (req: Request, res: Response) => {
             console.log("Conversation not found for AI response:", conversationId);
             return;
         }
-        const formattedHistory = conversation.messages.map((msg) => ({
-            role: msg.isFromAI ? 'model' : 'user',
-            parts: [{ text: msg.content }],
-        }));
-        const latestUserMessage = formattedHistory[formattedHistory.length - 1];
 
-        if (!latestUserMessage || latestUserMessage.role !== 'user') {
-            console.warn("sendAIMessage called for conversation", conversationId, "but no user message found as the latest message.");
-            return; 
+        const formattedHistory: { role: string; parts: Part[] }[] = conversation.messages.map((msg) => {
+            const messageParts: Part[] = (msg.parts as Part[] | null) || [];
+            return {
+                role: msg.isFromAI ? 'model' : 'user',
+                parts: messageParts,
+            };
+        });
+        const latestUserMessageEntry = formattedHistory[formattedHistory.length - 1];
+        if (!latestUserMessageEntry || latestUserMessageEntry.role !== 'user' || latestUserMessageEntry.parts.length === 0) {
+            console.warn("sendAIMessage called for conversation", conversationId, "but no valid user message (with parts) found as the latest message.");
+            return;
         }
-        const historyForChat = formattedHistory.slice(0, -1);
-
+        const latestUserMessageParts: Part[] = latestUserMessageEntry.parts;
+        const historyForChat: { role: string; parts: Part[] }[] = formattedHistory.slice(0, -1);
         const chat: ChatSession = model.startChat({
             history: historyForChat,
         });
@@ -233,9 +333,9 @@ export const sendMessage = async (req: Request, res: Response) => {
         let aiResponseError = false;
 
         try {
-            const result = await chat.sendMessageStream(latestUserMessage.parts[0].text);
+            const result = await chat.sendMessageStream(latestUserMessageParts);
             for await (const chunk of result.stream) {
-                const chunkText = chunk.text();
+                const chunkText = chunk.text(); 
                 if (chunkText) {
                     fullAiResponseContent += chunkText;
                     io.to(conversationId).emit('new_message_chunk', {
@@ -258,18 +358,17 @@ export const sendMessage = async (req: Request, res: Response) => {
             fullAiResponseContent = "Error generating response from AI.";
             aiResponseError = true;
         }
+
         const aiMessage = await prisma.message.create({
             data: {
-                content: fullAiResponseContent,
+                parts: [{ text: fullAiResponseContent }],
                 conversationId,
                 isFromAI: true,
-                // error: aiResponseError,
+                // error: aiResponseError, 
             }
         });
         io.to(conversationId).emit('ai_typing_stop', { conversationId });
-
         io.to(conversationId).emit('new_message', aiMessage);
-
         io.emit(`user_${conversation.userId}_conversation_updated`, {
             conversationId,
             lastMessage: aiMessage
