@@ -196,27 +196,6 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
         socket={socket}
       />
     <div className="flex flex-col w-full px-4 max-w-3xl mx-auto pb-6">
-      {/* File Preview Area */}
-      {previewImages.length > 0 && (
-          <div className="mb-2 flex flex-wrap gap-2 p-2 border rounded-lg bg-neutral-100 dark:bg-neutral-700">
-              {previewImages.map((src, index) => (
-                  <div key={index} className="relative group">
-                      <img
-                          src={src}
-                          alt={`Preview ${index}`}
-                          className="w-20 h-20 object-cover rounded-md"
-                      />
-                      <button
-                          onClick={() => removeFile(index)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                          aria-label="Remove file"
-                      >
-                          <LuCircleX size={16} />
-                      </button>
-                  </div>
-              ))}
-          </div>
-      )}
 
       <div className="relative rounded-2xl p-0.5 ">
 
@@ -296,6 +275,26 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
               }
             </button>
         </div>
+        {previewImages.length > 0 && (
+          <div className=" border-t border-neutral-500/50 flex flex-wrap gap-2 p-2 ">
+              {previewImages.map((src, index) => (
+                  <div key={index} className="relative group">
+                      <img
+                          src={src}
+                          alt={`Preview ${index}`}
+                          className="w-20 h-20 object-cover rounded-md"
+                      />
+                      <button
+                          onClick={() => removeFile(index)}
+                          className="absolute -top-2 -right-2 bg-neutral-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label="Remove file"
+                      >
+                          <LuCircleX size={16} />
+                      </button>
+                  </div>
+              ))}
+          </div>
+      )}
       </div>
     </div>
     </div>

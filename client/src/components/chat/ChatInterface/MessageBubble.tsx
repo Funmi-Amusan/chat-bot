@@ -22,7 +22,7 @@ const MessageBubble = ({ parts, isFromAI, id }: { parts: MessagePart[]; isFromAI
   );
 
   return (
-    <div className={`w-fit ${!isFromAI ? 'ml-auto  ' : ''}`}>
+    <div className={`w-fit items-end flex flex-col ${!isFromAI ? 'ml-auto  ' : ''}`}>
       {images.map((part, index) => (
         <React.Fragment key={`image-${index}`}>
           {part.inlineData && part.inlineData.mimeType.startsWith('image/') && (
