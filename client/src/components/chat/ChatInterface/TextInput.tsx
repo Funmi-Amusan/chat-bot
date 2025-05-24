@@ -398,11 +398,11 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
                         <img
                           src={fileData.preview}
                           alt={`Preview ${index}`}
-                          className="w-20 h-20 object-cover rounded-md"
+                          className="w-10 h-10 md:w-20 md:h-20 object-cover rounded-md"
                         />
                       ) : (
                         // Document preview
-                        <div className="w-20 h-20 bg-neutral-100 dark:bg-neutral-700 rounded-md flex flex-col items-center justify-center text-xs">
+                        <div className="h-10 w-10 md:w-20 md:h-20 bg-neutral-100 dark:bg-neutral-700 rounded-md flex flex-col items-center justify-center text-xs">
                           <span className="text-2xl">{getFileIcon(fileData.file.type)}</span>
                           <span className="text-center px-1 truncate w-full">
                             {fileData.file.name.split('.').pop()?.toUpperCase()}

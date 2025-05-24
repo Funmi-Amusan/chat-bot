@@ -6,7 +6,7 @@ import { ImageAssets } from '@/assets/images';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import { motion } from 'framer-motion';
 import { Message } from '@/store/conversation/types';
-import { setAITyping, setMessagesData } from '@/store/conversation';
+import { setAITyping, setMessagesData, clearStreamingState } from '@/store/conversation';
 import EmptyChat from './EmptyChat';
 import ShinyText from '@/components/ui/BaseShinyText';
 import NameIcon from '@/components/ui/NameIcon';
@@ -16,10 +16,6 @@ const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
   const dispatch = useAppDispatch();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    dispatch(setMessagesData(messagesProp));
-  }, [dispatch, messagesProp]); 
-
   const {
     isAITyping,
     messages,
@@ -27,10 +23,21 @@ const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
   } = useAppSelector((state) => state.conversationReducer);
 
   useEffect(() => {
+    dispatch(clearStreamingState());
+    dispatch(setMessagesData(messagesProp));
+  }, [dispatch, messagesProp]); 
+
+  useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isAITyping]); 
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearStreamingState());
+    };
+  }, [dispatch]);
 
   return (
     <div className="h-full overflow-y-auto w-full md:p-4 scrollbar-hide flex-col">

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit"; 
 import { InitialState, Message } from "./types";
 
-interface StreamingAIMessage extends Omit<Message, 'content'> {
+interface StreamingAIMessage extends Omit<Message, 'isStreaming'> {
     isStreaming: boolean; 
 }
 
@@ -55,13 +55,21 @@ const conversationSlice = createSlice({
         },
         updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
             const { message } = action.payload;
-            const existingIndex = state.messages.findIndex(msg => msg.id === message.id);
+            
+            // Find and remove any streaming message with the same ID or temp streaming message
+            const streamingIndex = state.messages.findIndex(msg => 
+                (msg.id === message.id) || 
+                (msg.isFromAI && (msg as StreamingAIMessage).isStreaming)
+            );
 
-            if (existingIndex !== -1) {
-                state.messages[existingIndex] = { ...message, isStreaming: false } as Message; 
+            if (streamingIndex !== -1) {
+                // Replace the streaming message with the final message
+                state.messages[streamingIndex] = { ...message };
             } else {
-                state.messages.push({ ...message, isStreaming: false } as Message);
+                // Fallback: add the message if no streaming message found
+                state.messages.push({ ...message });
             }
+            
             state.allowTypwriterAnimation = null; 
             state.isAITyping = null; 
         },
@@ -71,14 +79,31 @@ const conversationSlice = createSlice({
         setLoggedInUserAction: (state, action) => {
             state.user = action.payload;
         },
-        setMessagesData: (state, action) => {
-            state.messages = action.payload;
+        setMessagesData: (state, action: PayloadAction<Message[]>) => {
+            // Only set messages if there are no streaming messages in progress
+            const hasStreamingMessage = state.messages.some(msg => 
+                msg.isFromAI && (msg as StreamingAIMessage).isStreaming
+            );
+            
+            if (!hasStreamingMessage) {
+                state.messages = action.payload;
+            }
         },
         setAllowTypwriterAnimation: (state, action: PayloadAction<string | null>) => {
             state.allowTypwriterAnimation = action.payload;
+        },
+        // Add this new action to clear streaming state when needed
+        clearStreamingState: (state) => {
+            state.isAITyping = null;
+            state.allowTypwriterAnimation = null;
+            // Remove any streaming messages that might be stuck
+            state.messages = state.messages.filter(msg => 
+                !msg.isFromAI || !(msg as StreamingAIMessage).isStreaming
+            );
         }
     }
 });
+
 export default conversationSlice.reducer;
 
 export const {
@@ -88,5 +113,6 @@ export const {
     setAITyping,
     setLoggedInUserAction,
     setMessagesData,
-    setAllowTypwriterAnimation
+    setAllowTypwriterAnimation,
+    clearStreamingState
 } = conversationSlice.actions;
