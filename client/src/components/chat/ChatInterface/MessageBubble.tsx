@@ -50,11 +50,11 @@ const MessageBubble = ({ parts, isFromAI, id }: { parts: MessagePart[]; isFromAI
             </a>
           )}
           {part.text && (
-            <div className={`font-inter w-fit text-sm md:text-base ${!isFromAI ? 'ml-auto rounded-lg py-1 my-1 shadow-sm' : 'mr-auto text-red-800 dark:text-neutral-200 font-medium font-serif text-base'}`}> 
+            <div className={`font-inter w-fit text-sm md:text-base ${!isFromAI ? 'ml-auto rounded-lg py-1 my-1' : 'mr-auto text-neutral-800 dark:text-neutral-200 font-medium font-serif text-base'}`}> 
               {(isFromAI && allowTypwriterAnimation === id) ? (
                 <SplitText text={marked.parse(part.text || '', { async: false })} />
               ) : (
-                <div className={`markdown-rendered ${!isFromAI ? 'py-1 px-2 rounded-lg dark:bg-neutral-700 text-neutral-200' : ''} `} dangerouslySetInnerHTML={{ __html: marked.parse(part.text || '', { async: false }) }} />
+                <div className={`markdown-rendered ${!isFromAI ? 'py-1 px-2 rounded-lg bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200' : ''} `} dangerouslySetInnerHTML={{ __html: marked.parse(part.text || '', { async: false }) }} />
               )}
             </div>
           )}

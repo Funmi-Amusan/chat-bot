@@ -49,3 +49,21 @@ export type sendMessagePayload = {
 export type createConversationPayload = {
     userId: string;
 }
+
+export type FileUploadData = {
+    file: File;
+    preview?: string;
+    type: 'image' | 'document' | 'other';
+    base64?: string;
+  }
+  
+export type TextPart = {
+    text: string;
+  }
+  
+export type InlineDataPart = {
+    inlineData: {
+      mimeType: string;
+      data: string; 
+    };
+  }
