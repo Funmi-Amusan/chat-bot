@@ -1,9 +1,7 @@
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
 import { Request, Response } from 'express';
 import prisma from '../db/prisma';
 import { CreateUserDto } from '../dtos/CreateUser.dto';
-import { CreateUserQueryParams } from '../types/query-params';
 
 
 export const createUser = async (req: Request<{}, {}, CreateUserDto>, res: Response) => {

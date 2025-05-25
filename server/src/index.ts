@@ -5,11 +5,13 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { Server } from "socket.io";
-// import swaggerUi from 'swagger-ui-express';
+import swaggerUi from 'swagger-ui-express';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import userRouter from './routes/users';
 import conversationRouter from './routes/conversation';
 // import { createRequire } from 'module';
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerOptions = require('./swagger-config');
 // const customRequire = createRequire(import.meta.url);
 // import swaggerFile from './swagger-output.json';
 
@@ -23,6 +25,22 @@ app.use(cors());
 app.use(helmet())
 app.use(morgan('dev'))
 
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
+  customSiteTitle: "Chat API Documentation",
+  swaggerOptions: {
+    explorer: true,
+    filter: true,
+    showRequestDuration: true,
+  }
+}));
+
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 const server = http.createServer(app);
 const io = new Server(server, {
