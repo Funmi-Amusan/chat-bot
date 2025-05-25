@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { addMessageToConversationAction, appendChunkToAIMessage, setAITyping, setAllowTypwriterAnimation, updateAIMessage } from '@/store/conversation';
+import { addMessageToConversationAction, appendChunkToAIMessage, setAITyping, setAllowTypwriterAnimation, updateAIMessage, updateConversationTitle } from '@/store/conversation';
 import { Message } from '@/store/conversation/types';
 import { useAppDispatch } from '@/utils/hooks';
 
@@ -45,8 +45,6 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
             conversationId: fullMessage.conversationId,
             message: fullMessage 
           }));
-          dispatch(setAllowTypwriterAnimation(null)); 
-          dispatch(setAITyping(null));
         } else {
           dispatch(addMessageToConversationAction({ newMessage: fullMessage, conversationId: currentConversationId.current! }));
         }
@@ -69,6 +67,15 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
     newSocket.on('conversation_deleted', ({ id }: { id: string }) => {
       if (id === currentConversationId.current) {
         alert('This conversation has been deleted');
+      }
+    });
+
+    newSocket.on('conversation_title_updated', (data: { conversationId: string, title: string }) => {
+      if (data.conversationId === currentConversationId.current) {
+        dispatch(updateConversationTitle({
+          conversationId: data.conversationId,
+          newTitle: data.title
+        }));
       }
     });
 

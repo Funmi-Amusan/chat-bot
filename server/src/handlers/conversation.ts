@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import { Request, Response } from "express-serve-static-core";
 import prisma from "../db/prisma";
 import { io, model } from "..";
@@ -37,21 +36,9 @@ export const createConversation = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "User not found" });
         }
         
-        const lastConversation = await prisma.conversation.findFirst({
-            where: { userId },
-            orderBy: { title: "desc" },
-        });
-
-        let nextTitleNumber = 1;
-        if (lastConversation?.title && lastConversation.title.startsWith("Conversation")) {
-            const lastTitleNumber = parseInt(lastConversation.title.split(" ")[1], 10);
-            if (!isNaN(lastTitleNumber)) {
-                nextTitleNumber = lastTitleNumber + 1;
-            }
-        }
         const conversation = await prisma.conversation.create({
             data: {
-                title: `Conversation ${nextTitleNumber}`,
+                title: 'Untitled Chat',
                 userId: userId,
             },
         });
@@ -264,6 +251,66 @@ console.log("Message sent successfully:", message);
     }
 };
 
+const generateConversationTitle = async (conversationId: string): Promise<string> => {
+    try {
+        const conversation = await prisma.conversation.findUnique({
+            where: { id: conversationId },
+            include: {
+                messages: {
+                    orderBy: {
+                        createdAt: 'asc'
+                    },
+                    take: 2 
+                }
+            }
+        });
+
+        if (!conversation || conversation.messages.length < 2) {
+            return "New Chat";
+        }
+        const firstUserMessage = conversation.messages.find(msg => !msg.isFromAI);
+        if (!firstUserMessage || !firstUserMessage.parts) {
+            return "New Chat";
+        }
+
+        const parts = firstUserMessage.parts as any[];
+        const textPart = parts.find(part => part.text);
+        
+        if (!textPart || !textPart.text) {
+            return "New Chat";
+        }
+
+        const userText = textPart.text as string;
+        
+        const titlePrompt = `Generate a very short title (maximum 18 characters) for a conversation that starts with: "${userText.substring(0, 100)}". The title should capture the main topic or question. Return only the title, nothing else.`;
+        
+        const titleChat = model.startChat({
+            history: []
+        });
+        
+        const result = await titleChat.sendMessage(titlePrompt);
+        let generatedTitle = result.response.text().trim();
+    
+        generatedTitle = generatedTitle.replace(/['"]/g, ''); 
+        generatedTitle = generatedTitle.substring(0, 18);
+        if (!generatedTitle || generatedTitle.toLowerCase().includes('conversation') || generatedTitle.toLowerCase().includes('chat')) {
+            const words = userText.split(' ').filter(word => word.length > 3);
+            if (words.length > 0) {
+                generatedTitle = words.slice(0, 3).join(' ').substring(0, 18);
+            } else {
+                generatedTitle = "New Chat";
+            }
+        }
+        
+        return generatedTitle || "New Chat";
+        
+    } catch (error) {
+        console.error("Error generating conversation title:", error);
+        return "New Chat";
+    }
+};
+
+
 const sendAIMessage = async (conversationId: string) => {
     try {
         const conversation = await prisma.conversation.findUnique({
@@ -345,6 +392,33 @@ const sendAIMessage = async (conversationId: string) => {
             lastMessage: aiMessage
         });
 
+        const messageCount = await prisma.message.count({
+            where: { conversationId }
+        });
+        if (messageCount === 2 && conversation.title && conversation.title.startsWith('Untitled Chat')) {
+            try {
+                const newTitle = await generateConversationTitle(conversationId);
+                
+                 await prisma.conversation.update({
+                    where: { id: conversationId },
+                    data: { title: newTitle }
+                });
+
+                io.to(conversationId).emit('conversation_title_updated', {
+                    conversationId,
+                    newTitle
+                });
+                io.emit(`user_${conversation.userId}_conversation_title_updated`, {
+                    conversationId,
+                    newTitle
+                });
+
+                console.log(`Updated conversation title to: "${newTitle}"`);
+            } catch (titleError) {
+                console.error("Error updating conversation title:", titleError);
+            }
+        }
+
     } catch (error) {
         console.error("Error in sendAIMessage function:", error);
         io.to(conversationId).emit('server_error', {
@@ -353,5 +427,4 @@ const sendAIMessage = async (conversationId: string) => {
         });
     }
 };
-
 

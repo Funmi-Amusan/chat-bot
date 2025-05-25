@@ -55,18 +55,14 @@ const conversationSlice = createSlice({
         },
         updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
             const { message } = action.payload;
-            
-            // Find and remove any streaming message with the same ID or temp streaming message
             const streamingIndex = state.messages.findIndex(msg => 
                 (msg.id === message.id) || 
                 (msg.isFromAI && (msg as StreamingAIMessage).isStreaming)
             );
 
             if (streamingIndex !== -1) {
-                // Replace the streaming message with the final message
                 state.messages[streamingIndex] = { ...message };
             } else {
-                // Fallback: add the message if no streaming message found
                 state.messages.push({ ...message });
             }
             
@@ -80,7 +76,6 @@ const conversationSlice = createSlice({
             state.user = action.payload;
         },
         setMessagesData: (state, action: PayloadAction<Message[]>) => {
-            // Only set messages if there are no streaming messages in progress
             const hasStreamingMessage = state.messages.some(msg => 
                 msg.isFromAI && (msg as StreamingAIMessage).isStreaming
             );
@@ -92,14 +87,20 @@ const conversationSlice = createSlice({
         setAllowTypwriterAnimation: (state, action: PayloadAction<string | null>) => {
             state.allowTypwriterAnimation = action.payload;
         },
-        // Add this new action to clear streaming state when needed
         clearStreamingState: (state) => {
             state.isAITyping = null;
             state.allowTypwriterAnimation = null;
-            // Remove any streaming messages that might be stuck
             state.messages = state.messages.filter(msg => 
                 !msg.isFromAI || !(msg as StreamingAIMessage).isStreaming
             );
+        },
+        updateConversationTitle: (state, action: PayloadAction<{ conversationId: string, newTitle: string }>) => {
+            const { conversationId, newTitle } = action.payload;
+            const conversationIndex = state.conversations.findIndex(conversation => conversation.id === conversationId);
+            if (conversationIndex !== -1) {
+                state.conversations[conversationIndex].title = newTitle;
+                console.log("Updated conversation title:", state.conversations[conversationIndex].title);
+            }
         }
     }
 });
@@ -114,5 +115,6 @@ export const {
     setLoggedInUserAction,
     setMessagesData,
     setAllowTypwriterAnimation,
-    clearStreamingState
+    clearStreamingState, 
+    updateConversationTitle
 } = conversationSlice.actions;

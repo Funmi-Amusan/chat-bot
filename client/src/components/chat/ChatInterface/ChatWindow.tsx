@@ -70,7 +70,7 @@ const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
         <EmptyChat user={user} />
       )}
 
-      {isAITyping && (
+{(isAITyping || (messages.length === 1 && messages[0] && !messages[0].isFromAI && messages[0].parts?.length > 0)) && (
         <div className="flex gap-2 items-end mb-4"> 
           <div className="flex-shrink-0 w-8 h-8 rounded-full">
             <motion.img
