@@ -310,11 +310,23 @@ const TextInput = ({ conversationId }: { conversationId: string }) => {
                   name="chat-input"
                   id="chat-input"
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const words = inputValue.split(/\s+/).filter(word => word.length > 0);
+                    console.log(words.length);
+                    if (words.length <= 1000) {
+                      setMessage(inputValue);
+                    } else {
+                      const truncatedText = words.slice(0, 1000).join(' ');
+                      setMessage(truncatedText);
+                      toast.error('Message is too long. Please keep it under 1000 words.');
+                    }
+                  }}
                   onKeyDown={handleKeyDown}
                   placeholder="Imagine Something...✦˚"
                   className="w-full h-16 bg-transparent rounded-2xl dark:text-white text-base px-3 resize-none outline-none dark:placeholder-white/90 focus:placeholder-neutral-700"
                   rows={1}
+                  minLength={1}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                   disabled={loading || isSending || isUploading}

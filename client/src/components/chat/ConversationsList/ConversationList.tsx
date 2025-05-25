@@ -35,7 +35,6 @@ const ConversationList = ({ conversations, user }: ConversationListProps) => {
 
   return (
     <>
-      {/* Mobile toggle button - always visible on mobile regardless of sidebar state */}
       <div className=" pt-4 pl-4 flex lg:hidden">
         {!isMobileSidebarOpen && (
           <SidebarButton 
