@@ -45,7 +45,7 @@ const ChatInterface = async ({ params }: any) => {
   return (
     <div className='w-full h-screen bg-white dark:bg-neutral-800 relative'>
       <MainHeader />
-      <div className='flex flex-col h-full p-4'>
+      <div className='flex flex-col h-full p-4 pl-12 md-pl-0'>
         <div className='h-full w-full md:max-w-3xl mx-auto overflow-y-auto relative'>
           <Suspense fallback={<div>Loading...</div>}>
           <ChatWindow messages={messages} />

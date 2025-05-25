@@ -6,7 +6,7 @@ export type InitialState = {
     conversations: Conversation[] | []
     error: boolean;
     message: string | null;
-    isAITyping: boolean;
+    isAITyping: string | null;
     user: User | null;
     allowTypwriterAnimation: string | null;
 };
@@ -23,10 +23,22 @@ export type Conversation = {
 
 export type Message = {
     id: string;
-    content: string;
     isFromAI: boolean;
     conversationId: string;
     createdAt: string;
+    parts: MessagePart[];
+}
+
+export type MessagePart = {
+    text?: string;
+    inlineData?: {
+        mimeType: string;
+        data: string;
+    };
+    fileData?: {
+        mimeType: string;
+        uri: string;
+    };
 }
 
 export type sendMessagePayload = {
@@ -37,3 +49,23 @@ export type sendMessagePayload = {
 export type createConversationPayload = {
     userId: string;
 }
+
+export type FileUploadData = {
+    file: File;
+    preview?: string;
+    type: 'image' | 'document' | 'other';
+    base64?: string;
+  }
+  
+export type TextPart = {
+    text: string;
+  }
+  
+export type InlineDataPart = {
+    inlineData: {
+      mimeType: string;
+      data: string; 
+    };
+  }
+
+  export type ClientPart = TextPart | InlineDataPart; 

@@ -9,7 +9,6 @@ interface ActionResponse {
 async function executeAction({ actionFn }: { actionFn: () => Promise<void> }): Promise<ActionResponse> {
   try {
     await actionFn();
-    console.log("Action executed successfully");
     return { success: true, message: 'Sign in successful' }; 
   } catch (error) {
     console.error("Action execution failed:", error); 
@@ -18,7 +17,6 @@ async function executeAction({ actionFn }: { actionFn: () => Promise<void> }): P
     if (error instanceof Error) {
         message = error.message;
     }
-console.log('first error', message)
     return { success: false, message };
   }
 }

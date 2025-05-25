@@ -71,7 +71,7 @@ export async function getAConverstaionById(conversationId: string) {
     }
 }
 
-export async function sendMessageAction(content: string, conversationId: string) {
+export async function sendMessageAction(parts: string, conversationId: string) {
     
     // const session = await auth();
     // if (!session || session.user?.id !== userId) {
@@ -80,7 +80,7 @@ export async function sendMessageAction(content: string, conversationId: string)
     // }
     try {
         const body  = {
-            content,
+            parts,
             conversationId
         };
         const newMessage = await http.post({ url: sendMessageURL, body });

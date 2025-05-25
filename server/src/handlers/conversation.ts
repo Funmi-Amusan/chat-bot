@@ -1,8 +1,29 @@
-import * as fs from "fs";
 import { Request, Response } from "express-serve-static-core";
 import prisma from "../db/prisma";
 import { io, model } from "..";
-import { ChatSession } from "@google/generative-ai";
+import { ChatSession, Part } from "@google/generative-ai";
+import { Prisma } from "@prisma/client";
+
+
+interface TextPart {
+    text: string;
+  }
+  
+  interface InlineDataPart {
+    inlineData: {
+      mimeType: string;
+      data: string;
+    };
+  }
+  
+  interface FileDataPart {
+      fileData: {
+          mimeType: string;
+          uri: string;
+      };
+  }
+  
+  type ServerPart = TextPart | InlineDataPart | FileDataPart;
 
 export const createConversation = async (req: Request, res: Response) => {
     try {
@@ -15,21 +36,9 @@ export const createConversation = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "User not found" });
         }
         
-        const lastConversation = await prisma.conversation.findFirst({
-            where: { userId },
-            orderBy: { title: "desc" },
-        });
-
-        let nextTitleNumber = 1;
-        if (lastConversation?.title && lastConversation.title.startsWith("Conversation")) {
-            const lastTitleNumber = parseInt(lastConversation.title.split(" ")[1], 10);
-            if (!isNaN(lastTitleNumber)) {
-                nextTitleNumber = lastTitleNumber + 1;
-            }
-        }
         const conversation = await prisma.conversation.create({
             data: {
-                title: `Conversation ${nextTitleNumber}`,
+                title: 'Untitled Chat',
                 userId: userId,
             },
         });
@@ -152,50 +161,157 @@ export const deleteConversationById = async (req: Request, res: Response) => {
 };
 
 export const sendMessage = async (req: Request, res: Response) => {
+console.log("sending message");
+    let parts: ServerPart[]; 
+    let conversationId: string;
+
     try {
-        const { content, conversationId } = req.body;
-        if (!content || !conversationId) {
-            return res.status(400).json({ error: "Content and conversation ID are required" });
+        if (typeof req.body.parts === 'string') {
+            try {
+                parts = JSON.parse(req.body.parts);
+            } catch (parseError: any) {
+                console.error("Error parsing req.body.parts string:", parseError);
+                return res.status(400).json({ error: "Invalid JSON format for 'parts' array.", details: parseError.message });
+            }
+        } else {
+            parts = req.body.parts;
+        }
+
+        conversationId = req.body.conversationId;
+        if (!parts || !Array.isArray(parts) || parts.length === 0 || !conversationId) {
+            console.error("Validation failed: Missing parts array, empty parts array, or missing conversationId.");
+            return res.status(400).json({ error: "Parts array and conversation ID are required." });
         }
 
         const conversationExists = await prisma.conversation.findUnique({ where: { id: conversationId } });
         if (!conversationExists) {
-            return res.status(404).json({ error: "Conversation not found" });
+            console.error(`Conversation with ID ${conversationId} not found.`);
+            return res.status(404).json({ error: "Conversation not found." });
         }
-// console.log('conversationExists', conversationExists)
-//          if (conversationExists.userId !== userId) {
-//             return res.status(403).json({ error: "User not authorized to send messages in this conversation" });
-//         }
+        const validatedParts: ServerPart[] = parts.map((part: any, index: number) => {
+            if (part.text !== undefined) {
+                if (typeof part.text === 'string') {
+                    return { text: part.text };
+                } else {
+                    console.error(`Part ${index} has 'text' but it's not a string. Type: ${typeof part.text}`);
+                }
+            }
+
+            if (part.inlineData !== undefined) {
+                if (typeof part.inlineData === 'object' && part.inlineData !== null &&
+                    typeof part.inlineData.mimeType === 'string' && typeof part.inlineData.data === 'string') {
+                    return { inlineData: part.inlineData };
+                } else {
+                    console.error(`Part ${index} has 'inlineData' but it's malformed. Structure:`, part.inlineData);
+                }
+            }
+
+            if (part.fileData !== undefined) {
+                if (typeof part.fileData === 'object' && part.fileData !== null &&
+                    typeof part.fileData.mimeType === 'string' && typeof part.fileData.uri === 'string') {
+                    return { fileData: part.fileData };
+                } else {
+                    console.error(`Part ${index} has 'fileData' but it's malformed. Structure:`, part.fileData);
+                }
+            }
+            const errorMessage = `Invalid part structure found at index ${index}: ${JSON.stringify(part)}. Expected 'text', 'inlineData', or 'fileData' with correct types.`;
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        });
 
         const message = await prisma.message.create({
             data: {
-                content,
+                parts: validatedParts as unknown as Prisma.JsonArray,
                 conversationId,
                 isFromAI: false,
             }
         });
 
-        io.to(conversationId).emit('new_message', message);
-
-        io.emit(`user_${conversationExists.userId}_conversation_updated`, {
-            conversationId,
-            lastMessage: message
-        });
-
+            io.to(conversationId).emit('new_message', message);
+            io.emit(`user_${conversationExists.userId}_conversation_updated`, {
+                conversationId,
+                lastMessage: message
+            });
+console.log("Message sent successfully:", message);
         res.status(201).json({
             message,
             status: 201,
         });
+            io.to(conversationId).emit('ai_typing_start', { conversationId });
 
-        io.to(conversationId).emit('ai_typing_start', { conversationId });
-            sendAIMessage(conversationId);
-    } catch (error) {
-        res.status(500).json(error);
-        console.log("error sending message", error);
+        sendAIMessage(conversationId);
+
+    } catch (error: any) {
+        console.error("Error sending message:", error);
+        if (error.message.includes("Invalid part structure") || error.message.includes("Invalid JSON format for 'parts' array")) {
+            res.status(400).json({ message: "Invalid message format: " + error.message, status: 400 });
+        } else {
+            res.status(500).json({ message: "Internal server error.", error: error.message, status: 500 });
+        }
     }
 };
 
- const sendAIMessage = async (conversationId: string) => {
+const generateConversationTitle = async (conversationId: string): Promise<string> => {
+    try {
+        const conversation = await prisma.conversation.findUnique({
+            where: { id: conversationId },
+            include: {
+                messages: {
+                    orderBy: {
+                        createdAt: 'asc'
+                    },
+                    take: 2 
+                }
+            }
+        });
+
+        if (!conversation || conversation.messages.length < 2) {
+            return "New Chat";
+        }
+        const firstUserMessage = conversation.messages.find(msg => !msg.isFromAI);
+        if (!firstUserMessage || !firstUserMessage.parts) {
+            return "New Chat";
+        }
+
+        const parts = firstUserMessage.parts as any[];
+        const textPart = parts.find(part => part.text);
+        
+        if (!textPart || !textPart.text) {
+            return "New Chat";
+        }
+
+        const userText = textPart.text as string;
+        
+        const titlePrompt = `Generate a very short title (maximum 18 characters) for a conversation that starts with: "${userText.substring(0, 100)}". The title should capture the main topic or question. Return only the title, nothing else.`;
+        
+        const titleChat = model.startChat({
+            history: []
+        });
+        
+        const result = await titleChat.sendMessage(titlePrompt);
+        let generatedTitle = result.response.text().trim();
+    
+        generatedTitle = generatedTitle.replace(/['"]/g, ''); 
+        generatedTitle = generatedTitle.substring(0, 18);
+        if (!generatedTitle || generatedTitle.toLowerCase().includes('conversation') || generatedTitle.toLowerCase().includes('chat')) {
+            const words = userText.split(' ').filter(word => word.length > 3);
+            if (words.length > 0) {
+                generatedTitle = words.slice(0, 3).join(' ').substring(0, 18);
+            } else {
+                generatedTitle = "New Chat";
+            }
+        }
+        
+        return generatedTitle || "New Chat";
+        
+    } catch (error) {
+        console.error("Error generating conversation title:", error);
+        return "New Chat";
+    }
+};
+
+
+const sendAIMessage = async (conversationId: string) => {
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
@@ -211,20 +327,23 @@ export const sendMessage = async (req: Request, res: Response) => {
 
         if (!conversation) {
             console.log("Conversation not found for AI response:", conversationId);
+            throw new Error("Conversation not found");
+        }
+
+        const formattedHistory: { role: string; parts: Part[] }[] = conversation.messages.map((msg) => {
+            const messageParts: Part[] = (msg.parts as Part[] | null) || [];
+            return {
+                role: msg.isFromAI ? 'model' : 'user',
+                parts: messageParts,
+            };
+        });
+        const latestUserMessageEntry = formattedHistory[formattedHistory.length - 1];
+        if (!latestUserMessageEntry || latestUserMessageEntry.role !== 'user' || latestUserMessageEntry.parts.length === 0) {
+            console.warn("sendAIMessage called for conversation", conversationId, "but no valid user message (with parts) found as the latest message.");
             return;
         }
-        const formattedHistory = conversation.messages.map((msg) => ({
-            role: msg.isFromAI ? 'model' : 'user',
-            parts: [{ text: msg.content }],
-        }));
-        const latestUserMessage = formattedHistory[formattedHistory.length - 1];
-
-        if (!latestUserMessage || latestUserMessage.role !== 'user') {
-            console.warn("sendAIMessage called for conversation", conversationId, "but no user message found as the latest message.");
-            return; 
-        }
-        const historyForChat = formattedHistory.slice(0, -1);
-
+        const latestUserMessageParts: Part[] = latestUserMessageEntry.parts;
+        const historyForChat: { role: string; parts: Part[] }[] = formattedHistory.slice(0, -1);
         const chat: ChatSession = model.startChat({
             history: historyForChat,
         });
@@ -233,9 +352,9 @@ export const sendMessage = async (req: Request, res: Response) => {
         let aiResponseError = false;
 
         try {
-            const result = await chat.sendMessageStream(latestUserMessage.parts[0].text);
+            const result = await chat.sendMessageStream(latestUserMessageParts);
             for await (const chunk of result.stream) {
-                const chunkText = chunk.text();
+                const chunkText = chunk.text(); 
                 if (chunkText) {
                     fullAiResponseContent += chunkText;
                     io.to(conversationId).emit('new_message_chunk', {
@@ -243,7 +362,6 @@ export const sendMessage = async (req: Request, res: Response) => {
                         content: chunkText,
                         isFromAI: true,
                     });
-                    console.log("Sending chunk:", chunkText);
                 }
             }
 
@@ -258,22 +376,48 @@ export const sendMessage = async (req: Request, res: Response) => {
             fullAiResponseContent = "Error generating response from AI.";
             aiResponseError = true;
         }
+
         const aiMessage = await prisma.message.create({
             data: {
-                content: fullAiResponseContent,
+                parts: [{ text: fullAiResponseContent }],
                 conversationId,
                 isFromAI: true,
-                // error: aiResponseError,
+                // error: aiResponseError, 
             }
         });
         io.to(conversationId).emit('ai_typing_stop', { conversationId });
-
         io.to(conversationId).emit('new_message', aiMessage);
-
         io.emit(`user_${conversation.userId}_conversation_updated`, {
             conversationId,
             lastMessage: aiMessage
         });
+
+        const messageCount = await prisma.message.count({
+            where: { conversationId }
+        });
+        if (messageCount === 2 && conversation.title && conversation.title.startsWith('Untitled Chat')) {
+            try {
+                const newTitle = await generateConversationTitle(conversationId);
+                
+                 await prisma.conversation.update({
+                    where: { id: conversationId },
+                    data: { title: newTitle }
+                });
+
+                io.to(conversationId).emit('conversation_title_updated', {
+                    conversationId,
+                    newTitle
+                });
+                io.emit(`user_${conversation.userId}_conversation_title_updated`, {
+                    conversationId,
+                    newTitle
+                });
+
+                console.log(`Updated conversation title to: "${newTitle}"`);
+            } catch (titleError) {
+                console.error("Error updating conversation title:", titleError);
+            }
+        }
 
     } catch (error) {
         console.error("Error in sendAIMessage function:", error);
@@ -283,26 +427,4 @@ export const sendMessage = async (req: Request, res: Response) => {
         });
     }
 };
-
-export const textAIGeneration = async () => {
-
-    const fileToGeneratePart = (path: string, mimeType: string) => {
-        return {
-            inlineData: {
-                data: Buffer.from(fs.readFileSync(path)).toString('base64'),
-                mimeType: mimeType,
-            }
-        }
-    }
-    const imagePart = [fileToGeneratePart('quantum.png', 'image/png')]; // Corrected to 'imagePart'
-
-
-    const prompt = "Generate content with Stranger things innuendos.";
-    // Assuming 'model' is defined and initialized elsewhere in your code
-    const response = await model.generateContent([
-        prompt, ...imagePart
-    ]);
-    const result = await response.response.text();
-    console.log(result);
-}
 
