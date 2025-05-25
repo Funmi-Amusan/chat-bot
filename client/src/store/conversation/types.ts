@@ -2,7 +2,7 @@ import { User } from "next-auth";
 
 export type InitialState = {
     loading: boolean;
-    messages: Message[] | [];
+    messages: Message[];
     conversations: Conversation[] | []
     error: boolean;
     message: string | null;

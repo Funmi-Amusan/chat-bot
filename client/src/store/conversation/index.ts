@@ -27,7 +27,7 @@ const conversationSlice = createSlice({
         appendChunkToAIMessage: (state, action: PayloadAction<{ conversationId: string, chunk: string }>) => {
             const { chunk } = action.payload;
 
-            const lastAIMessage = state.messages.findLast((msg): msg is StreamingAIMessage => 
+            const lastAIMessage = state.messages.find((msg): msg is StreamingAIMessage => 
                 msg.isFromAI && (msg as StreamingAIMessage).isStreaming
             );
             if (!lastAIMessage) {
@@ -52,8 +52,7 @@ const conversationSlice = createSlice({
                 state.allowTypwriterAnimation = lastAIMessage.id;
                 state.isAITyping = action.payload.conversationId;
             }
-        },
-        updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
+        },        updateAIMessage: (state, action: PayloadAction<{ conversationId: string, message: Message }>) => {
             const { message } = action.payload;
             const streamingIndex = state.messages.findIndex(msg => 
                 (msg.id === message.id) || 

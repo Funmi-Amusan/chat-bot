@@ -11,29 +11,13 @@ import { toast } from 'react-toastify';
 import { sendMessageAction } from '@/lib/actions/ConversationActions';
 import { ClientPart } from '@/store/conversation/types';
 import { setAITyping } from '@/store/conversation';
+import { emptyChatPrompts } from '@/utils/data-react';
 
 
 const EmptyChat = ({user}: {user: User|null}) => {
  const dispatch = useAppDispatch();
  const router = useRouter()
-   const emptyChatPrompts = [
-    {
-      icon: <CiGlobe color='purple' size={24} />,
-      title: 'Last 24 hours',
-      content: 'Tell me what has happened ver the last 24 hours',
-    },
-    {
-      icon: <CiBeaker1 color='purple' size={24} />,
-      title: 'Learn',
-      content: 'Explain Quantum computing in simple terms',
-    },
-    {
-      icon: <CiStar color='purple' size={24} />,
-      title: 'Random',
-      content: 'Tell me an interesting random fact',
-    },
-
-  ]
+ 
 
   const sendPromptMessage = async (content: string) => {
     if(!user) {
@@ -43,7 +27,6 @@ const EmptyChat = ({user}: {user: User|null}) => {
     try {
         dispatch(setAITyping('new'));
       const {data} = await createNewConversation(userId)
-      console.log(data)
       const conversationId = data.id;
     
           const messageParts: ClientPart[] = [];
@@ -67,7 +50,8 @@ const EmptyChat = ({user}: {user: User|null}) => {
                {emptyChatPrompts.map((chatPrompt) => (
                 <PromptCard onClick={()=> {
                   sendPromptMessage(chatPrompt.content)
-                }} key={chatPrompt.title} icon={chatPrompt.icon} title={chatPrompt.title} content={chatPrompt.content} onClick={(e)=>sendPromptMessage(e)} />
+                }} key={chatPrompt.title} icon={chatPrompt.icon} title={chatPrompt.title}
+                 content={chatPrompt.content}  />
                ))}
                       </div>
                       

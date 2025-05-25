@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
+    "@next/eslint-plugin-next": "^15.3.2",
     "@reduxjs/toolkit": "^2.6.0",
     "axios": "^1.8.2",
     "framer-motion": "^12.10.0",
@@ -40,6 +41,10 @@
     "cypress": "^14.4.0",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
