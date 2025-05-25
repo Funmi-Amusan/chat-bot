@@ -6,7 +6,7 @@ import { ImageAssets } from '@/assets/images';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks';
 import { motion } from 'framer-motion';
 import { Message } from '@/store/conversation/types';
-import { setAITyping, setMessagesData, clearStreamingState } from '@/store/conversation';
+import { setMessagesData, clearStreamingState } from '@/store/conversation';
 import EmptyChat from './EmptyChat';
 import ShinyText from '@/components/ui/BaseShinyText';
 import NameIcon from '@/components/ui/NameIcon';

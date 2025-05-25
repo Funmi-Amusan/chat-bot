@@ -265,7 +265,6 @@ console.log("Message sent successfully:", message);
 };
 
 const sendAIMessage = async (conversationId: string) => {
-    console.log("sendAIMessage called for conversationId:", conversationId);
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
@@ -281,7 +280,7 @@ const sendAIMessage = async (conversationId: string) => {
 
         if (!conversation) {
             console.log("Conversation not found for AI response:", conversationId);
-            return;
+            throw new Error("Conversation not found");
         }
 
         const formattedHistory: { role: string; parts: Part[] }[] = conversation.messages.map((msg) => {
@@ -316,7 +315,6 @@ const sendAIMessage = async (conversationId: string) => {
                         content: chunkText,
                         isFromAI: true,
                     });
-                    console.log("Sending chunk:", chunkText);
                 }
             }
 
@@ -356,25 +354,4 @@ const sendAIMessage = async (conversationId: string) => {
     }
 };
 
-export const textAIGeneration = async () => {
-
-    const fileToGeneratePart = (path: string, mimeType: string) => {
-        return {
-            inlineData: {
-                data: Buffer.from(fs.readFileSync(path)).toString('base64'),
-                mimeType: mimeType,
-            }
-        }
-    }
-    const imagePart = [fileToGeneratePart('quantum.png', 'image/png')]; // Corrected to 'imagePart'
-
-
-    const prompt = "Generate content with Stranger things innuendos.";
-    // Assuming 'model' is defined and initialized elsewhere in your code
-    const response = await model.generateContent([
-        prompt, ...imagePart
-    ]);
-    const result = await response.response.text();
-    console.log(result);
-}
 

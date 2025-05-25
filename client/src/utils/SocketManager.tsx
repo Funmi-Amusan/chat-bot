@@ -18,7 +18,6 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
   const dispatch = useAppDispatch();
   const currentConversationId = useRef<string | undefined>(conversationId);
 
-  // Initialize socket connection once
   useEffect(() => {
     const newSocket = io(ENDPOINT, {
       transports: ['websocket', 'polling']
@@ -27,7 +26,7 @@ const SocketManager = ({ conversationId, setSocket, socket }: SocketManagerProps
     setSocket(newSocket);
 
     newSocket.on('new_message_chunk', (chunkData: { conversationId: string, content: string, isFromAI: boolean, messageId?: string }) => {
-      console.log('Received chunk data:', chunkData);
+
       if (chunkData.isFromAI && chunkData.conversationId === currentConversationId.current) {
         dispatch(appendChunkToAIMessage({
           conversationId: chunkData.conversationId,

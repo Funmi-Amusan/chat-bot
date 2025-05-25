@@ -9,12 +9,12 @@ import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { Socket } from 'socket.io-client';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { LuCamera, LuSend, LuCircleX, LuPaperclip } from "react-icons/lu";
+import { LuCamera, LuSend, LuPaperclip } from "react-icons/lu";
 import { MdOutlineKeyboardVoice, MdClose } from "react-icons/md";
 import { TbFidgetSpinner } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 import { toast } from 'react-toastify';
-import { TextPart, InlineDataPart, FileUploadData } from '@/store/conversation/types';
+import { FileUploadData, ClientPart } from '@/store/conversation/types';
 import { MAX_FILE_SIZE, MAX_FILES, SUPPORTED_DOC_TYPES, SUPPORTED_IMAGE_TYPES } from '@/lib/constants';
 
 const MessageSchema = z.object({
@@ -32,8 +32,6 @@ const MessageSchema = z.object({
 });
 
 type MessageData = z.infer<typeof MessageSchema>;
-
-type ClientPart = TextPart | InlineDataPart; 
 
 const TextInput = ({ conversationId }: { conversationId: string }) => {
     const router = useRouter();

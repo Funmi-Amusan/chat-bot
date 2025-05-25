@@ -67,3 +67,5 @@ export type InlineDataPart = {
       data: string; 
     };
   }
+
+  export type ClientPart = TextPart | InlineDataPart; 
