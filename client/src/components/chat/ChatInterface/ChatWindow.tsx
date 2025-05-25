@@ -50,11 +50,11 @@ const ChatWindow = ({messages: messagesProp}: {messages: Message[]}) => {
                 message?.isFromAI ? 'flex-row' : 'flex-row-reverse'
               }`}
             >
-              <div className="flex-shrink-0 w-8 h-8 rounded-full">
                 {!message?.isFromAI && (
+              <div className="flex-shrink-0 w-8 h-8 rounded-full">
                   <NameIcon />
-                )}
               </div>
+                )}
               <div className="flex-grow">
                 <MessageBubble 
                   isFromAI={message?.isFromAI} 
