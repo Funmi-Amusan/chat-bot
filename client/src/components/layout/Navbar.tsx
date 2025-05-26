@@ -9,8 +9,8 @@ export const Navbar = () => {
       <img src={ImageAssets.Logo.src} alt="logo" width={40}/>
       <div className="flex gap-4 items-center">
         <ThemeSwitch />
-        <Link href={'/login'} className="text-black/70 text-sm dark:text-white font-medium border border-black/70 dark:border-white/70 px-4 rounded-lg !py-2 ">Sign In</Link>
-         <Link href={'/signup'} className="btn !py-2 ">Sign Up</Link>
+        <Link prefetch href={'/login'} className="text-black/70 text-sm dark:text-white font-medium border border-black/70 dark:border-white/70 px-4 rounded-lg !py-2 ">Sign In</Link>
+         <Link prefetch href={'/signup'} className="btn !py-2 ">Sign Up</Link>
       </div>
     </nav>
   );

@@ -2,7 +2,6 @@
 
 import PromptCard from '@/components/ui/PromptCard';
 import { createNewConversation } from '@/lib/actions/ConversationActions';
-import { CiBeaker1, CiGlobe, CiStar } from "react-icons/ci";
 import { useAppDispatch } from '@/utils/hooks';
 import { User } from 'next-auth';
 import { redirect, useRouter } from 'next/navigation';

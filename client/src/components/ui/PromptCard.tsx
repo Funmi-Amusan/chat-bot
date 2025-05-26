@@ -16,9 +16,9 @@ const PromptCard = ({title, content, icon, onClick}: PromptCardProps) => {
   return (
     <div 
       onClick={()=>onClick(content)}
-      className='shadow-sm rounded-xl flex flex-col items-start gap-2 p-4 
+      className='shadow-sm rounded-xl relative flex flex-col items-start gap-2 p-4 
         border border-gray-200 dark:border-neutral-700  transition-all duration-300 
-        hover:border-violet-200 dark:hover:border-neutral-600 hover:shadow-lg cursor-pointer group'
+        hover:border-violet-200 dark:hover:border-neutral-500 hover:shadow-lg cursor-pointer group'
     >
       {icon}
       <h4 className='text-black dark:text-white text-start text-base font-semibold'>{title}</h4>
@@ -28,6 +28,7 @@ const PromptCard = ({title, content, icon, onClick}: PromptCardProps) => {
           <IoArrowForwardSharp size={18} className="text-violet-500" />
         </div>
       </div>
+         <p className='text-black/50 absolute -bottom-10  -translate-y-4 hidden group-hover:translate-0 group-hover:block  dark:text-white/50 text-sm text-start flex-1 transition-all duration-200 ease-in-out group-hover:text-black/70 dark:group-hover:text-white/70'>Click to ask Chat bot</p>
     </div>
   )
 }
