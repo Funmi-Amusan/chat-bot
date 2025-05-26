@@ -21,6 +21,7 @@
     "motion-plus": "^0.1.9",
     "next": "^15.3.2",
     "next-auth": "^5.0.0-beta.27",
+    "ogl": "^1.0.11",
     "query-string": "^9.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

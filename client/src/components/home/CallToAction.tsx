@@ -14,7 +14,7 @@ export const CallToAction = () => {
  an app designed to track your progress
  and motivate your efforts.
       </p>
-      <div className="flex w-full flex-col items-center md:flex-row gap-2 mt-8">
+      <div className="flex w-full flex-col items-center justify-center md:flex-row gap-2 mt-8">
       {/* <BaseInput placeholder={"name@email.com"} id={"name"} name={"name"} className="!w-full"/> */}
       <Link href='/login' className="btn">Get Access</Link>
       </div>

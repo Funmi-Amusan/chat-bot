@@ -1,6 +1,6 @@
 'use client'
 
-import { Navbar } from "./Navbar";
+import { Navbar } from "../layout/Navbar";
 import { ImageAssets } from "@/assets/images";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import Image from "next/image";
@@ -36,7 +36,7 @@ export const Hero = () => {
             className=" my-8 md:leading-30"
             data-testid="hero-heading"
           >
-            One Task <br /> at a Time
+            One Chat <br /> at a Time
           </h1>
           <div className=" flex justify-center">
             
@@ -88,7 +88,7 @@ export const Hero = () => {
             initial={{ opacity: 0}} 
             animate={{ opacity: 1}} 
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="btn mt-8 hover:scale-105"
+            className=" mt-8 hover:scale-105"
           >
             <Link href={'/signup'} className="btn" data-testid="get-started-btn">
               Get Started 

@@ -1,4 +1,4 @@
-import MainHeader from "@/components/layout/MainHeader";
+import MainHeader from "@/components/chat/MainHeader";
 import { auth } from "@/lib/auth";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";

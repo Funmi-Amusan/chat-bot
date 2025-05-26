@@ -1,6 +1,6 @@
 import ChatWindow from "@/components/chat/ChatInterface/ChatWindow";
 import TextInput from "@/components/chat/ChatInterface/TextInput";
-import MainHeader from "@/components/layout/MainHeader";
+import MainHeader from "@/components/chat/MainHeader";
 import { getAConverstaionById } from "@/lib/actions/ConversationActions";
 import { Message } from "@/store/conversation/types";
 import { Suspense } from "react";
