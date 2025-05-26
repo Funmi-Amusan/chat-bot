@@ -17,35 +17,64 @@ export const Hero = () => {
   : "/landingBgHero.png";
 
   return (
-    <section 
+    <motion.section 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
       className={` bg-cover bg-center `}
       style={{ backgroundImage: `url(${heroBackground})` }}
       data-testid="hero-section"
     >
-      <Navbar data-testid="navbar" />
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+      >
+        <Navbar data-testid="navbar" />
+      </motion.div>
+      
       <div className="pb-25 flex-col-center flex-col justify-center text-center" data-testid="hero-content">
-        <a href="" className="tag" data-testid="version-tag">
+        <motion.a 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
+          href="" 
+          className="tag" 
+          data-testid="version-tag"
+        >
           <ShinyText text=" Version 2.0 is here" />
          
           <span className="text-black dark:text-white inline-flex pl-2 gap-2 flex-center">Read more
             <IoIosArrowRoundForward className="text-black dark:text-white" />
           </span>
-        </a> 
+        </motion.a> 
+        
         <div className="relative">
-        <h1
+          <motion.h1
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, delay: 0.6, ease: 'easeOut' }}
             className=" my-8 md:leading-30"
             data-testid="hero-heading"
           >
             One Chat <br /> at a Time
-          </h1>
+          </motion.h1>
+          
           <div className=" flex justify-center">
-            
-            <p className="text-body-lg font-inter max-w-[450px] " data-testid="hero-description">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes.</p>
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8, ease: 'easeOut' }}
+              className="text-body-lg font-inter max-w-[450px] " 
+              data-testid="hero-description"
+            >
+              Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes.
+            </motion.p>
 
             <motion.div
               initial={{ opacity: 0, x: 200, y: 100 }} 
               animate={{ opacity: 1, x: 0, y: 0 }} 
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              transition={{ duration: 0.8, delay: 1.0, ease: 'easeOut' }}
               className="absolute top-20 -right-15 lg:right-70 hidden md:block"
               drag 
               dragSnapToOrigin 
@@ -65,8 +94,8 @@ export const Hero = () => {
 
             <motion.div
               initial={{ opacity: 0, x: -200, y:-100 }} 
-              animate={{ opacity: 1, x: 0 }} 
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              animate={{ opacity: 1, x: 0, y: 0 }} 
+              transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
               className="absolute top-52 -left-12 lg:left-70 lg:top-30 hidden md:block"
               drag 
               dragSnapToOrigin
@@ -84,11 +113,12 @@ export const Hero = () => {
               />
             </motion.div>
           </div>
+          
           <motion.div 
-            initial={{ opacity: 0}} 
-            animate={{ opacity: 1}} 
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className=" mt-8 hover:scale-105"
+            initial={{ opacity: 0, y: 30}} 
+            animate={{ opacity: 1, y: 0}} 
+            transition={{ duration: 0.8, delay: 1.4, ease: 'easeOut' }}
+            className=" mt-8 "
           >
             <Link href={'/signup'} className="btn" data-testid="get-started-btn">
               Get Started 
@@ -96,6 +126,6 @@ export const Hero = () => {
           </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };

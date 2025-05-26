@@ -92,7 +92,7 @@
   }
 
   .btn {
-    @apply py-3 px-5 dark:bg-white bg-black font-semibold dark:text-black text-white inline-flex whitespace-nowrap rounded-lg w-fit text-sm;
+    @apply py-3 px-5 dark:bg-white bg-black font-semibold dark:text-black text-white inline-flex whitespace-nowrap rounded-lg w-fit text-sm hover:scale-105 cursor-pointer;
   }
 
     .btn-purple {

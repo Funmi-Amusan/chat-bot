@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ImageAssets } from "@/assets/images";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import ScrollReveal from "../ui/ScrollReveal";
 
 export const ProductShowcase = () => {
   const appImage = useRef<HTMLImageElement>(null)
@@ -16,8 +17,8 @@ export const ProductShowcase = () => {
   return (
     <section className="bg-gradient bg-gradient-to-b px-4 py-18 gap-6 flex-center-col">
       <h2>Intuitive Interface</h2>
-      <p className="text-body-lg font-inter max-w-[540px] ">Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes, one task at a time.</p>
-    <motion.div
+           <ScrollReveal value="Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes, one task at a time." />
+   <motion.div
 style={{
   opacity: opacity,
   rotateX: rotateX,
