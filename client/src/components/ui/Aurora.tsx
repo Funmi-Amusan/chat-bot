@@ -143,6 +143,7 @@ export default function Aurora(props: AuroraProps) {
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.canvas.style.backgroundColor = "transparent";
 
+    // eslint-disable-next-line prefer-const
     let program: Program | undefined;
 
     function resize() {
@@ -159,6 +160,7 @@ export default function Aurora(props: AuroraProps) {
     const geometry = new Triangle(gl);
     if (geometry.attributes.uv) {
       // TypeScript may require a type assertion here.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (geometry.attributes as any).uv;
     }
 

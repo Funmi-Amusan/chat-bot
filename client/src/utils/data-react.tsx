@@ -4,7 +4,7 @@ import { FaGlobe, FaAtom, FaFan } from "react-icons/fa";
       {
         icon: <FaGlobe color='#8000ff' size={24} />,
         title: 'Last 24 hours',
-        content: 'Tell me what has happened over the last 24 hours',
+        content: 'Teach me about the latest news in the world',
       },
       {
         icon: <FaAtom color='#8000ff' size={24} />,
