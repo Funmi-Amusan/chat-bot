@@ -7,8 +7,8 @@ const NotFound = () => {
     <main className='bg-white dark:bg-black min-h-screen relative' >
                <Aurora
   colorStops={["	#5D3FD3", "#7F00FF", "#E6E6FA"]}
-  blend={0.5}
-  amplitude={0.5}
+  blend={4.5}
+  amplitude={3.5}
   speed={0.5}
 />
           <div className=" flex-1 flex items-center justify-center px-6 py-20">
@@ -38,7 +38,7 @@ const NotFound = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-               <Link href='/' className="btn">Return to Homepage</Link>
+               <Link href='/' className="btn z-30">Return to Homepage</Link>
                 <Link href='/login' className="btn btn-purple">Login To Explore</Link>
            
           </div>

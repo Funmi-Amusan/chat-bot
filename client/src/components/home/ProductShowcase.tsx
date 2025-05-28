@@ -25,7 +25,7 @@ style={{
   transformPerspective: '800px'
 }}
     >
-      <Image src={ImageAssets.appScreen} alt="Logo" className=' w-[80vw] object-cover' ref={appImage}/>
+      <Image src={ImageAssets.appScreen} alt="Logo" className=' w-[80vw] max-w-4xl object-cover' ref={appImage}/>
     </motion.div>
     </section>
   );
