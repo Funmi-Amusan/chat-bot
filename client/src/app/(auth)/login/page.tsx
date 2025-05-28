@@ -12,7 +12,7 @@ import { redirect } from 'next/navigation'
 type Params = Promise<{ slug: string }>
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
  
-const SignUpForm = async (props: {
+const LoginForm = async (props: {
   params: Params
   searchParams: SearchParams
 }) => {
@@ -63,7 +63,6 @@ const SignUpForm = async (props: {
         >
           Your Ideas, <br /> <span>Elevated</span> 
         </h2>
-        
         <p 
           className='dark:text-neutral-200 text-center'
           data-testid="subtitle"
@@ -139,4 +138,4 @@ const SignUpForm = async (props: {
   )
 }
 
-export default SignUpForm;
+export default LoginForm;

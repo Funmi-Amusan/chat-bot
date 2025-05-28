@@ -4,48 +4,48 @@ import { ImageAssets } from "@/assets/images";
 export const features = [
     {
       image: IconAssets.ecosystem.src,
-      title: "Integration Ecosystem",
+      title: "Next-Gen AI Intelligence",
       description:
-        "Enhance your productivity by connecting with your tools, keeping your essentials in one place.",
+        "Powered by advanced reasoning, creativity, and accuracy—helping you think, plan, and create effortlessly.",
     },
     {
       image: IconAssets.ecosystem.src,
-      title: "Goal Setting and Tracking",
+      title: "Multimodal Understanding",
       description:
-        "Define and track your goals, breaking down objectives into achievable tasks to keep your targets in sight.",
+        "Engage using text, files and images, with intelligent responses tailored to different input types.",
     },
     {
       image: IconAssets.ecosystem.src,
-      title: "Secure Data Encryption",
+      title: "Retained Chats",
       description:
-        "With end-to-end encryption, your data is securely stored and protected from unauthorized access.",
+        "Stay connected to past conversations, so your AI remembers context and keeps interactions fluid.",
     },
   ];
 
   export const faqs = [
     {
       id: 1,
-      question: "What payment methods do you accept?",
+      question: "Is my data secure?",
       answer:
-        "We accept all major credit cards, PayPal, and various other payment methods depending on your location. Please contact our support team for more information on accepted payment methods in your region.",
+        "Security is at the core of our system. Your data is protected with industry-leading encryption, ensuring secure storage and access only for authorized users.",
     },
     {
       id: 2,
-      question: "How does the pricing work for teams?",
+      question: "Can the chatbot remember past conversations?",
       answer:
-        "Our pricing is per user, per month. This means you only pay for the number of team members you have on your account. Discounts are available for larger teams and annual subscriptions.",
+        "Yes! It retains chat history, allowing you to pick up where you left off without losing context.",
     },
     {
       id: 3,
-      question: "Can I change my plan later?",
+      question: "What does multimodal mean?",
       answer:
-        "Yes, you can upgrade or downgrade your plan at any time. Changes to your plan will be prorated and reflected in your next billing cycle.",
+        "It means the chatbot can understand and respond to different types of input—not just text but also images—giving you a more interactive experience.",
     },
     {
       id: 4,
-      question: "Is my data secure?",
+      question: "How intelligent is this AI?",
       answer:
-        "Security is our top priority. We use state-of-the-art encryption and comply with the best industry practices to ensure that your data is stored securely and accessed only by authorized users.",
+        "It leverages advanced AI capabilities similar to Gemini, offering accurate answers, creative insights, and problem-solving assistance.",
     },
   ];
 

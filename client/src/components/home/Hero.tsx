@@ -49,7 +49,7 @@ export const Hero = () => {
           </span>
         </motion.a> 
         
-        <div className="relative">
+        <div className="relative w-fit mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
@@ -68,50 +68,48 @@ export const Hero = () => {
               className="text-body-lg font-inter max-w-[450px] " 
               data-testid="hero-description"
             >
-              Celebrate the joy of accomplishment with an app designed to track your progress, motivate your efforts, and celebrate your successes.
+             Say hello to effortless communication. Whether you&apos;re looking for answers, brainstorming ideas, or just having a casual chat, our AI-powered assistant adapts to your needs—fast, intuitive, and always ready to help.
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, x: 200, y: 100 }} 
-              animate={{ opacity: 1, x: 0, y: 0 }} 
-              transition={{ duration: 0.8, delay: 1.0, ease: 'easeOut' }}
-              className="absolute top-20 -right-15 lg:right-70 hidden md:block"
-              drag 
-              dragSnapToOrigin 
-              data-testid="message-container"
-            >
-              <Image 
-                src={ImageAssets.message.src} 
-                alt="message image" 
-                aria-hidden 
-                className="" 
-                width={150} 
-                height={150} 
-                draggable={false} 
-                data-testid="message-image"
-              />
-            </motion.div>
+           <motion.div
+  initial={{ opacity: 0, x: 200, y: 100 }} 
+  animate={{ opacity: 1, x: 0, y: 0 }} 
+  transition={{ duration: 0.8, delay: 1.0, ease: 'easeOut' }}
+  className="absolute hidden md:flex top-[10vh] md:left-[40rem] w-40"
+  drag 
+  dragSnapToOrigin 
+  data-testid="message-container"
+>
+  <Image 
+    src={ImageAssets.message.src} 
+    alt="message image" 
+    aria-hidden 
+    className="w-full h-auto" 
+    draggable={false} 
+    width={150} height={150}
+    data-testid="message-image"
+  />
+</motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -200, y:-100 }} 
-              animate={{ opacity: 1, x: 0, y: 0 }} 
-              transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
-              className="absolute top-52 -left-12 lg:left-70 lg:top-30 hidden md:block"
-              drag 
-              dragSnapToOrigin
-              data-testid="cursor-container"
-            >
-              <Image 
-                src={ImageAssets.cursor.src} 
-                alt="cursor image" 
-                aria-hidden 
-                className="" 
-                width={150} 
-                height={150} 
-                draggable={false} 
-                data-testid="cursor-image"
-              />
-            </motion.div>
+           <motion.div
+  initial={{ opacity: 0, x: -200, y: -100 }} 
+  animate={{ opacity: 1, x: 0, y: 0 }} 
+  transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
+  className="absolute top-[25vh] hidden md:flex md:right-[40rem] w-40"
+  drag 
+  dragSnapToOrigin 
+  data-testid="cursor-container"
+>
+  <Image 
+    src={ImageAssets.cursor.src} 
+    alt="cursor image" 
+    aria-hidden 
+    width={150} height={150}
+    className="w-full h-auto" 
+    draggable={false} 
+    data-testid="cursor-image"
+  />
+</motion.div>
           </div>
           
           <motion.div 

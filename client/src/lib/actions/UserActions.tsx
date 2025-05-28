@@ -49,6 +49,7 @@ export async function loginAction(
     }
   } catch (error) {
     if (error instanceof AuthError) {
+      console.log(error.message); 
         let message = "Authentication failed. Please try again."; 
         if (error.type === "CallbackRouteError") {
           if (error.cause?.err instanceof Error && error.cause.err.message) {
@@ -62,6 +63,7 @@ export async function loginAction(
           };
       }
     }
+    console.error(error);
     const errorMessage = error instanceof Error 
       ? error.message 
       : "An unexpected error occurred";

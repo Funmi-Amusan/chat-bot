@@ -1,6 +1,6 @@
 import acme from './images/acme.png';
 import apex from './images/apex.png';
-import appScreen from './images/app-screen.png';
+import appScreen from './images/chatbot-preview.png';
 import calendar from './images/calendar.svg';
 import celestial from './images/celestial.png';
 import ChatBotAvatar from './images/ChatBotAvatar.png';

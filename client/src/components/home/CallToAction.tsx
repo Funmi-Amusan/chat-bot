@@ -9,11 +9,10 @@ export const CallToAction = () => {
       <div className=" max-w-[540px] flex-center-col ">
 
       <h2>Get instant access</h2>
-      <p className="text-black/50 dark:text-white/50 text-body-gray font-inter text-center">
-      Celebrate the joy of accomplishment with
- an app designed to track your progress
- and motivate your efforts.
-      </p>
+   <p className="text-black/50 dark:text-white/50 text-body-gray font-inter text-center">
+      Embrace your achievements with an AI assistant that tracks your progress, keeps you motivated, and helps you reach new milestones effortlessly.
+</p>
+
       <div className="flex w-full flex-col items-center justify-center md:flex-row gap-2 mt-8">
       {/* <BaseInput placeholder={"name@email.com"} id={"name"} name={"name"} className="!w-full"/> */}
       <Link href='/login' className="btn">Get Access</Link>
